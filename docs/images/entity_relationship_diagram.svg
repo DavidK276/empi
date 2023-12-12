@@ -4,15 +4,15 @@
    height="112.68381mm"
    viewBox="0 0 900.78142 425.89091"
    version="1.2"
-   id="svg307"
-   sodipodi:docname="entity relationship diagram.svg"
+   id="svg309"
+   sodipodi:docname="entity_relationship_diagram.svg"
    inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
-     id="namedview307"
+     id="namedview309"
      pagecolor="#ffffff"
      bordercolor="#000000"
      borderopacity="0.25"
@@ -21,15 +21,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.196914"
-     inkscape:cx="460.35054"
-     inkscape:cy="182.97054"
+     inkscape:zoom="1.2412315"
+     inkscape:cx="480.16827"
+     inkscape:cy="132.12684"
      inkscape:window-width="1920"
      inkscape:window-height="1012"
      inkscape:window-x="328"
      inkscape:window-y="1080"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g307" />
+     inkscape:current-layer="g309" />
   <title
      id="title1">Qt SVG Document</title>
   <desc
@@ -43,7 +43,7 @@
      fill-rule="evenodd"
      stroke-linecap="square"
      stroke-linejoin="bevel"
-     id="g307"
+     id="g309"
      transform="translate(-84292.3,-11753.6)">
     <g
        fill="none"
@@ -886,7 +886,7 @@
          font-size="13.3333px"
          font-weight="400"
          font-style="normal"
-         id="text55">1</text>
+         id="text55">*</text>
     </g>
     <g
        fill="none"
@@ -908,7 +908,7 @@
        stroke-width="1"
        stroke-linecap="square"
        stroke-linejoin="bevel"
-       transform="matrix(0.999819,0,0,0.999819,84792.7,12004)"
+       transform="matrix(0.999819,0,0,0.999819,84792.7,12029)"
        font-family="'Noto Sans'"
        font-size="13.3333px"
        font-weight="400"
@@ -921,7 +921,7 @@
        stroke-width="1"
        stroke-linecap="square"
        stroke-linejoin="bevel"
-       transform="matrix(0.999819,0,0,0.999819,84792.7,12004)"
+       transform="matrix(0.999819,0,0,0.999819,84792.7,12029)"
        font-family="'Noto Sans'"
        font-size="13.3333px"
        font-weight="400"
@@ -934,7 +934,7 @@
        stroke-width="1"
        stroke-linecap="square"
        stroke-linejoin="bevel"
-       transform="matrix(0.999819,0,0,0.999819,84792.7,12004)"
+       transform="matrix(0.999819,0,0,0.999819,84792.7,12029)"
        font-family="'Noto Sans'"
        font-size="13.3333px"
        font-weight="400"
@@ -960,7 +960,7 @@
        stroke-width="1"
        stroke-linecap="square"
        stroke-linejoin="bevel"
-       transform="matrix(0.999819,0,0,0.999819,84792.7,12004)"
+       transform="matrix(0.999819,0,0,0.999819,84792.7,12029)"
        font-family="'Noto Sans'"
        font-size="13.3333px"
        font-weight="400"
@@ -4711,7 +4711,8 @@
          id="text285">datum_cas </text>
     </g>
     <g
-       fill="none"
+       fill="#ffffc0"
+       fill-opacity="1"
        stroke="#000000"
        stroke-opacity="1"
        stroke-width="1"
@@ -4724,6 +4725,46 @@
        font-style="normal"
        id="g287" />
     <g
+       fill="#ffffc0"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       transform="matrix(0.999819,0,0,0.999819,84742.7,12054)"
+       font-family="'Noto Sans'"
+       font-size="13.3333px"
+       font-weight="400"
+       font-style="normal"
+       id="g288">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="5"
+         y="68"
+         font-family="'Noto Sans'"
+         font-size="13.3333px"
+         font-weight="400"
+         font-style="normal"
+         id="text287">kapacita </text>
+    </g>
+    <g
+       fill="none"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       transform="matrix(0.999819,0,0,0.999819,84742.7,12054)"
+       font-family="'Noto Sans'"
+       font-size="13.3333px"
+       font-weight="400"
+       font-style="normal"
+       id="g289" />
+    <g
        fill="none"
        stroke="#000000"
        stroke-opacity="1"
@@ -4735,7 +4776,7 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g288" />
+       id="g290" />
     <g
        fill="#ffffc0"
        fill-opacity="1"
@@ -4749,14 +4790,14 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g289">
+       id="g291">
       <rect
          vector-effect="non-scaling-stroke"
          x="0"
          y="0"
          width="100"
          height="100"
-         id="rect288" />
+         id="rect290" />
     </g>
     <g
        fill="#ffffc0"
@@ -4771,7 +4812,7 @@
        font-size="13.3333px"
        font-weight="700"
        font-style="normal"
-       id="g290" />
+       id="g292" />
     <g
        fill="#ffffc0"
        fill-opacity="1"
@@ -4785,7 +4826,7 @@
        font-size="13.3333px"
        font-weight="700"
        font-style="normal"
-       id="g291">
+       id="g293">
       <text
          fill="#000000"
          fill-opacity="1"
@@ -4797,7 +4838,7 @@
          font-size="13.3333px"
          font-weight="700"
          font-style="normal"
-         id="text290">pouzivatel</text>
+         id="text292">pouzivatel</text>
     </g>
     <g
        fill="#ffffc0"
@@ -4812,53 +4853,12 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g292">
+       id="g294">
       <polyline
          fill="none"
          vector-effect="non-scaling-stroke"
          points="0,18 100,18 "
-         id="polyline291" />
-    </g>
-    <g
-       fill="#ffffc0"
-       fill-opacity="1"
-       stroke="#000000"
-       stroke-opacity="1"
-       stroke-width="1"
-       stroke-linecap="square"
-       stroke-linejoin="bevel"
-       transform="matrix(0.999819,0,0,0.999819,84492.7,11879.1)"
-       font-family="'Noto Sans'"
-       font-size="13.3333px"
-       font-weight="400"
-       font-style="normal"
-       id="g293" />
-    <g
-       fill="#ffffc0"
-       fill-opacity="1"
-       stroke="#000000"
-       stroke-opacity="1"
-       stroke-width="1"
-       stroke-linecap="square"
-       stroke-linejoin="bevel"
-       transform="matrix(0.999819,0,0,0.999819,84492.7,11879.1)"
-       font-family="'Noto Sans'"
-       font-size="13.3333px"
-       font-weight="400"
-       font-style="normal"
-       id="g294">
-      <text
-         fill="#000000"
-         fill-opacity="1"
-         stroke="none"
-         xml:space="preserve"
-         x="5"
-         y="32"
-         font-family="'Noto Sans'"
-         font-size="13.3333px"
-         font-weight="400"
-         font-style="normal"
-         id="text293">meno </text>
+         id="polyline293" />
     </g>
     <g
        fill="#ffffc0"
@@ -4894,12 +4894,12 @@
          stroke="none"
          xml:space="preserve"
          x="5"
-         y="50"
+         y="32"
          font-family="'Noto Sans'"
          font-size="13.3333px"
          font-weight="400"
          font-style="normal"
-         id="text295">priezvisko </text>
+         id="text295">meno </text>
     </g>
     <g
        fill="#ffffc0"
@@ -4935,12 +4935,53 @@
          stroke="none"
          xml:space="preserve"
          x="5"
+         y="50"
+         font-family="'Noto Sans'"
+         font-size="13.3333px"
+         font-weight="400"
+         font-style="normal"
+         id="text297">priezvisko </text>
+    </g>
+    <g
+       fill="#ffffc0"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       transform="matrix(0.999819,0,0,0.999819,84492.7,11879.1)"
+       font-family="'Noto Sans'"
+       font-size="13.3333px"
+       font-weight="400"
+       font-style="normal"
+       id="g299" />
+    <g
+       fill="#ffffc0"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       transform="matrix(0.999819,0,0,0.999819,84492.7,11879.1)"
+       font-family="'Noto Sans'"
+       font-size="13.3333px"
+       font-weight="400"
+       font-style="normal"
+       id="g300">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="5"
          y="68"
          font-family="'Noto Sans'"
          font-size="13.3333px"
          font-weight="400"
          font-style="normal"
-         id="text297">email </text>
+         id="text299">email </text>
     </g>
     <g
        fill="none"
@@ -4954,7 +4995,7 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g299" />
+       id="g301" />
     <g
        fill="none"
        stroke="#000000"
@@ -4967,7 +5008,7 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g300" />
+       id="g302" />
     <g
        fill="#ffffc0"
        fill-opacity="1"
@@ -4981,14 +5022,14 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g301">
+       id="g303">
       <rect
          vector-effect="non-scaling-stroke"
          x="0"
          y="0"
          width="125"
          height="25"
-         id="rect300" />
+         id="rect302" />
     </g>
     <g
        fill="#ffffc0"
@@ -5003,7 +5044,7 @@
        font-size="13.3333px"
        font-weight="700"
        font-style="normal"
-       id="g302" />
+       id="g304" />
     <g
        fill="#ffffc0"
        fill-opacity="1"
@@ -5017,7 +5058,7 @@
        font-size="13.3333px"
        font-weight="700"
        font-style="normal"
-       id="g303">
+       id="g305">
       <text
          fill="#000000"
          fill-opacity="1"
@@ -5029,7 +5070,7 @@
          font-size="13.3333px"
          font-weight="700"
          font-style="normal"
-         id="text302">administrator</text>
+         id="text304">administrator</text>
     </g>
     <g
        fill="#ffffc0"
@@ -5044,12 +5085,12 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g304">
+       id="g306">
       <polyline
          fill="none"
          vector-effect="non-scaling-stroke"
          points="0,18 125,18 "
-         id="polyline303" />
+         id="polyline305" />
     </g>
     <g
        fill="none"
@@ -5063,7 +5104,7 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g305" />
+       id="g307" />
     <g
        fill="none"
        stroke="#000000"
@@ -5075,6 +5116,6 @@
        font-size="13.3333px"
        font-weight="400"
        font-style="normal"
-       id="g306" />
+       id="g308" />
   </g>
 </svg>
