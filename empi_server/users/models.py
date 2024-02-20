@@ -21,6 +21,7 @@ class EmpiUserManager(BaseUserManager):
 
 
 class EmpiUser(AbstractUser):
+    date_joined = models.DateTimeField(auto_now_add=True)
     password = models.CharField(max_length=128, verbose_name="heslo", blank=False)
     first_name = models.CharField(verbose_name="meno", max_length=150, null=True)
     last_name = models.CharField(verbose_name="priezvisko", max_length=150, null=True)
