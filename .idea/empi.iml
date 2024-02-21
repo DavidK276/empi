@@ -18,19 +18,10 @@
       <excludeFolder url="file://$MODULE_DIR$/src/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Pipenv (empi)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (.python-venv) (3)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
-  <component name="PyDocumentationSettings">
-    <option name="format" value="GOOGLE" />
-    <option name="myDocStringFormat" value="Google" />
-  </component>
-  <component name="TemplatesService">
-    <option name="TEMPLATE_CONFIGURATION" value="Django" />
-    <option name="TEMPLATE_FOLDERS">
-      <list>
-        <option value="$MODULE_DIR$/empi_server/users/templates" />
-      </list>
-    </option>
+  <component name="PackageRequirementsSettings">
+    <option name="requirementsPath" value="" />
   </component>
 </module>
