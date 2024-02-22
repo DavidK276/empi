@@ -1,10 +1,18 @@
 from django.db import models
+from django.db.models import Q
+
+from .utils.constants import *
+
+
+class Research(models.Model):
+    name = models.CharField(max_length=120, verbose_name="meno")
+    url = models.URLField()
+    points = models.PositiveIntegerField(verbose_name="body")
 
 
 class Credit(models.Model):
-    value = models.PositiveIntegerField(verbose_name="hodnota")
-    research = models.CharField(max_length=200, blank=True)
-    participant = models.ForeignKey('users.Participant', on_delete=models.CASCADE)
+    research = models.ForeignKey(Research, on_delete=models.CASCADE)
+    participant_token_encrypted = models.BinaryField()
 
 
 class Attribute(models.Model):
@@ -22,20 +30,26 @@ class AttributeValue(models.Model):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
 
 
-class Research(models.Model):
-    url = models.URLField()
-
-
 class Appointment(models.Model):
+    research = models.ForeignKey(Research, on_delete=models.CASCADE)
     when = models.DateTimeField(verbose_name="kedy", blank=False)
     capacity = models.IntegerField(verbose_name="kapacita")
-    research = models.ForeignKey(Research, on_delete=models.CASCADE)
     comment = models.TextField(blank=True)
+    location = models.TextField(blank=False, null=True)
+    url = models.URLField(blank=False, null=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check=Q(url__isnull=True) ^ Q(location__isnull=True),
+                                   name="one_of_url_location_null")
+        ]
+
+    def get_type(self):
+        if self.location is None:
+            return AppointmentType.ONLINE
+        return AppointmentType.IN_PERSON
 
 
-class InPersonAppointment(models.Model):
-    location = models.TextField(blank=False)
-
-
-class OnlineAppointment(models.Model):
-    url = models.URLField()
+class Participation(models.Model):
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    participant_token_encrypted = models.BinaryField()
