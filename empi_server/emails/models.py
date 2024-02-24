@@ -4,9 +4,11 @@ from datetime import datetime
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from .fields import SeparatedValuesField
 
 
 class Email(models.Model):
+    recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
     subject = models.CharField(max_length=78, verbose_name="predmet")
     body = models.TextField(verbose_name="telo")
     send_when = models.DateTimeField(verbose_name="dátum a čas odoslania", blank=True)

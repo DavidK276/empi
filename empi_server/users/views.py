@@ -44,7 +44,7 @@ class LecturerViewSet(mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
-    queryset = Lecturer.objects.get_queryset()
+    queryset = Lecturer.objects.get_queryset().order_by('pk')
     serializer_class = LecturerSerializer
 
 
@@ -52,5 +52,5 @@ class ParticipantViewSet(mixins.CreateModelMixin,
                          mixins.ListModelMixin,
                          mixins.RetrieveModelMixin,
                          viewsets.GenericViewSet):
-    queryset = Participant.objects.get_queryset()
+    queryset = Participant.objects.get_queryset().order_by('pk')
     serializer_class = ParticipantSerializer
