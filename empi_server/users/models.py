@@ -41,7 +41,10 @@ class EmpiUserManager(UserManager):
 
 
 class EmpiUser(AbstractUser):
-    objects = EmpiUserManager()
+    users = EmpiUserManager()
+
+    class Meta:
+        default_manager_name = 'users'
 
     def get_keypair(self) -> (bytes, bytes):
         """
@@ -58,8 +61,9 @@ class EmpiUser(AbstractUser):
         return public_key, private_key
 
     def change_password(self, old_raw_password, new_raw_password) -> int:
-        if not self.check_password(old_raw_password):
-            return constants.INVALID_PASSPHRASE
+        if self.has_usable_password():
+            if not self.check_password(old_raw_password):
+                return constants.INVALID_PASSPHRASE
         self.set_password(new_raw_password)
 
         _, encrypted_key = self.get_keypair()
@@ -84,7 +88,7 @@ def keys_delete(sender, instance, **kwargs):
 
 
 class Lecturer(models.Model):
-    user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
 
 
 def generate_token():
@@ -93,14 +97,15 @@ def generate_token():
         part1 = ''.join(random.choice(alphabet) for _ in range(4))
         part2 = ''.join(random.choice(alphabet) for _ in range(4))
         result = '-'.join([part1, part2])
-        user = EmpiUser.objects.get(token=result)
-        if user is None:
+        try:
+            Participant.objects.get(token=result)
+        except Participant.DoesNotExist:
             return result
 
 
 class Participant(models.Model):
-    user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
     acad_year = models.CharField(verbose_name="akademický rok", max_length=9, blank=False, null=False,
                                  validators=[validate_acad_year])
-    chosen_attribute_values = models.ManyToManyField('research.AttributeValue')
+    chosen_attribute_values = models.ManyToManyField('research.AttributeValue', blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)
