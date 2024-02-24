@@ -1,4 +1,6 @@
 import os
+import random
+from string import ascii_uppercase, digits
 
 from Crypto.PublicKey import RSA
 from django.contrib.auth.models import AbstractUser, UserManager
@@ -85,8 +87,20 @@ class Lecturer(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE)
 
 
+def generate_token():
+    alphabet = ascii_uppercase + digits
+    while True:
+        part1 = ''.join(random.choice(alphabet) for _ in range(4))
+        part2 = ''.join(random.choice(alphabet) for _ in range(4))
+        result = '-'.join([part1, part2])
+        user = EmpiUser.objects.get(token=result)
+        if user is None:
+            return result
+
+
 class Participant(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE)
     acad_year = models.CharField(verbose_name="akademický rok", max_length=9, blank=False, null=False,
                                  validators=[validate_acad_year])
     chosen_attribute_values = models.ManyToManyField('research.AttributeValue')
+    token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)
