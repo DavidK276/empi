@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "mailer",
     "users",
     "research",
-    "mailer",
+    "emails",
 ]
 
 MIDDLEWARE = [
