@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a33eeea9658b6466ea378b56b0a6bbfc6925ef970581970705878286b9d13865"
+            "sha256": "839274f3045cba0ba7f9c4854429dbe3984ad139ed790d233c574308e493983e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -40,14 +40,6 @@
             "index": "pypi",
             "version": "==4.3.1"
         },
-        "django-mailer": {
-            "hashes": [
-                "sha256:d667ae8633d6b7c1e259d7142e6fbad0a4b079a528ecc6854b452d7bcb3e6aed",
-                "sha256:eefa89b8abf3f10574a3322b08c82e1265d7b0822c4bbb9bd7b9a4110c823ac9"
-            ],
-            "index": "pypi",
-            "version": "==2.3.1"
-        },
         "djangorestframework": {
             "hashes": [
                 "sha256:579a333e6256b09489cbe0a067e66abe55c6595d8926be6b99423786334350c8",
@@ -55,13 +47,6 @@
             ],
             "index": "pypi",
             "version": "==3.14.0"
-        },
-        "lockfile": {
-            "hashes": [
-                "sha256:6aed02de03cba24efabcd600b30540140634fc06cfa603822d508d5361e9f799",
-                "sha256:6c3cb24f344923d30b2785d5ad75182c8ea7ac1b6171b08657258ec7429d50fa"
-            ],
-            "version": "==0.12.2"
         },
         "pycryptodome": {
             "hashes": [
