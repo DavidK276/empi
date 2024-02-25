@@ -9,6 +9,7 @@ django-cors-headers = "*"
 djangorestframework = "*"
 pycryptodome = "*"
 django-mailer = "*"
+python-magic = "*"
 
 [dev-packages]
 
