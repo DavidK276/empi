@@ -28,7 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, name="Change password", methods=[HTTPMethod.POST], serializer_class=PasswordSerializer)
     def change_password(self, request, pk=None):
         user: EmpiUser = self.get_object()
-        serializer = PasswordSerializer(data=request.data)
+        serializer = self.get_serializer_class()(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         current_password = serializer.validated_data['current_password']

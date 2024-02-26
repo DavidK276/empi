@@ -1,8 +1,8 @@
 from rest_framework import viewsets, status
-from django.core.mail import send_mail
 from rest_framework.response import Response
 
-from .forms import EmailForm
+from django.forms import modelform_factory
+
 from .models import Email, Attachment
 from .serializers import EmailSerializer, AttachmentSerializer
 
@@ -12,22 +12,24 @@ class EmailViewSet(viewsets.ModelViewSet):
     serializer_class = EmailSerializer
 
     def create(self, request, *args, **kwargs):
-        form = EmailForm(request.POST, request.FILES)
+        form_class = modelform_factory(model=Email, fields='__all__')
+        form = form_class(request.data, request.FILES)
+
         if form.is_valid():
-            return super().update(request, *args, **kwargs)
+            return super().create(request, *args, **kwargs)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
-        form = EmailForm(request.POST, request.FILES)
+        partial = kwargs.get('partial', False)
+        fields = '__all__' if not partial else set(request.data.keys()) - {'url'}
+        form_class = modelform_factory(model=Email, fields=fields)
+        form = form_class(request.data, request.FILES)
+
         if form.is_valid():
             return super().update(request, *args, **kwargs)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, *args, **kwargs):
-        emails = super().retrieve(request, *args, **kwargs)
-        return emails
 
 
 class AttachmentViewSet(viewsets.ModelViewSet):
