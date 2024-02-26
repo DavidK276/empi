@@ -21,7 +21,8 @@ class Email(models.Model):
     recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
     subject = models.CharField(max_length=78, verbose_name="predmet")
     body = models.TextField(verbose_name="telo")
-    send_when = models.DateTimeField(verbose_name="dátum a čas odoslania", blank=False, null=True)
+    send_when = models.DateTimeField(verbose_name="dátum a čas odoslania", blank=True, null=True)
+    is_finalized = models.BooleanField(verbose_name="je publikovaný", null=False, default=False)
 
     @classmethod
     def get_emails_to_send(cls):
