@@ -21,17 +21,15 @@ class PasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(max_length=100)
 
 
-class LecturerSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.HyperlinkedRelatedField(queryset=models.EmpiUser.users.all(), view_name='empiuser-detail',
-                                               validators=[
-                                                   validators.UniqueValidator(
-                                                       queryset=models.Lecturer.objects.all(),
-                                                       message="This user is already a lecturer"
-                                                   )
-                                               ])
-
+class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = models.Lecturer
+        model = models.Attribute
+        fields = '__all__'
+
+
+class AttributeValueSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.AttributeValue
         fields = '__all__'
 
 

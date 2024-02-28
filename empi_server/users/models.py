@@ -82,13 +82,29 @@ def keys_delete(sender, instance, **kwargs):
     key_dir = get_keydir(instance.username)
     os.unlink(key_dir / "receiver.pem")
     os.unlink(key_dir / "privatekey.der")
-    key_dir.rmdir()
     if len(os.listdir(key_dir)) == 0:
         key_dir.rmdir()
 
 
-class Lecturer(models.Model):
-    user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
+class Attribute(models.Model):
+    class AttributeType(models.TextChoices):
+        SINGLE_CHOICE = 'SC', 'Výber jednej hodnoty'
+        MULTIPLE_CHOICE = 'MC', 'Výber viacero hodnôt'
+        ENTER_TEXT = 'ET', 'Vpis textu'
+
+    name = models.CharField(max_length=150, blank=False)
+    type = models.CharField(max_length=2, choices=AttributeType.choices, default=AttributeType.SINGLE_CHOICE)
+
+    def __str__(self):
+        return self.name.capitalize()
+
+
+class AttributeValue(models.Model):
+    attribute = models.ForeignKey(Attribute, verbose_name="atribút", on_delete=models.CASCADE)
+    name = models.CharField(verbose_name="hodnota", max_length=150, blank=False)
+
+    def __str__(self):
+        return "%s > %s" % (str(self.attribute), self.name.capitalize())
 
 
 def generate_token():
@@ -107,5 +123,5 @@ class Participant(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
     acad_year = models.CharField(verbose_name="akademický rok", max_length=9, blank=False, null=False,
                                  validators=[validate_acad_year])
-    chosen_attribute_values = models.ManyToManyField('research.AttributeValue', blank=True)
+    chosen_attribute_values = models.ManyToManyField(AttributeValue, blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)

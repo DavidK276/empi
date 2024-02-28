@@ -4,8 +4,9 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import EmpiUser, Lecturer, Participant
-from .serializers import UserSerializer, PasswordSerializer, LecturerSerializer, ParticipantSerializer
+from .models import EmpiUser, Participant, Attribute, AttributeValue
+from .serializers import UserSerializer, PasswordSerializer, ParticipantSerializer, AttributeSerializer, \
+    AttributeValueSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -22,9 +23,6 @@ class UserViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
-
     @action(detail=True, name="Change password", methods=[HTTPMethod.POST], serializer_class=PasswordSerializer)
     def change_password(self, request, pk=None):
         user: EmpiUser = self.get_object()
@@ -39,13 +37,9 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response({'status': 'password changed'})
 
-
-class LecturerViewSet(mixins.CreateModelMixin,
-                      mixins.ListModelMixin,
-                      mixins.RetrieveModelMixin,
-                      viewsets.GenericViewSet):
-    queryset = Lecturer.objects.get_queryset().order_by('pk')
-    serializer_class = LecturerSerializer
+    @action(detail=True, name="Get attributes", methods=[HTTPMethod.GET], serializer_class=PasswordSerializer)
+    def get_attributes(self, request, pk=None):
+        ...
 
 
 class ParticipantViewSet(mixins.CreateModelMixin,
@@ -54,3 +48,13 @@ class ParticipantViewSet(mixins.CreateModelMixin,
                          viewsets.GenericViewSet):
     queryset = Participant.objects.get_queryset().order_by('pk')
     serializer_class = ParticipantSerializer
+
+
+class AttributeViewSet(viewsets.ModelViewSet):
+    queryset = Attribute.objects.get_queryset().order_by('pk')
+    serializer_class = AttributeSerializer
+
+
+class AttributeValueViewSet(viewsets.ModelViewSet):
+    queryset = AttributeValue.objects.get_queryset().order_by('pk')
+    serializer_class = AttributeValueSerializer
