@@ -10,27 +10,17 @@ from .serializers import UserSerializer, PasswordSerializer, ParticipantSerializ
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = EmpiUser.users.get_queryset().order_by('date_joined')
+    queryset = EmpiUser.objects.get_queryset().order_by('date_joined')
     serializer_class = UserSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer: UserSerializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        if serializer.validated_data['is_staff']:
-            EmpiUser.users.create_superuser(**serializer.validated_data)
-        else:
-            EmpiUser.users.create_user(**serializer.validated_data)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(detail=True, name="Change password", methods=[HTTPMethod.POST], serializer_class=PasswordSerializer)
     def change_password(self, request, pk=None):
-        user: EmpiUser = self.get_object()
         serializer = self.get_serializer_class()(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         current_password = serializer.validated_data['current_password']
         new_password = serializer.validated_data['new_password']
+        user: EmpiUser = self.get_object()
         if not user.check_password(current_password):
             return Response({'status': 'invalid current password'}, status=status.HTTP_401_UNAUTHORIZED)
         user.change_password(current_password, new_password)

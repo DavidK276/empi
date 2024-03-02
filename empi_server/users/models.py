@@ -14,37 +14,10 @@ from .utils.validators import validate_acad_year
 
 
 class EmpiUserManager(UserManager):
-
-    @staticmethod
-    def new_key(username, passphrase: str):
-        key = RSA.generate(2048)
-        encrypted_key = export_privkey(key, passphrase)
-
-        key_dir = get_keydir(username)
-        key_dir.mkdir(mode=0o700, parents=True)
-        with open(key_dir / "privatekey.der", "wb") as keyfile:
-            keyfile.write(encrypted_key)
-
-        public_key = key.publickey().export_key(format="PEM")
-        with open(key_dir / "receiver.pem", "wb") as keyfile:
-            keyfile.write(public_key)
-
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        user = super().create_user(username, email, password, **extra_fields)
-        self.new_key(username, password)
-        return user
-
-    def create_superuser(self, username, email=None, password=None, **extra_fields):
-        user = super().create_superuser(username, email, password, **extra_fields)
-        self.new_key(username, password)
-        return user
+    pass
 
 
 class EmpiUser(AbstractUser):
-    users = EmpiUserManager()
-
-    class Meta:
-        default_manager_name = 'users'
 
     def get_keypair(self) -> (bytes, bytes):
         """
@@ -76,14 +49,24 @@ class EmpiUser(AbstractUser):
 
         return 0
 
+    def is_participant(self):
+        try:
+            _ = Participant.objects.get(user=self.pk)
+            return True
+        except Participant.DoesNotExist:
+            return False
+
 
 @receiver(post_delete, sender=EmpiUser)
 def keys_delete(sender, instance, **kwargs):
     key_dir = get_keydir(instance.username)
-    os.unlink(key_dir / "receiver.pem")
-    os.unlink(key_dir / "privatekey.der")
-    if len(os.listdir(key_dir)) == 0:
-        key_dir.rmdir()
+    if key_dir.is_dir():
+        if (key_dir / "receiver.pem").is_file():
+            os.unlink(key_dir / "receiver.pem")
+        if (key_dir / "privatekey.der").is_file():
+            os.unlink(key_dir / "privatekey.der")
+        if len(os.listdir(key_dir)) == 0:
+            key_dir.rmdir()
 
 
 class Attribute(models.Model):

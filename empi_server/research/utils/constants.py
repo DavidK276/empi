@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class AppointmentType(Enum):
-    ONLINE = 1
-    IN_PERSON = 2
+    ONLINE = "online"
+    IN_PERSON = "in_person"

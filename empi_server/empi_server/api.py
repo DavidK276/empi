@@ -3,12 +3,13 @@ from django.urls import include, path
 from rest_framework import routers, viewsets, serializers
 from users import views as users_views
 from emails import views as emails_views
+from research import views as research_views
 
 
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        exclude = []
+        fields = '__all__'
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
@@ -26,6 +27,10 @@ router.register(r'attr-value', users_views.AttributeValueViewSet)
 
 router.register(r'email', emails_views.EmailViewSet)
 router.register(r'attachment', emails_views.AttachmentViewSet)
+
+router.register(r'research', research_views.ResearchViewSet)
+router.register(r'appointment', research_views.AppointmentViewSet)
+router.register(r'participation', research_views.ParticipationViewSet)
 
 urlpatterns = [
     path('auth/', include('rest_framework.urls', namespace='rest_framework')),

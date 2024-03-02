@@ -12,9 +12,12 @@ from .utils.keys import export_privkey, get_keydir
 
 class Research(models.Model):
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
-    url = models.URLField()
+    url = models.URLField()  # TODO: rename this column to prevent interference with serializer
     points = models.PositiveIntegerField(verbose_name="body")
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
     @staticmethod
     def new_key(name):
@@ -61,30 +64,22 @@ def keys_delete(sender, instance, **kwargs):
         key_dir.rmdir()
 
 
-class Credit(models.Model):
-    class RecipientType(models.TextChoices):
-        LECTURER = 'LE', 'Vyučujúci'
-        STUDENT = 'ST', 'Študent'
-        EXPERT = 'EX', 'Expert'
-
-    recipient_type = models.CharField(verbose_name="typ príjemcu", max_length=2, choices=RecipientType.choices)
-    research = models.ForeignKey(Research, on_delete=models.CASCADE)
-    participant_token_encrypted = models.BinaryField()
-
-
 class Appointment(models.Model):
     research = models.ForeignKey(Research, on_delete=models.CASCADE)
     when = models.DateTimeField(verbose_name="kedy", blank=False)
     capacity = models.IntegerField(verbose_name="kapacita")
     comment = models.TextField(blank=True)
     location = models.TextField(blank=False, null=True)
-    url = models.URLField(blank=False, null=True)
+    url = models.URLField(blank=False, null=True)  # TODO: rename this column to prevent interference with serializer
 
     class Meta:
         constraints = [
             models.CheckConstraint(check=Q(url__isnull=True) ^ Q(location__isnull=True),
                                    name="one_of_url_location_null")
         ]
+
+    def __str__(self):
+        return " / ".join((self.research.name, self.when.isoformat(timespec="minutes")))
 
     def get_type(self):
         if self.location is None:
@@ -100,4 +95,5 @@ class Participation(models.Model):
 
     recipient_type = models.CharField(verbose_name="typ príjemcu", max_length=2, choices=RecipientType.choices)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
-    participant_token_encrypted = models.BinaryField()
+    has_participated = models.BooleanField(default=False, blank=True, null=False)
+    token_encrypted = models.BinaryField()
