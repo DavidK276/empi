@@ -94,7 +94,7 @@ class ParticipationViewSet(mixins.ListModelMixin,
             _, encrypted_key = research.get_keypair()
             private_key = RSA.import_key(encrypted_key, "unprotected")
 
-            participations = Participation.objects.all()
+            participations = Participation.objects.filter(appointment__research=research)
             return Response(ParticipationViewSet.get_participations_for_key(private_key, participations, request))
         except Research.DoesNotExist:
             raise exceptions.NotFound('the specified research does not exist')
