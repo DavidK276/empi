@@ -1,11 +1,18 @@
 import os
+from collections.abc import Sequence
+from typing import Self, Optional
 
+from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
+from Crypto.PublicKey.RSA import RsaKey
+from Crypto.Random import get_random_bytes
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
+from .fields import SeparatedBinaryField
 from .utils.constants import *
 from .utils.keys import export_privkey, get_keydir
 
@@ -86,14 +93,58 @@ class Appointment(models.Model):
             return AppointmentType.ONLINE
         return AppointmentType.IN_PERSON
 
+    def get_pubkeys(self, user) -> Sequence[RsaKey]:
+        pubkeys = []
+        public_key_bytes, _ = self.research.get_keypair()
+        pubkeys.append(RSA.import_key(public_key_bytes))
+
+        public_key_bytes, _ = user.get_keypair()
+        pubkeys.append(RSA.import_key(public_key_bytes))
+
+        admins = get_user_model().objects.filter(is_staff=True)
+        for admin in admins:
+            public_key_bytes, _ = admin.get_keypair()
+            pubkeys.append(RSA.import_key(public_key_bytes))
+        return pubkeys
+
+
+class EncryptedToken(models.Model):
+    session_keys = SeparatedBinaryField(length=16)
+    nonce = models.BinaryField()
+    tag = models.BinaryField()
+    ciphertext = models.BinaryField()
+
+    @classmethod
+    def encrypt(cls, token: str, pubkeys: Sequence[RsaKey]) -> Self:
+        session_key = get_random_bytes(16)
+        enc_session_keys = []
+        for pubkey in pubkeys:
+            cipher_rsa = PKCS1_OAEP.new(pubkey)
+            enc_session_keys.append(cipher_rsa.encrypt(session_key))
+
+        cipher_aes = AES.new(session_key, AES.MODE_EAX)
+        ciphertext, tag = cipher_aes.encrypt_and_digest(token.encode('utf-8'))
+
+        del session_key  # the session key is sensitive, so delete it immediately
+        return cls(session_keys=enc_session_keys, nonce=cipher_aes.nonce, tag=tag, ciphertext=ciphertext)
+
+    def decrypt(self, private_key: RsaKey) -> Optional[str]:
+        cipher_rsa = PKCS1_OAEP.new(private_key)
+        for enc_key in self.session_keys:
+            try:
+                session_key = cipher_rsa.decrypt(enc_key)
+            except ValueError:
+                continue
+            cipher_aes = AES.new(session_key, AES.MODE_EAX, self.nonce)
+            token_data = cipher_aes.decrypt_and_verify(self.ciphertext, self.tag)
+            token = token_data.decode('utf-8')
+
+            del session_key  # the session key is sensitive, so delete it immediately
+            return token
+        return None
+
 
 class Participation(models.Model):
-    class RecipientType(models.TextChoices):
-        LECTURER = 'LE', 'vyučujúci'
-        STUDENT = 'ST', 'študent'
-        EXPERT = 'EX', 'expert'
-
-    recipient_type = models.CharField(verbose_name="typ príjemcu", max_length=2, choices=RecipientType.choices)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     has_participated = models.BooleanField(default=False, blank=True, null=False)
-    token_encrypted = models.BinaryField()
+    encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=False)
