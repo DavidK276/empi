@@ -109,14 +109,15 @@ class Appointment(models.Model):
 
 
 class EncryptedToken(models.Model):
-    session_keys = SeparatedBinaryField(length=16)
+    __AES_KEY_LENGTH = 16
+    session_keys = SeparatedBinaryField(length=__AES_KEY_LENGTH)
     nonce = models.BinaryField()
     tag = models.BinaryField()
     ciphertext = models.BinaryField()
 
     @classmethod
     def new(cls, token: str, pubkeys: Sequence[RsaKey]) -> Self:
-        session_key = get_random_bytes(16)
+        session_key = get_random_bytes(cls.__AES_KEY_LENGTH)
         enc_session_keys = []
         for pubkey in pubkeys:
             cipher_rsa = PKCS1_OAEP.new(pubkey)
@@ -134,6 +135,8 @@ class EncryptedToken(models.Model):
             try:
                 session_key = cipher_rsa.decrypt(enc_key)
             except ValueError:
+                continue
+            if len(session_key) != self.__AES_KEY_LENGTH:  # anything else means decryption failed
                 continue
             cipher_aes = AES.new(session_key, AES.MODE_EAX, self.nonce)
             try:
