@@ -51,7 +51,7 @@ class ParticipationViewSet(mixins.ListModelMixin,
             appointment: Appointment = serializer.validated_data['appointment']
             pubkeys = appointment.get_pubkeys(request.user)
 
-            encrypted_token = EncryptedToken.encrypt(token, pubkeys)
+            encrypted_token = EncryptedToken.new(token, pubkeys)
             encrypted_token.save()
 
             participation = Participation(appointment=appointment, encrypted_token=encrypted_token)

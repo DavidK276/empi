@@ -58,7 +58,7 @@ class EmpiUser(AbstractUser):
 
 
 @receiver(post_delete, sender=EmpiUser)
-def keys_delete(sender, instance, **kwargs):
+def keys_delete(_sender, instance, **_kwargs):
     key_dir = get_keydir(instance.username)
     if key_dir.is_dir():
         if (key_dir / "receiver.pem").is_file():

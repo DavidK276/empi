@@ -56,14 +56,14 @@ class Research(models.Model):
 
 
 @receiver(post_save, sender=Research)
-def check_and_create_keys(sender, instance, **kwargs):
+def check_and_create_keys(_sender, instance, **_kwargs):
     key_dir = get_keydir(instance.name)
     if not key_dir.is_dir():
         Research.new_key(instance.name)
 
 
 @receiver(post_delete, sender=Research)
-def keys_delete(sender, instance, **kwargs):
+def keys_delete(_sender, instance, **_kwargs):
     key_dir = get_keydir(instance.name)
     os.unlink(key_dir / "receiver.pem")
     os.unlink(key_dir / "privatekey.der")
@@ -115,7 +115,7 @@ class EncryptedToken(models.Model):
     ciphertext = models.BinaryField()
 
     @classmethod
-    def encrypt(cls, token: str, pubkeys: Sequence[RsaKey]) -> Self:
+    def new(cls, token: str, pubkeys: Sequence[RsaKey]) -> Self:
         session_key = get_random_bytes(16)
         enc_session_keys = []
         for pubkey in pubkeys:
@@ -136,7 +136,10 @@ class EncryptedToken(models.Model):
             except ValueError:
                 continue
             cipher_aes = AES.new(session_key, AES.MODE_EAX, self.nonce)
-            token_data = cipher_aes.decrypt_and_verify(self.ciphertext, self.tag)
+            try:
+                token_data = cipher_aes.decrypt_and_verify(self.ciphertext, self.tag)
+            except ValueError:
+                continue
             token = token_data.decode('utf-8')
 
             del session_key  # the session key is sensitive, so delete it immediately

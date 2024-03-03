@@ -74,5 +74,5 @@ class Attachment(models.Model):
 
 
 @receiver(post_delete, sender=Attachment)
-def attachment_delete(sender, instance, **kwargs):
+def attachment_delete(_sender, instance, **_kwargs):
     os.unlink(instance.file.file.name)
