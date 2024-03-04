@@ -84,10 +84,10 @@ class Attribute(models.Model):
 
 class AttributeValue(models.Model):
     attribute = models.ForeignKey(Attribute, verbose_name="atribút", on_delete=models.CASCADE)
-    name = models.CharField(verbose_name="hodnota", max_length=150, blank=False)
+    value = models.CharField(verbose_name="hodnota", max_length=150, blank=False)
 
     def __str__(self):
-        return "%s > %s" % (str(self.attribute), self.name.capitalize())
+        return "%s > %s" % (str(self.attribute), self.value.capitalize())
 
 
 def generate_token():

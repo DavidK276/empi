@@ -22,6 +22,7 @@ class Research(models.Model):
     url = models.URLField()  # TODO: rename this column to prevent interference with serializer
     points = models.PositiveIntegerField(verbose_name="body")
     created = models.DateTimeField(auto_now_add=True)
+    chosen_attribute_values = models.ManyToManyField('users.AttributeValue', blank=True)
 
     def __str__(self):
         return self.name
@@ -57,14 +58,14 @@ class Research(models.Model):
 
 @receiver(post_save, sender=Research)
 def check_and_create_keys(_sender, instance, **_kwargs):
-    key_dir = get_keydir(instance.name)
+    key_dir = get_keydir(instance.value)
     if not key_dir.is_dir():
-        Research.new_key(instance.name)
+        Research.new_key(instance.value)
 
 
 @receiver(post_delete, sender=Research)
 def keys_delete(_sender, instance, **_kwargs):
-    key_dir = get_keydir(instance.name)
+    key_dir = get_keydir(instance.value)
     os.unlink(key_dir / "receiver.pem")
     os.unlink(key_dir / "privatekey.der")
     if len(os.listdir(key_dir)) == 0:

@@ -16,8 +16,11 @@ from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
 from .fields import SeparatedValuesField
 
+from research import models as research_models
+
 
 class Email(models.Model):
+    research = models.ForeignKey(research_models.Research, on_delete=models.CASCADE)
     recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
     subject = models.CharField(max_length=78, verbose_name="predmet")
     body = models.TextField(verbose_name="telo")
@@ -53,9 +56,9 @@ class Attachment(models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         now = datetime.now()
         year, month = now.year, now.month
-        directory = self.file.file.name.parent
+        directory = self.file.file.value.parent
         destination = directory / str(year) / str(month)
-        self.file.file.name = destination
+        self.file.file.value = destination
         super().save(force_insert, force_update, using, update_fields)
 
     def get_mimebase(self):
@@ -75,4 +78,4 @@ class Attachment(models.Model):
 
 @receiver(post_delete, sender=Attachment)
 def attachment_delete(_sender, instance, **_kwargs):
-    os.unlink(instance.file.file.name)
+    os.unlink(instance.file.file.value)

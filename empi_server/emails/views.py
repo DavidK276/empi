@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins, permissions
 from rest_framework.response import Response
 
 from django.forms import modelform_factory
@@ -32,6 +32,10 @@ class EmailViewSet(viewsets.ModelViewSet):
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AttachmentViewSet(viewsets.ModelViewSet):
+class AttachmentViewSet(mixins.CreateModelMixin,
+                        mixins.RetrieveModelMixin,
+                        mixins.ListModelMixin,
+                        mixins.DestroyModelMixin,
+                        viewsets.GenericViewSet):
     queryset = Attachment.objects.get_queryset().order_by('pk')
     serializer_class = AttachmentSerializer

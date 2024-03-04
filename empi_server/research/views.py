@@ -79,7 +79,7 @@ class ParticipationViewSet(mixins.ListModelMixin,
 
         password = serializer.validated_data['current_password']
         if not request.user.check_password(password):
-            return Response({'status': 'invalid password'}, status=status.HTTP_401_UNAUTHORIZED)
+            raise exceptions.AuthenticationFailed('invalid password')
 
         participations = Participation.objects.all()
         _, encrypted_key = request.user.get_keypair()
