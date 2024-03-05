@@ -75,7 +75,7 @@ class Attribute(models.Model):
         MULTIPLE_CHOICE = 'MC', 'Výber viacero hodnôt'
         ENTER_TEXT = 'ET', 'Vpis textu'
 
-    name = models.CharField(max_length=150, blank=False)
+    name = models.CharField(max_length=150, blank=False, unique=True)
     type = models.CharField(max_length=2, choices=AttributeType.choices, default=AttributeType.SINGLE_CHOICE)
 
     def __str__(self):
@@ -83,7 +83,7 @@ class Attribute(models.Model):
 
 
 class AttributeValue(models.Model):
-    attribute = models.ForeignKey(Attribute, verbose_name="atribút", on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute, verbose_name="atribút", related_name="values", on_delete=models.CASCADE)
     value = models.CharField(verbose_name="hodnota", max_length=150, blank=False)
 
     def __str__(self):
@@ -106,5 +106,5 @@ class Participant(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
     acad_year = models.CharField(verbose_name="akademický rok", max_length=9, blank=False, null=False,
                                  validators=[validate_acad_year])
-    chosen_attribute_values = models.ManyToManyField(AttributeValue, blank=True)
+    chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)

@@ -23,7 +23,7 @@ router.register(r'permission', PermissionViewSet)
 router.register(r'user', users_views.UserViewSet)
 router.register(r'participant', users_views.ParticipantViewSet)
 router.register(r'attr', users_views.AttributeViewSet)
-router.register(r'attr-value', users_views.AttributeValueViewSet)
+# router.register(r'attr-value', users_views.AttributeValueViewSet)
 
 router.register(r'email', emails_views.EmailViewSet)
 router.register(r'attachment', emails_views.AttachmentViewSet)

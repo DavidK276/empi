@@ -2,19 +2,32 @@ from collections.abc import Iterable
 from http import HTTPMethod
 
 from django.contrib.auth.models import AnonymousUser
-from rest_framework import viewsets, status, mixins, exceptions
+from rest_framework import viewsets, status, mixins, exceptions, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import EmpiUser, Participant, Attribute, AttributeValue
 from .serializers import UserSerializer, PasswordSerializer, ParticipantSerializer, AttributeSerializer, \
     AttributeValueSerializer
-from ..research.models import Research
+
+from research.models import Research
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = EmpiUser.objects.get_queryset().order_by('date_joined')
     serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        user: EmpiUser = serializer.instance
+        user.set_password(serializer.validated_data['password'])
+        user.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(detail=True, name="Change password", methods=[HTTPMethod.POST], serializer_class=PasswordSerializer)
     def change_password(self, request, pk=None):
@@ -58,6 +71,20 @@ class AttributeViewSet(viewsets.ModelViewSet):
             attribute_obj["values"] = values_obj
             attributes_obj[attribute.name] = attribute_obj
         return attributes_obj
+
+    @action(detail=False, name="Get attributes for participant", methods=[HTTPMethod.GET])
+    def for_participant(self, request):
+        if isinstance(request.user, AnonymousUser):
+            raise exceptions.AuthenticationFailed('only viewing own attributes is allowed')
+        try:
+            participant: Participant = Participant.objects.get(user=request.user.pk)
+        except Participant.DoesNotExist:
+            raise exceptions.NotFound('user is not a participant')
+        chosen_values = participant.chosen_attribute_values.all()
+        attributes = Attribute.objects.all()
+        serializer = AttributeSerializer(attributes, many=True, context={'request': request})
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, headers=headers)
 
     @action(detail=False, name="Get attributes for user", methods=[HTTPMethod.GET])
     def participant(self, request):
