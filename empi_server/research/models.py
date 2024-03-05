@@ -11,6 +11,7 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+from users import models as user_models
 
 from .fields import SeparatedBinaryField
 from .utils.constants import *
@@ -22,7 +23,7 @@ class Research(models.Model):
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body")
     created = models.DateTimeField(auto_now_add=True)
-    chosen_attribute_values = models.ManyToManyField('users.AttributeValue', blank=True)
+    chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
 
     def __str__(self):
         return self.name
@@ -52,20 +53,19 @@ class Research(models.Model):
             public_key = keyfile.read()
         with open(key_dir / "privatekey.der", "rb") as keyfile:
             private_key = keyfile.read()
-
         return public_key, private_key
 
 
 @receiver(post_save, sender=Research)
-def check_and_create_keys(_sender, instance, **_kwargs):
-    key_dir = get_keydir(instance.value)
+def check_and_create_keys(sender, instance, created, **kwargs):
+    key_dir = get_keydir(instance.name)
     if not key_dir.is_dir():
-        Research.new_key(instance.value)
+        Research.new_key(instance.name)
 
 
 @receiver(post_delete, sender=Research)
-def keys_delete(_sender, instance, **_kwargs):
-    key_dir = get_keydir(instance.value)
+def keys_delete(sender, instance, created, **kwargs):
+    key_dir = get_keydir(instance.name)
     os.unlink(key_dir / "receiver.pem")
     os.unlink(key_dir / "privatekey.der")
     if len(os.listdir(key_dir)) == 0:

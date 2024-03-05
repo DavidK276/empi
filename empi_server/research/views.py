@@ -49,18 +49,17 @@ class ParticipationViewSet(mixins.ListModelMixin,
 
         try:
             appointment: Appointment = serializer.validated_data['appointment']
-            pubkeys = appointment.get_pubkeys(request.user)
-
-            encrypted_token = EncryptedToken.new(token, pubkeys)
-            encrypted_token.save()
-
-            participation = Participation(appointment=appointment, encrypted_token=encrypted_token)
-            participation.save()
-
-            return Response(status=status.HTTP_200_OK)
-
         except Appointment.DoesNotExist:
             raise exceptions.ParseError('the specified appointment was not found')
+        pubkeys = appointment.get_pubkeys(request.user)
+
+        encrypted_token = EncryptedToken.new(token, pubkeys)
+        encrypted_token.save()
+
+        participation = Participation(appointment=appointment, encrypted_token=encrypted_token)
+        participation.save()
+
+        return Response(status=status.HTTP_200_OK)
 
     @staticmethod
     def get_participations_for_key(private_key: RsaKey, participations: Iterable[Participation], request):
