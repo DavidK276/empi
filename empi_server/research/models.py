@@ -19,7 +19,7 @@ from .utils.keys import export_privkey, get_keydir
 
 class Research(models.Model):
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
-    url = models.URLField()  # TODO: rename this column to prevent interference with serializer
+    info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body")
     created = models.DateTimeField(auto_now_add=True)
     chosen_attribute_values = models.ManyToManyField('users.AttributeValue', blank=True)
