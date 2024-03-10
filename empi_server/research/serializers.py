@@ -1,16 +1,14 @@
 from rest_framework import serializers
 
 from users import models as user_models
-from users.serializers import AttributeValueSerializer
 from . import models
 
 
 class ResearchSerializer(serializers.HyperlinkedModelSerializer):
-    chosen_attribute_values = AttributeValueSerializer(many=True)
 
     class Meta:
         model = models.Research
-        fields = "__all__"
+        exclude = ["chosen_attribute_values"]
 
     def create(self, validated_data):
         chosen_values = validated_data.pop("chosen_attribute_values")

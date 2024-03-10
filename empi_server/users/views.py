@@ -12,7 +12,6 @@ from .serializers import (
     PasswordSerializer,
     ParticipantSerializer,
     AttributeSerializer,
-    AttributeValueSerializer,
 )
 
 from research.models import Research
@@ -61,67 +60,34 @@ class AttributeViewSet(viewsets.ModelViewSet):
     queryset = Attribute.objects.get_queryset().order_by("pk")
     serializer_class = AttributeSerializer
 
-    @staticmethod
-    def chosen_values_to_dict(chosen_values: Iterable[AttributeValue]):
-        attributes_obj: dict[str:dict] = {}
-        for chosen_value in chosen_values:
-            attribute = Attribute.objects.get(pk=chosen_value.attribute)
-            values = AttributeValue.objects.filter(attribute=attribute)
-            attribute_obj = {"type": attribute.type}
-            values_obj = {}
-            for value in values:
-                values_obj[value.value] = value == chosen_value
-            attribute_obj["values"] = values_obj
-            attributes_obj[attribute.name] = attribute_obj
-        return attributes_obj
-
+    # TODO: implement the POST method for this action
     @action(
-        detail=False, name="Get attributes for participant", methods=[HTTPMethod.GET]
+        detail=False,
+        name="Get attributes for user",
+        methods=[HTTPMethod.GET],
+        url_path="participant/(?P<participant_pk>[0-9]+/?)",
     )
-    def for_participant(self, request):
-        if isinstance(request.user, AnonymousUser):
-            raise exceptions.AuthenticationFailed(
-                "only viewing own attributes is allowed"
-            )
-        # try:
-        #     participant: Participant = Participant.objects.get(user=request.user.pk)
-        # except Participant.DoesNotExist:
-        #     raise exceptions.NotFound("user is not a participant")
-        # chosen_values = participant.chosen_attribute_values.all()
-        attributes = Attribute.objects.all()
-        serializer = AttributeSerializer(
-            attributes, many=True, context={"request": request}
-        )
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, headers=headers)
-
-    @action(detail=False, name="Get attributes for user", methods=[HTTPMethod.GET])
-    def participant(self, request):
-        if isinstance(request.user, AnonymousUser) or request.user == self.get_object():
-            raise exceptions.AuthenticationFailed(
-                "only viewing own attributes is allowed"
-            )
-        pk = request.GET.get("participant", None)
+    def participant(self, request, participant_pk=None):
         try:
-            participant: Participant = Participant.objects.get(pk=pk)
+            participant: Participant = Participant.objects.get(pk=participant_pk)
         except Participant.DoesNotExist:
             raise exceptions.NotFound("participant does not exist")
         return Response(
-            self.chosen_values_to_dict(participant.chosen_attribute_values.all())
+            AttributeValue.group_by_attribute(participant.chosen_attribute_values.all())
         )
 
-    @action(detail=False, name="Get attributes for research", methods=[HTTPMethod.GET])
-    def research(self, request):
-        pk = request.GET.get("research", None)
+    # TODO: implement the POST method for this action
+    @action(
+        detail=False,
+        name="Attributes for research",
+        methods=[HTTPMethod.GET],
+        url_path="research/(?P<research_pk>[0-9]+/?)",
+    )
+    def research(self, request, research_pk=None):
         try:
-            research: Research = Research.objects.get(pk=pk)
+            research: Research = Research.objects.get(pk=research_pk)
         except Research.DoesNotExist:
             raise exceptions.NotFound("research does not exist")
         return Response(
-            self.chosen_values_to_dict(research.chosen_attribute_values.all())
+            AttributeValue.group_by_attribute(research.chosen_attribute_values.all())
         )
-
-
-class AttributeValueViewSet(viewsets.ModelViewSet):
-    queryset = AttributeValue.objects.get_queryset().order_by("pk")
-    serializer_class = AttributeValueSerializer

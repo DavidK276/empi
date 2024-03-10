@@ -1,11 +1,14 @@
 import os
 import random
+from collections.abc import Mapping, Sequence, Iterable
 from string import ascii_uppercase, digits
+from typing import Self
 
 from Crypto.PublicKey import RSA
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django.db.models.signals import post_delete
+from django.db.models import QuerySet
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
 from .utils import constants
@@ -18,6 +21,20 @@ class EmpiUserManager(UserManager):
 
 
 class EmpiUser(AbstractUser):
+
+    @staticmethod
+    def new_key(username, passphrase: str):
+        key = RSA.generate(2048)
+        encrypted_key = export_privkey(key, passphrase)
+
+        key_dir = get_keydir(username)
+        key_dir.mkdir(mode=0o700, parents=True)
+        with open(key_dir / "privatekey.der", "wb") as keyfile:
+            keyfile.write(encrypted_key)
+
+        public_key = key.publickey().export_key(format="PEM")
+        with open(key_dir / "receiver.pem", "wb") as keyfile:
+            keyfile.write(public_key)
 
     def get_keypair(self) -> (bytes, bytes):
         """
@@ -55,6 +72,13 @@ class EmpiUser(AbstractUser):
             return True
         except Participant.DoesNotExist:
             return False
+
+
+@receiver(post_save, sender=EmpiUser)
+def check_and_create_keys(sender, instance, created, **kwargs):
+    key_dir = get_keydir(instance.name)
+    if not key_dir.is_dir():
+        EmpiUser.new_key(instance.name)
 
 
 @receiver(post_delete, sender=EmpiUser)
@@ -102,6 +126,28 @@ class AttributeValue(models.Model):
 
     def __str__(self):
         return "%s > %s" % (str(self.attribute), self.value.capitalize())
+
+    @classmethod
+    def group_by_attribute(
+        cls, queryset: Iterable[Self], all=False
+    ) -> Mapping[str : Sequence[str]]:
+        result = {}
+        if all:
+            for attr in Attribute.objects.all():
+                result[attr.name] = []
+        for value in queryset:
+            result.setdefault(value.attribute.name, [])
+            result[value.attribute.name].append(value.value)
+        return result
+
+    @classmethod
+    def from_groups(cls, groups: Mapping[str : Sequence[str]]) -> Iterable[Self]:
+        result = []
+        for name, values in groups.items():
+            result.extend(
+                cls.objects.filter(attribute__name=name).filter(value__in=values)
+            )
+        return result
 
 
 def generate_token():

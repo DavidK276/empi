@@ -2,6 +2,7 @@ from Crypto.PublicKey import RSA
 from rest_framework import serializers, validators
 
 from . import models
+from .models import Attribute
 from .utils.keys import export_privkey, get_keydir
 
 
@@ -23,43 +24,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "date_joined",
         ]
 
-    @staticmethod
-    def new_key(username, passphrase: str):
-        key = RSA.generate(2048)
-        encrypted_key = export_privkey(key, passphrase)
-
-        key_dir = get_keydir(username)
-        key_dir.mkdir(mode=0o700, parents=True)
-        with open(key_dir / "privatekey.der", "wb") as keyfile:
-            keyfile.write(encrypted_key)
-
-        public_key = key.publickey().export_key(format="PEM")
-        with open(key_dir / "receiver.pem", "wb") as keyfile:
-            keyfile.write(public_key)
-
     def create(self, validated_data):
         user = super().create(validated_data)
         password = self.validated_data["password"]
         user.set_password(password)
         user.save()
-        self.new_key(user.username, password)
         return user
 
 
 class PasswordSerializer(serializers.Serializer):
     current_password = serializers.CharField(max_length=100, write_only=True)
     new_password = serializers.CharField(max_length=100, write_only=True, default=None)
-
-
-class AttributeValueSerializer(serializers.ModelSerializer):
-    attribute = serializers.HyperlinkedRelatedField(
-        queryset=models.Attribute.objects.get_queryset(), view_name="attribute-detail"
-    )
-    value = serializers.CharField()
-
-    class Meta:
-        model = models.AttributeValue
-        fields = ["attribute", "value"]
 
 
 class AttributeValueSimpleSerializer(serializers.BaseSerializer):
@@ -124,31 +99,40 @@ class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
             )
         ],
     )
-    chosen_attribute_values = AttributeValueSerializer(many=True)
 
     class Meta:
         model = models.Participant
-        fields = "__all__"
+        exclude = ["chosen_attribute_values"]
+
+    @property
+    def data(self):
+        data = super().data
+        return data
+
+    @property
+    def validated_data(self):
+        data = super().validated_data
+        return data
 
     def create(self, validated_data):
-        chosen_values = validated_data.pop("chosen_attribute_values")
-        attributes = {}
-        for chosen_value in chosen_values:
-            pk = chosen_value["attribute"].pk
-            attributes.setdefault(pk, set())
-            attributes[pk].add(chosen_value["value"])
-
         instance = super().create(validated_data)
-        for pk, new_values in attributes.items():
-            for value in new_values:
-                try:
-                    value = models.AttributeValue.objects.get(
-                        attribute_id=pk, value=value
-                    )
-                    instance.chosen_attribute_values.add(value)
-                except models.AttributeValue.DoesNotExist:
-                    pass
-        instance.save()
+        if chosen_values := validated_data.pop("chosen_attribute_values", None):
+            attributes = {}
+            for chosen_value in chosen_values:
+                pk = chosen_value["attribute"].pk
+                attributes.setdefault(pk, set())
+                attributes[pk].add(chosen_value["value"])
+
+            for pk, new_values in attributes.items():
+                for value in new_values:
+                    try:
+                        value = models.AttributeValue.objects.get(
+                            attribute_id=pk, value=value
+                        )
+                        instance.chosen_attribute_values.add(value)
+                    except models.AttributeValue.DoesNotExist:
+                        pass
+            instance.save()
         return instance
 
     def update(self, instance, validated_data):
