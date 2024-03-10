@@ -1,6 +1,6 @@
 import os
+import uuid
 
-# import uuid
 from collections.abc import Sequence
 from typing import Self, Optional
 
@@ -21,7 +21,7 @@ from .utils.keys import export_privkey, get_keydir
 
 
 class Research(models.Model):
-    # uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
+    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body")
@@ -83,14 +83,12 @@ class Appointment(models.Model):
     capacity = models.IntegerField(verbose_name="kapacita")
     comment = models.TextField(blank=True)
     location = models.TextField(blank=False, null=True)
-    url = models.URLField(
-        blank=False, null=True
-    )  # TODO: rename this column to prevent interference with serializer
+    info_url = models.URLField(blank=False, null=True)
 
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=Q(url__isnull=True) ^ Q(location__isnull=True),
+                check=Q(info_url__isnull=True) ^ Q(location__isnull=True),
                 name="one_of_url_location_null",
             )
         ]
