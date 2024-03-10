@@ -41,6 +41,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         user = super().create(validated_data)
         password = self.validated_data["password"]
         user.set_password(password)
+        user.save()
         self.new_key(user.username, password)
         return user
 
