@@ -71,23 +71,34 @@ def keys_delete(sender, instance, **kwargs):
 
 class Attribute(models.Model):
     class AttributeType(models.TextChoices):
-        SINGLE_CHOICE = 'SC', 'Výber jednej hodnoty'
-        MULTIPLE_CHOICE = 'MC', 'Výber viacero hodnôt'
-        ENTER_TEXT = 'ET', 'Vpis textu'
+        SINGLE_CHOICE = "SC", "Výber jednej hodnoty"
+        MULTIPLE_CHOICE = "MC", "Výber viacero hodnôt"
+        ENTER_TEXT = "ET", "Vpis textu"
 
     name = models.CharField(max_length=150, blank=False, unique=True)
-    type = models.CharField(max_length=2, choices=AttributeType.choices, default=AttributeType.SINGLE_CHOICE)
+    type = models.CharField(
+        max_length=2, choices=AttributeType.choices, default=AttributeType.SINGLE_CHOICE
+    )
 
     def __str__(self):
         return self.name.capitalize()
 
 
 class AttributeValue(models.Model):
-    attribute = models.ForeignKey(Attribute, verbose_name="atribút", related_name="values", on_delete=models.CASCADE)
+    attribute = models.ForeignKey(
+        Attribute,
+        verbose_name="atribút",
+        related_name="values",
+        on_delete=models.CASCADE,
+    )
     value = models.CharField(verbose_name="hodnota", max_length=150, blank=False)
 
     class Meta:
-        constraints = [models.UniqueConstraint("attribute", "value", name="unique_value_per_attribute")]
+        constraints = [
+            models.UniqueConstraint(
+                "attribute", "value", name="unique_value_per_attribute"
+            )
+        ]
 
     def __str__(self):
         return "%s > %s" % (str(self.attribute), self.value.capitalize())
@@ -96,9 +107,9 @@ class AttributeValue(models.Model):
 def generate_token():
     alphabet = ascii_uppercase + digits
     while True:
-        part1 = ''.join(random.choice(alphabet) for _ in range(4))
-        part2 = ''.join(random.choice(alphabet) for _ in range(4))
-        result = '-'.join([part1, part2])
+        part1 = "".join(random.choice(alphabet) for _ in range(4))
+        part2 = "".join(random.choice(alphabet) for _ in range(4))
+        result = "-".join([part1, part2])
         try:
             Participant.objects.get(token=result)
         except Participant.DoesNotExist:
@@ -107,7 +118,16 @@ def generate_token():
 
 class Participant(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
-    acad_year = models.CharField(verbose_name="akademický rok", max_length=9, blank=False, null=False,
-                                 validators=[validate_acad_year])
-    chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
-    token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)
+    acad_year = models.CharField(
+        verbose_name="akademický rok",
+        max_length=9,
+        blank=False,
+        null=False,
+        validators=[validate_acad_year],
+    )
+    chosen_attribute_values = models.ManyToManyField(
+        AttributeValue, related_name="attributes", blank=True
+    )
+    token = models.CharField(
+        default=generate_token, unique=True, null=False, editable=False, max_length=9
+    )

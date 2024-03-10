@@ -1,4 +1,6 @@
 import os
+
+# import uuid
 from collections.abc import Sequence
 from typing import Self, Optional
 
@@ -19,11 +21,14 @@ from .utils.keys import export_privkey, get_keydir
 
 
 class Research(models.Model):
+    # uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body")
     created = models.DateTimeField(auto_now_add=True)
-    chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
+    chosen_attribute_values = models.ManyToManyField(
+        user_models.AttributeValue, blank=True
+    )
 
     def __str__(self):
         return self.name
@@ -78,12 +83,16 @@ class Appointment(models.Model):
     capacity = models.IntegerField(verbose_name="kapacita")
     comment = models.TextField(blank=True)
     location = models.TextField(blank=False, null=True)
-    url = models.URLField(blank=False, null=True)  # TODO: rename this column to prevent interference with serializer
+    url = models.URLField(
+        blank=False, null=True
+    )  # TODO: rename this column to prevent interference with serializer
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=Q(url__isnull=True) ^ Q(location__isnull=True),
-                                   name="one_of_url_location_null")
+            models.CheckConstraint(
+                check=Q(url__isnull=True) ^ Q(location__isnull=True),
+                name="one_of_url_location_null",
+            )
         ]
 
     def __str__(self):
@@ -125,10 +134,15 @@ class EncryptedToken(models.Model):
             enc_session_keys.append(cipher_rsa.encrypt(session_key))
 
         cipher_aes = AES.new(session_key, AES.MODE_EAX)
-        ciphertext, tag = cipher_aes.encrypt_and_digest(token.encode('utf-8'))
+        ciphertext, tag = cipher_aes.encrypt_and_digest(token.encode("utf-8"))
 
         del session_key  # the session key is sensitive, so delete it immediately
-        return cls(session_keys=enc_session_keys, nonce=cipher_aes.nonce, tag=tag, ciphertext=ciphertext)
+        return cls(
+            session_keys=enc_session_keys,
+            nonce=cipher_aes.nonce,
+            tag=tag,
+            ciphertext=ciphertext,
+        )
 
     def decrypt(self, private_key: RsaKey) -> Optional[str]:
         cipher_rsa = PKCS1_OAEP.new(private_key)
@@ -137,14 +151,16 @@ class EncryptedToken(models.Model):
                 session_key = cipher_rsa.decrypt(enc_key)
             except ValueError:
                 continue
-            if len(session_key) != self.__AES_KEY_LENGTH:  # anything else means decryption failed
+            if (
+                len(session_key) != self.__AES_KEY_LENGTH
+            ):  # anything else means decryption failed
                 continue
             cipher_aes = AES.new(session_key, AES.MODE_EAX, self.nonce)
             try:
                 token_data = cipher_aes.decrypt_and_verify(self.ciphertext, self.tag)
             except ValueError:
                 continue
-            token = token_data.decode('utf-8')
+            token = token_data.decode("utf-8")
 
             del session_key  # the session key is sensitive, so delete it immediately
             return token
@@ -154,4 +170,6 @@ class EncryptedToken(models.Model):
 class Participation(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     has_participated = models.BooleanField(default=False, blank=True, null=False)
-    encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=False)
+    encrypted_token = models.OneToOneField(
+        EncryptedToken, on_delete=models.CASCADE, blank=True, null=False
+    )

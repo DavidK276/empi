@@ -9,7 +9,7 @@ from research import views as research_views
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        fields = '__all__'
+        fields = "__all__"
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
@@ -18,22 +18,22 @@ class PermissionViewSet(viewsets.ModelViewSet):
 
 
 router = routers.DefaultRouter()
-router.register(r'permission', PermissionViewSet)
+router.register(r"permission", PermissionViewSet)
 
-router.register(r'user', users_views.UserViewSet)
-router.register(r'participant', users_views.ParticipantViewSet)
-router.register(r'attr', users_views.AttributeViewSet)
+router.register(r"user", users_views.UserViewSet)
+router.register(r"participant", users_views.ParticipantViewSet)
+router.register(r"attr", users_views.AttributeViewSet)
 # router.register(r'attr-value', users_views.AttributeValueViewSet)
 
-router.register(r'email', emails_views.EmailViewSet)
-router.register(r'attachment', emails_views.AttachmentViewSet)
+router.register(r"email", emails_views.EmailViewSet)
+router.register(r"attachment", emails_views.AttachmentViewSet)
 
-router.register(r'research', research_views.ResearchViewSet)
-router.register(r'appointment', research_views.AppointmentViewSet)
-router.register(r'participation', research_views.ParticipationViewSet)
+router.register(r"research", research_views.ResearchViewSet)
+router.register(r"appointment", research_views.AppointmentViewSet)
+router.register(r"participation", research_views.ParticipationViewSet)
 
 urlpatterns = [
-    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path("auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
 
 urlpatterns += router.urls

@@ -22,18 +22,16 @@ class SeparatedBinaryField(models.BinaryField):
             return value
         if value is None:
             return None
-        return [value[i:i + self.length] for i in range(0, len(value), self.length)]
+        return [value[i : i + self.length] for i in range(0, len(value), self.length)]
 
     def from_db_value(self, value, expression, connection):
         if value is None:
             return None
-        return [value[i:i + self.length] for i in range(0, len(value), self.length)]
+        return [value[i : i + self.length] for i in range(0, len(value), self.length)]
 
     def get_prep_value(self, value):
-        return b''.join(value)
+        return b"".join(value)
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
         return self.get_prep_value(value)
-
-

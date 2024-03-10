@@ -3,7 +3,7 @@ from django.db import models
 
 class SeparatedValuesField(models.Field):
 
-    def __init__(self, *args, field=models.Field, token=',', **kwargs):
+    def __init__(self, *args, field=models.Field, token=",", **kwargs):
         assert field is not None
         self.token = token
         self.field = field
@@ -11,7 +11,7 @@ class SeparatedValuesField(models.Field):
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        if self.token != ',':
+        if self.token != ",":
             kwargs["token"] = self.token
         return name, path, args, kwargs
 
@@ -46,5 +46,3 @@ class SeparatedValuesField(models.Field):
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
         return self.get_prep_value(value)
-
-
