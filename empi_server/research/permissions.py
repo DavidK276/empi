@@ -18,4 +18,4 @@ class CreateOnly(BasePermission):
 class AllowAllExceptList(BasePermission):
 
     def has_permission(self, request, view):
-        return request.action != 'list'
+        return view.action != 'list'
