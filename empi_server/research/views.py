@@ -23,6 +23,22 @@ class ResearchViewSet(viewsets.ModelViewSet):
     queryset = Research.objects.get_queryset().order_by("-created")
     serializer_class = ResearchSerializer
 
+    @action(
+        detail=True,
+        name="Change password",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+    )
+    def change_password(self, request, pk=None):
+        research: Research = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        current_password = serializer.validated_data["current_password"]
+        new_password = serializer.validated_data["new_password"]
+        research.change_password(current_password, new_password)
+        return Response(status=status.HTTP_200_OK)
+
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.get_queryset().order_by("pk")
@@ -62,32 +78,24 @@ class ParticipationViewSet(
         encrypted_token = EncryptedToken.new(token, pubkeys)
         encrypted_token.save()
 
-        participation = Participation(
-            appointment=appointment, encrypted_token=encrypted_token
-        )
+        participation = Participation(appointment=appointment, encrypted_token=encrypted_token)
         participation.save()
 
         return Response(status=status.HTTP_200_OK)
 
     @staticmethod
-    def get_participations_for_key(
-        private_key: RsaKey, participations: Iterable[Participation], request
-    ):
+    def get_participations_for_key(private_key: RsaKey, participations: Iterable[Participation], request):
         result = []
         for p in participations:
             if token := p.encrypted_token.decrypt(private_key):
-                data = ParticipationSerializer(p, context={"request": request}).data | {
-                    "token": token
-                }
+                data = ParticipationSerializer(p, context={"request": request}).data | {"token": token}
                 result.append(data)
         return result
 
     @staticmethod
     def get_user_participations(request: Request) -> Response:
         # serializer = PasswordSerializer(data=request.data)
-        serializer = PasswordSerializer(
-            data={"current_password": "asdf"}
-        )  # for testing
+        serializer = PasswordSerializer(data={"current_password": "asdf"})  # for testing
         serializer.is_valid(raise_exception=True)
 
         password = serializer.validated_data["current_password"]
@@ -98,11 +106,7 @@ class ParticipationViewSet(
         _, encrypted_key = request.user.get_keypair()
         private_key = RSA.import_key(encrypted_key, password)
 
-        return Response(
-            ParticipationViewSet.get_participations_for_key(
-                private_key, participations, request
-            )
-        )
+        return Response(ParticipationViewSet.get_participations_for_key(private_key, participations, request))
 
     @staticmethod
     def get_research_participations(request: Request) -> Response:
@@ -111,14 +115,8 @@ class ParticipationViewSet(
             _, encrypted_key = research.get_keypair()
             private_key = RSA.import_key(encrypted_key, "unprotected")
 
-            participations = Participation.objects.filter(
-                appointment__research=research
-            )
-            return Response(
-                ParticipationViewSet.get_participations_for_key(
-                    private_key, participations, request
-                )
-            )
+            participations = Participation.objects.filter(appointment__research=research)
+            return Response(ParticipationViewSet.get_participations_for_key(private_key, participations, request))
         except Research.DoesNotExist:
             raise exceptions.NotFound("the specified research does not exist")
 

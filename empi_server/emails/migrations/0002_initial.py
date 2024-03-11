@@ -17,15 +17,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="email",
             name="research",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="research.research"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="research.research"),
         ),
         migrations.AddField(
             model_name="attachment",
             name="email",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="emails.email"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="emails.email"),
         ),
     ]

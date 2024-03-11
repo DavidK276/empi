@@ -69,12 +69,8 @@ class AttributeSerializer(serializers.HyperlinkedModelSerializer):
             instance.save()
         if values := validated_data.get("values", None):
             new_values = set(values)
-            current_values_queryset = models.AttributeValue.objects.filter(
-                attribute=instance
-            )
-            current_values: set[str] = {
-                value.value for value in current_values_queryset
-            }
+            current_values_queryset = models.AttributeValue.objects.filter(attribute=instance)
+            current_values: set[str] = {value.value for value in current_values_queryset}
 
             # delete values not in recieved ones
             to_delete = current_values - new_values

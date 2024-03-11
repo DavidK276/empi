@@ -19,6 +19,8 @@ from .fields import SeparatedBinaryField
 from .utils.constants import *
 from .utils.keys import export_privkey, get_keydir
 
+from rest_framework import exceptions
+
 
 class Research(models.Model):
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
@@ -26,12 +28,27 @@ class Research(models.Model):
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body")
     created = models.DateTimeField(auto_now_add=True)
-    chosen_attribute_values = models.ManyToManyField(
-        user_models.AttributeValue, blank=True
-    )
+    chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
+    protected = models.BooleanField(default=False, null=False)
+    is_published = models.BooleanField(default=False, null=False)
 
     def __str__(self):
         return self.name
+
+    def change_password(self, old_raw_password, new_raw_password):
+        _, encrypted_key = self.get_keypair()
+        try:
+            private_key = RSA.import_key(encrypted_key, old_raw_password if self.protected else "unprotected")
+        except ValueError:
+            raise exceptions.PermissionDenied("invalid current password")
+        encrypted_key = export_privkey(private_key, new_raw_password)
+
+        key_dir = get_keydir(self.name)
+        with open(key_dir / "privatekey.der", "wb") as keyfile:
+            keyfile.write(encrypted_key)
+        if not self.protected:
+            self.protected = True
+            self.save()
 
     @staticmethod
     def new_key(name):
@@ -64,7 +81,7 @@ class Research(models.Model):
 @receiver(post_save, sender=Research)
 def check_and_create_keys(sender, instance, created, **kwargs):
     key_dir = get_keydir(instance.name)
-    if not key_dir.is_dir():
+    if created and not key_dir.is_dir():
         Research.new_key(instance.name)
 
 
@@ -149,9 +166,7 @@ class EncryptedToken(models.Model):
                 session_key = cipher_rsa.decrypt(enc_key)
             except ValueError:
                 continue
-            if (
-                len(session_key) != self.__AES_KEY_LENGTH
-            ):  # anything else means decryption failed
+            if len(session_key) != self.__AES_KEY_LENGTH:  # anything else means decryption failed
                 continue
             cipher_aes = AES.new(session_key, AES.MODE_EAX, self.nonce)
             try:
@@ -168,6 +183,4 @@ class EncryptedToken(models.Model):
 class Participation(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     has_participated = models.BooleanField(default=False, blank=True, null=False)
-    encrypted_token = models.OneToOneField(
-        EncryptedToken, on_delete=models.CASCADE, blank=True, null=False
-    )
+    encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=False)

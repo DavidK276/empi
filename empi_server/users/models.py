@@ -7,8 +7,7 @@ from typing import Self
 from Crypto.PublicKey import RSA
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django.db.models import QuerySet
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 from .utils import constants
@@ -21,6 +20,12 @@ class EmpiUserManager(UserManager):
 
 
 class EmpiUser(AbstractUser):
+
+    def set_password(self, raw_password):
+        super().set_password(raw_password)
+        key_dir = get_keydir(self.username)
+        if not key_dir.is_dir():
+            EmpiUser.new_key(self.username, raw_password)
 
     @staticmethod
     def new_key(username, passphrase: str):
@@ -50,7 +55,7 @@ class EmpiUser(AbstractUser):
 
         return public_key, private_key
 
-    def change_password(self, old_raw_password, new_raw_password) -> int:
+    def change_password(self, old_raw_password, new_raw_password):
         if self.has_usable_password():
             if not self.check_password(old_raw_password):
                 return constants.INVALID_PASSPHRASE
@@ -64,21 +69,12 @@ class EmpiUser(AbstractUser):
         with open(key_dir / "privatekey.der", "wb") as keyfile:
             keyfile.write(encrypted_key)
 
-        return 0
-
     def is_participant(self):
         try:
             _ = Participant.objects.get(user=self.pk)
             return True
         except Participant.DoesNotExist:
             return False
-
-
-@receiver(post_save, sender=EmpiUser)
-def check_and_create_keys(sender, instance, created, **kwargs):
-    key_dir = get_keydir(instance.name)
-    if not key_dir.is_dir():
-        EmpiUser.new_key(instance.name)
 
 
 @receiver(post_delete, sender=EmpiUser)
@@ -100,9 +96,7 @@ class Attribute(models.Model):
         ENTER_TEXT = "ET", "Vpis textu"
 
     name = models.CharField(max_length=150, blank=False, unique=True)
-    type = models.CharField(
-        max_length=2, choices=AttributeType.choices, default=AttributeType.SINGLE_CHOICE
-    )
+    type = models.CharField(max_length=2, choices=AttributeType.choices, default=AttributeType.SINGLE_CHOICE)
 
     def __str__(self):
         return self.name.capitalize()
@@ -118,19 +112,13 @@ class AttributeValue(models.Model):
     value = models.CharField(verbose_name="hodnota", max_length=150, blank=False)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                "attribute", "value", name="unique_value_per_attribute"
-            )
-        ]
+        constraints = [models.UniqueConstraint("attribute", "value", name="unique_value_per_attribute")]
 
     def __str__(self):
         return "%s > %s" % (str(self.attribute), self.value.capitalize())
 
     @classmethod
-    def group_by_attribute(
-        cls, queryset: Iterable[Self], all=False
-    ) -> Mapping[str : Sequence[str]]:
+    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str : Sequence[str]]:
         result = {}
         if all:
             for attr in Attribute.objects.all():
@@ -144,9 +132,7 @@ class AttributeValue(models.Model):
     def from_groups(cls, groups: Mapping[str : Sequence[str]]) -> Iterable[Self]:
         result = []
         for name, values in groups.items():
-            result.extend(
-                cls.objects.filter(attribute__name=name).filter(value__in=values)
-            )
+            result.extend(cls.objects.filter(attribute__name=name).filter(value__in=values))
         return result
 
 
@@ -171,9 +157,5 @@ class Participant(models.Model):
         null=False,
         validators=[validate_acad_year],
     )
-    chosen_attribute_values = models.ManyToManyField(
-        AttributeValue, related_name="attributes", blank=True
-    )
-    token = models.CharField(
-        default=generate_token, unique=True, null=False, editable=False, max_length=9
-    )
+    chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
+    token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)

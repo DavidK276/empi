@@ -22,9 +22,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="appointment",
             name="research",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="research.research"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="research.research"),
         ),
         migrations.AddConstraint(
             model_name="appointment",

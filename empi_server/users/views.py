@@ -1,8 +1,7 @@
-from collections.abc import Iterable
 from http import HTTPMethod
 
 from django.contrib.auth.models import AnonymousUser
-from rest_framework import viewsets, status, mixins, exceptions, permissions
+from rest_framework import viewsets, status, mixins, exceptions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -30,9 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def change_password(self, request, pk=None):
         user: EmpiUser = self.get_object()
         if isinstance(request.user, AnonymousUser) or request.user == self.get_object():
-            raise exceptions.AuthenticationFailed(
-                "only changing own password is allowed"
-            )
+            raise exceptions.AuthenticationFailed("only changing own password is allowed")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -60,11 +57,10 @@ class AttributeViewSet(viewsets.ModelViewSet):
     queryset = Attribute.objects.get_queryset().order_by("pk")
     serializer_class = AttributeSerializer
 
-    # TODO: implement the POST method for this action
     @action(
         detail=False,
         name="Get attributes for user",
-        methods=[HTTPMethod.GET],
+        methods=[HTTPMethod.GET, HTTPMethod.POST],
         url_path="participant/(?P<participant_pk>[0-9]+/?)",
     )
     def participant(self, request, participant_pk=None):
@@ -72,15 +68,17 @@ class AttributeViewSet(viewsets.ModelViewSet):
             participant: Participant = Participant.objects.get(pk=participant_pk)
         except Participant.DoesNotExist:
             raise exceptions.NotFound("participant does not exist")
-        return Response(
-            AttributeValue.group_by_attribute(participant.chosen_attribute_values.all())
-        )
+        if request.method == HTTPMethod.POST:
+            for name, values in request.data.items():
+                new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)
+                participant.chosen_attribute_values.set(new_chosen_values)
+            participant.save()
+        return Response(AttributeValue.group_by_attribute(participant.chosen_attribute_values.all()))
 
-    # TODO: implement the POST method for this action
     @action(
         detail=False,
         name="Attributes for research",
-        methods=[HTTPMethod.GET],
+        methods=[HTTPMethod.GET, HTTPMethod.POST],
         url_path="research/(?P<research_pk>[0-9]+/?)",
     )
     def research(self, request, research_pk=None):
@@ -88,6 +86,9 @@ class AttributeViewSet(viewsets.ModelViewSet):
             research: Research = Research.objects.get(pk=research_pk)
         except Research.DoesNotExist:
             raise exceptions.NotFound("research does not exist")
-        return Response(
-            AttributeValue.group_by_attribute(research.chosen_attribute_values.all())
-        )
+        if request.method == HTTPMethod.POST:
+            for name, values in request.data.items():
+                new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)
+                research.chosen_attribute_values.set(new_chosen_values)
+            research.save()
+        return Response(AttributeValue.group_by_attribute(research.chosen_attribute_values.all()))

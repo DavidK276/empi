@@ -5,6 +5,8 @@ from . import models
 
 
 class ResearchSerializer(serializers.HyperlinkedModelSerializer):
+    protected = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = models.Research
         exclude = ["chosen_attribute_values"]
