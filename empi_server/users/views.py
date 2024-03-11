@@ -1,9 +1,8 @@
-from http import HTTPMethod
-
 from django.contrib.auth.models import AnonymousUser
-from rest_framework import viewsets, status, mixins, exceptions
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import *
 
 from .models import EmpiUser, Participant, Attribute, AttributeValue
 from .serializers import (
@@ -14,11 +13,13 @@ from .serializers import (
 )
 
 from research.models import Research
+from .permissions import *
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = EmpiUser.objects.get_queryset().order_by("date_joined")
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly & IsSelf | IsAdminUser]
 
     @action(
         detail=True,
@@ -51,11 +52,13 @@ class ParticipantViewSet(
 ):
     queryset = Participant.objects.get_queryset().order_by("pk")
     serializer_class = ParticipantSerializer
+    permission_classes = [CreateOnly | ReadOnly | IsAdminUser]
 
 
 class AttributeViewSet(viewsets.ModelViewSet):
     queryset = Attribute.objects.get_queryset().order_by("pk")
     serializer_class = AttributeSerializer
+    permission_classes = [ReadOnly | IsAdminUser]
 
     @action(
         detail=False,
