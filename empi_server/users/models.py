@@ -1,7 +1,6 @@
 import os
 import random
 from collections.abc import Mapping, Sequence, Iterable
-from string import ascii_uppercase, digits
 from typing import Self
 
 from Crypto.PublicKey import RSA
@@ -9,8 +8,8 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from rest_framework import exceptions
 
-from .utils import constants
 from .utils.keys import export_privkey, get_keydir
 from .utils.validators import validate_acad_year
 
@@ -58,7 +57,7 @@ class EmpiUser(AbstractUser):
     def change_password(self, old_raw_password, new_raw_password):
         if self.has_usable_password():
             if not self.check_password(old_raw_password):
-                return constants.INVALID_PASSPHRASE
+                raise exceptions.PermissionDenied("invalid password")
         self.set_password(new_raw_password)
 
         _, encrypted_key = self.get_keypair()
@@ -137,11 +136,11 @@ class AttributeValue(models.Model):
 
 
 def generate_token():
-    alphabet = ascii_uppercase + digits
+    alphabet = "2346789BCDFGHJKMPQRTVWXY"
     while True:
         part1 = "".join(random.choice(alphabet) for _ in range(4))
         part2 = "".join(random.choice(alphabet) for _ in range(4))
-        result = "-".join([part1, part2])
+        result = f"{part1}-{part2}"
         try:
             Participant.objects.get(token=result)
         except Participant.DoesNotExist:
