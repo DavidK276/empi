@@ -17,8 +17,7 @@ class EmailViewSet(viewsets.ModelViewSet):
 
         if form.is_valid():
             return super().create(request, *args, **kwargs)
-        else:
-            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
@@ -28,8 +27,7 @@ class EmailViewSet(viewsets.ModelViewSet):
 
         if form.is_valid():
             return super().update(request, *args, **kwargs)
-        else:
-            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AttachmentViewSet(
