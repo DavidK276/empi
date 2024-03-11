@@ -1,13 +1,13 @@
 from collections.abc import Iterable
-from http import HTTPMethod
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
 from django.contrib.auth.models import AnonymousUser
-from rest_framework import viewsets, mixins, status, exceptions
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.permissions import *
 from users.models import Participant
 from users.serializers import PasswordSerializer
 
@@ -17,11 +17,13 @@ from .serializers import (
     ResearchSerializer,
     ParticipationSerializer,
 )
+from .permissions import *
 
 
 class ResearchViewSet(viewsets.ModelViewSet):
     queryset = Research.objects.get_queryset().order_by("-created")
     serializer_class = ResearchSerializer
+    permission_classes = [AllowAllExceptList | IsAdminUser]
 
     @action(
         detail=True,
@@ -51,8 +53,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
 
 class ParticipationViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -69,10 +69,7 @@ class ParticipationViewSet(
         except Participant.DoesNotExist:
             raise exceptions.NotFound("user is not a participant")
 
-        try:
-            appointment: Appointment = serializer.validated_data["appointment"]
-        except Appointment.DoesNotExist:
-            raise exceptions.ParseError("the specified appointment was not found")
+        appointment: Appointment = serializer.validated_data["appointment"]
         pubkeys = appointment.get_pubkeys(request.user)
 
         encrypted_token = EncryptedToken.new(token, pubkeys)
@@ -83,19 +80,17 @@ class ParticipationViewSet(
 
         return Response(status=status.HTTP_200_OK)
 
-    @staticmethod
-    def get_participations_for_key(private_key: RsaKey, participations: Iterable[Participation], request):
+    def get_participations_for_key(self, private_key: RsaKey, participations: Iterable[Participation], request):
         result = []
         for p in participations:
             if token := p.encrypted_token.decrypt(private_key):
-                data = ParticipationSerializer(p, context={"request": request}).data | {"token": token}
+                data = self.get_serializer(p, context={"request": request}).data | {"token": token}
                 result.append(data)
         return result
 
-    @staticmethod
-    def get_user_participations(request: Request) -> Response:
-        # serializer = PasswordSerializer(data=request.data)
-        serializer = PasswordSerializer(data={"current_password": "asdf"})  # for testing
+    def get_user_participations(self, request: Request) -> Response:
+        serializer = PasswordSerializer(data=request.data)
+        # serializer = PasswordSerializer(data={"current_password": "asdf"})  # for testing
         serializer.is_valid(raise_exception=True)
 
         password = serializer.validated_data["current_password"]
@@ -106,17 +101,16 @@ class ParticipationViewSet(
         _, encrypted_key = request.user.get_keypair()
         private_key = RSA.import_key(encrypted_key, password)
 
-        return Response(ParticipationViewSet.get_participations_for_key(private_key, participations, request))
+        return Response(self.get_participations_for_key(private_key, participations, request))
 
-    @staticmethod
-    def get_research_participations(request: Request) -> Response:
+    def get_research_participations(self, request: Request) -> Response:
         try:
             research: Research = Research.objects.get(pk=request.GET["research"])
             _, encrypted_key = research.get_keypair()
             private_key = RSA.import_key(encrypted_key, "unprotected")
 
             participations = Participation.objects.filter(appointment__research=research)
-            return Response(ParticipationViewSet.get_participations_for_key(private_key, participations, request))
+            return Response(self.get_participations_for_key(private_key, participations, request))
         except Research.DoesNotExist:
             raise exceptions.NotFound("the specified research does not exist")
 
