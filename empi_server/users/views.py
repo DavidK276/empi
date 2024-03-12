@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
@@ -10,6 +11,7 @@ from .serializers import (
     PasswordSerializer,
     ParticipantSerializer,
     AttributeSerializer,
+    LoginSerializer,
 )
 
 from research.models import Research

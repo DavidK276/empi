@@ -78,13 +78,6 @@ class Research(models.Model):
         return public_key, private_key
 
 
-@receiver(post_save, sender=Research)
-def check_and_create_keys(sender, instance, created, **kwargs):
-    key_dir = get_keydir(instance.name)
-    if created and not key_dir.is_dir():
-        Research.new_key(instance.name)
-
-
 @receiver(post_delete, sender=Research)
 def keys_delete(sender, instance, created, **kwargs):
     key_dir = get_keydir(instance.name)
