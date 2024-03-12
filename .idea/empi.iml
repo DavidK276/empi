@@ -19,7 +19,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/empi_server/keys" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.11 (.python-venv) (3)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Poetry (empi)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
