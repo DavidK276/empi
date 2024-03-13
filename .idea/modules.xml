@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/empi.iml" filepath="$PROJECT_DIR$/.idea/empi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/empi-web/empi-web.iml" filepath="$PROJECT_DIR$/empi-web/empi-web.iml" />
     </modules>
   </component>
 </project>

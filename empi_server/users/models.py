@@ -22,9 +22,9 @@ class EmpiUser(AbstractUser):
 
     def set_password(self, raw_password):
         super().set_password(raw_password)
-        key_dir = get_keydir(self.username)
-        if not key_dir.is_dir():
-            EmpiUser.new_key(self.username, raw_password)
+        if key_dir := get_keydir(self.username):
+            if not key_dir.is_dir():
+                EmpiUser.new_key(self.username, raw_password)
 
     @staticmethod
     def new_key(username, passphrase: str):
