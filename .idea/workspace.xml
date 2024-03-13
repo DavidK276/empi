@@ -4,18 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2a22025a-4759-413e-a638-afde1b1ab5e0" name="Changes" comment="handle login errors">
-      <change beforePath="$PROJECT_DIR$/.idea/empi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/empi.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="2a22025a-4759-413e-a638-afde1b1ab5e0" name="Changes" comment="run pre-commit">
+      <change afterPath="$PROJECT_DIR$/empi-web/src/routes/+layout.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/empi-web/empi-web.iml" beforeDir="false" afterPath="$PROJECT_DIR$/empi-web/empi-web.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/empi-web/src/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/empi-web/src/app.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/empi-web/src/lib/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/empi-web/src/lib/constants.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/empi-web/src/lib/functions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/empi-web/src/lib/functions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/empi_server/empi_server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/empi_server/empi_server.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/empi_server/research/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/empi_server/research/permissions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +23,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
+        <option value="layout" />
       </list>
     </option>
   </component>
@@ -138,7 +133,7 @@
       <updated>1710346356995</updated>
       <workItem from="1710346358628" duration="99000" />
       <workItem from="1710346464459" duration="1255000" />
-      <workItem from="1710347729962" duration="1842000" />
+      <workItem from="1710347729962" duration="2288000" />
     </task>
     <task id="LOCAL-00001" summary="handle login errors">
       <option name="closed" value="true" />
@@ -148,7 +143,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710349492254</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="run pre-commit">
+      <option name="closed" value="true" />
+      <created>1710349618877</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1710349618877</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,6 +159,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="handle login errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="handle login errors" />
+    <MESSAGE value="run pre-commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="run pre-commit" />
   </component>
 </project>

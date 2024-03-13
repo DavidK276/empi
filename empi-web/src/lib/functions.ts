@@ -10,4 +10,4 @@ function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: 
 
 export {
     setCookie,
-}
+};
