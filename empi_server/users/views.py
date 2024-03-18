@@ -1,4 +1,3 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
@@ -11,7 +10,6 @@ from .serializers import (
     PasswordSerializer,
     ParticipantSerializer,
     AttributeSerializer,
-    LoginSerializer,
 )
 
 from research.models import Research
@@ -21,7 +19,7 @@ from .permissions import *
 class UserViewSet(viewsets.ModelViewSet):
     queryset = EmpiUser.objects.get_queryset().order_by("date_joined")
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly & IsSelf | IsAdminUser]
+    permission_classes = [CreateOnly | (IsAuthenticatedOrReadOnly & IsSelf) | IsAdminUser]
 
     @action(
         detail=True,

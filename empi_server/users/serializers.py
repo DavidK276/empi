@@ -32,11 +32,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         return user
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=100, write_only=True)
-    password = serializers.CharField(max_length=100, write_only=True)
-
-
 class PasswordSerializer(serializers.Serializer):
     current_password = serializers.CharField(max_length=100, write_only=True)
     new_password = serializers.CharField(max_length=100, write_only=True, default=None)
