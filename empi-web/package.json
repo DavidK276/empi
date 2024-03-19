@@ -32,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"class-transformer": "^0.5.1",
 		"js-cookie": "^3.0.5"
 	}
 }

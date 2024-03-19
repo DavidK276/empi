@@ -1,19 +1,18 @@
 from django.contrib.auth.models import AnonymousUser
+from research.models import Research
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.permissions import *
+from rest_framework.response import Response
 
 from .models import EmpiUser, Participant, Attribute, AttributeValue
+from .permissions import *
 from .serializers import (
     UserSerializer,
     PasswordSerializer,
     ParticipantSerializer,
     AttributeSerializer,
 )
-
-from research.models import Research
-from .permissions import *
 
 
 class UserViewSet(viewsets.ModelViewSet):

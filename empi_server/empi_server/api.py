@@ -35,8 +35,8 @@ router.register(r"appointment", research_views.AppointmentViewSet)
 router.register(r"participation", research_views.ParticipationViewSet)
 
 urlpatterns = [
-    path("auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("rest-auth/", include("dj_rest_auth.urls")),
+    path("rf-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("auth/", include("users.urls")),
 ]
 
 urlpatterns += router.urls

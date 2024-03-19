@@ -5,6 +5,6 @@
 </script>
 
 <h1>Welcome to SvelteKit</h1>
-{#if data.first_name !== undefined && data.last_name !== undefined}
-    <p>{data.first_name} {data.last_name}</p>
+{#if data.user !== undefined && data.user.first_name !== undefined}
+    <p>Vitajte, {data.user.first_name} {data.user.last_name}</p>
 {/if}

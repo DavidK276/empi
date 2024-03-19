@@ -4,7 +4,7 @@ from collections.abc import Mapping, Sequence, Iterable
 from typing import Self
 
 from Crypto.PublicKey import RSA
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -12,10 +12,6 @@ from rest_framework import exceptions
 
 from .utils.keys import export_privkey, get_keydir
 from .utils.validators import validate_acad_year
-
-
-class EmpiUserManager(UserManager):
-    pass
 
 
 class EmpiUser(AbstractUser):
@@ -117,7 +113,7 @@ class AttributeValue(models.Model):
         return "%s > %s" % (str(self.attribute), self.value.capitalize())
 
     @classmethod
-    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str : Sequence[str]]:
+    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str: Sequence[str]]:
         result = {}
         if all:
             for attr in Attribute.objects.all():
@@ -128,7 +124,7 @@ class AttributeValue(models.Model):
         return result
 
     @classmethod
-    def from_groups(cls, groups: Mapping[str : Sequence[str]]) -> Iterable[Self]:
+    def from_groups(cls, groups: Mapping[str: Sequence[str]]) -> Iterable[Self]:
         result = []
         for name, values in groups.items():
             result.extend(cls.objects.filter(attribute__name=name).filter(value__in=values))
