@@ -17,7 +17,7 @@
 		</nav>
 		{#if data.user != null}
 			<form method="POST" action="?/logout">
-				<button type="submit" name="submit">Log in</button>
+				<button type="submit" name="submit">Log out</button>
 			</form>
 		{:else}
 			<div class="{dropdown}">
