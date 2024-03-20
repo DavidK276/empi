@@ -4,7 +4,7 @@ import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({cookies, fetch}) => {
     const authToken = cookies.get(consts.TOKEN_COOKIE);
-    if (authToken !== undefined) {
+    if (authToken) {
         const response = await fetch(consts.API_ENDPOINT + "user/1/", {
             method: 'GET',
             headers: {
