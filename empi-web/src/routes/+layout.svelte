@@ -6,6 +6,7 @@
 
 	import { t } from '$lib/translations';
 	import type { LayoutData } from './$types';
+	import { toggleDropdown } from '$lib/functions';
 
 	export let data: LayoutData;
 </script>
@@ -30,7 +31,10 @@
 			</div>
 		{:else}
 			<div class="{dropdown}">
-				<button>{$t('common.account')}<span class="material-symbols-outlined">expand_more</span></button>
+				<button on:click={toggleDropdown}>
+					{$t('common.account')}
+					<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>
+				</button>
 				<div class="{dropdownContent}">
 					<form method="POST" action="?/login">
 						<label for="username">{$t('common.username')}: </label>
@@ -38,6 +42,7 @@
 						<label for="password">{$t('common.password')}: </label>
 						<input type="password" id="password" name="password" required>
 						<button type="submit" name="submit" style="margin: {vars.sm} 0">{$t('common.login')}</button>
+						<a href="/register">{$t('common.registration')}</a>
 					</form>
 				</div>
 			</div>

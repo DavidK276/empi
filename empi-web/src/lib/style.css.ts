@@ -24,12 +24,19 @@ export const container = style({
 export const dropdown = style({
 	position: 'relative',
 	display: 'inline-block',
+	float: 'right',
+	'@media': {
+		'screen and (min-width: 768px)': {
+			float: 'left'
+		}
+	}
 });
 
 export const dropdownContent = style({
 	display: 'none',
 	position: 'absolute',
-	minWidth: '160px',
+	right: 0,
+	minWidth: '200px',
 	boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.4)',
 	backgroundColor: vars.backgroundPrimary,
 	zIndex: 1,
@@ -37,8 +44,13 @@ export const dropdownContent = style({
 	padding: vars.lg,
 	gap: vars.lg,
 	selectors: {
-		[`${dropdown}:hover &`]: {
+		[`${dropdown}:hover &,${dropdown}.show &`]: {
 			display: 'flex'
+		}
+	},
+		'@media': {
+		'screen and (min-width: 768px)': {
+			left: 0
 		}
 	}
 });
@@ -51,6 +63,7 @@ globalStyle('a', {
 	textDecoration: 'none',
 	fontWeight: 700,
 	margin: `0 ${vars.sm}`,
+	color: vars.link
 });
 
 globalStyle('button', {

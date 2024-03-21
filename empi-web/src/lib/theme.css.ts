@@ -9,5 +9,6 @@ export const [themeClass, vars] = createTheme({
 	xl2: '3rem',
 	textSecondary: '#fff',
 	textPrimary: '#000',
-	backgroundPrimary: '#fff'
+	backgroundPrimary: '#fff',
+	link: 'rgb(37 99 235)'
 });

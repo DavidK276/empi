@@ -3,7 +3,8 @@
   "about": "O systéme",
   "logout": "Odhlásiť sa",
   "login": "Prihlásiť sa",
-  "username": "Meno používateľa",
+  "username": "Prihlasovacie meno",
   "password": "Heslo",
-  "account": "Účet"
+  "account": "Účet",
+  "registration": "Registrácia"
 }
