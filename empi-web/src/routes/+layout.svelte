@@ -4,6 +4,7 @@
 	import { container, dropdown, dropdownContent } from '$lib/style.css';
 	import { themeClass, vars } from '$lib/theme.css';
 
+	import { t } from '$lib/translations';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
@@ -12,23 +13,31 @@
 <div class="{themeClass}">
 	<header class="{container} hor-center ver-center">
 		<nav>
-			<a href="/">Home</a>
-			<a href="/about">About</a>
+			<a href="/">{$t('common.home')}</a>
+			<a href="/about">{$t('common.about')}</a>
 		</nav>
 		{#if data.user != null}
-			<form method="POST" action="?/logout">
-				<button type="submit" name="submit">Log out</button>
-			</form>
+			<div class="{dropdown}">
+				<button>
+					{data.user.first_name} {data.user.last_name}
+					<span class="material-symbols-outlined">expand_more</span>
+				</button>
+				<div class="{dropdownContent}">
+					<form method="POST" action="?/logout">
+						<button type="submit" name="submit">{$t('common.logout')}</button>
+					</form>
+				</div>
+			</div>
 		{:else}
 			<div class="{dropdown}">
-				<button>Log in<span class="material-symbols-outlined">expand_more</span></button>
+				<button>{$t('common.account')}<span class="material-symbols-outlined">expand_more</span></button>
 				<div class="{dropdownContent}">
 					<form method="POST" action="?/login">
-						<label for="username">Username: </label>
+						<label for="username">{$t('common.username')}: </label>
 						<input type="text" id="username" name="username" required>
-						<label for="password">Password: </label>
+						<label for="password">{$t('common.password')}: </label>
 						<input type="password" id="password" name="password" required>
-						<button type="submit" name="submit" style="margin: {vars.sm} 0">Log in</button>
+						<button type="submit" name="submit" style="margin: {vars.sm} 0">{$t('common.login')}</button>
 					</form>
 				</div>
 			</div>

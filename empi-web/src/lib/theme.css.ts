@@ -8,5 +8,6 @@ export const [themeClass, vars] = createTheme({
 	xl: '2rem',
 	xl2: '3rem',
 	textSecondary: '#fff',
-	textPrimary: '#000'
+	textPrimary: '#000',
+	backgroundPrimary: '#fff'
 });

@@ -30,8 +30,10 @@ export const dropdownContent = style({
 	display: 'none',
 	position: 'absolute',
 	minWidth: '160px',
-	boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+	boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.4)',
+	backgroundColor: vars.backgroundPrimary,
 	zIndex: 1,
+	borderRadius: vars.sm,
 	padding: vars.lg,
 	gap: vars.lg,
 	selectors: {
