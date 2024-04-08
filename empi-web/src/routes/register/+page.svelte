@@ -1,0 +1,85 @@
+<script lang="ts">
+	import { t } from '$lib/translations';
+	import { addFormError, removeFormError } from '$lib/functions';
+	import { browser } from '$app/environment';
+	import type { ActionData } from './$types';
+
+	export let form: ActionData;
+
+	const verifyForm = (form: HTMLFormElement) => {
+		let result = true;
+		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
+		const repeatPasswordInput = form.elements.namedItem('repeat_password') as HTMLInputElement;
+		if (passwordInput.value != repeatPasswordInput.value) {
+			addFormError(passwordInput, $t('common.passwords_nomatch'));
+			addFormError(repeatPasswordInput, $t('common.passwords_nomatch'));
+			result = false;
+		}
+		else {
+			removeFormError(passwordInput);
+			removeFormError(repeatPasswordInput);
+		}
+
+		const usernameInput = form.elements.namedItem('username') as HTMLInputElement;
+		if (usernameInput.value.match(/^[a-zA-Z0-9]+$/) == null) {
+			addFormError(usernameInput, $t('common.username_wrong'));
+			result = false;
+		}
+		else {
+			removeFormError(usernameInput);
+		}
+		return result;
+	};
+
+	const formCheck = (event: Event) => {
+		const target = event.target as HTMLElement;
+		const formElement = target.parentElement as HTMLFormElement;
+		const submitButton = formElement.children.namedItem('submit');
+		if (formElement.checkValidity() && verifyForm(formElement)) {
+			submitButton?.removeAttribute('disabled');
+		}
+		else {
+			submitButton?.setAttribute('disabled', '');
+		}
+	};
+
+	if (browser) {
+		window.onload = () => {
+			const formElement = document.getElementById('register_form') as HTMLFormElement;
+			if (form?.failure) {
+				Object.keys(form?.body).forEach(key => {
+					const element = formElement.elements.namedItem(key) as HTMLElement | null;
+					if (element != null) {
+						let errors = form?.body[key] as string[];
+						errors.forEach(error => {
+							addFormError(element, error);
+						});
+					}
+				});
+			}
+		};
+	}
+</script>
+
+<h1>{$t('common.registration')}</h1>
+<form method="POST" id="register_form" on:input={formCheck}>
+	<label for="username" title="{$t('common.username_hint')}">
+		{$t('common.username')}
+		<span class="material-symbols-outlined">help</span>
+	</label>
+	<input type="text" name="username" id="username" required>
+	<label for="first_name">{$t('common.first_name')}</label>
+	<input type="text" name="first_name" id="first_name" required>
+	<label for="last_name">{$t('common.last_name')}</label>
+	<input type="text" name="last_name" id="last_name" required>
+	<label for="email">Email</label>
+	<input type="email" name="email" id="email" required>
+	<label for="password">{$t('common.password')}</label>
+	<input type="password" name="password" id="password" required>
+	<label for="repeat_password">{$t('common.repeat_password')}</label>
+	<input type="password" id="repeat_password" required>
+	<button type="submit" name="submit" disabled>{$t('common.register')}</button>
+	{#if form?.success}
+		<span style="color: green">{$t('common.registration_ok')}</span>
+	{/if}
+</form>

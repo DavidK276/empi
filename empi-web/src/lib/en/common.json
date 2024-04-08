@@ -6,5 +6,14 @@
   "username": "Username",
   "password": "Password",
   "account": "Account",
-  "registration": "Registration"
+  "registration": "Registration",
+  "register": "Register",
+  "first_name": "First name",
+  "last_name": "Last name",
+  "repeat_password": "Password (again)",
+  "username_hint": "A nickname that you'll use to log in",
+  "username_wrong": "Username con only contain letters and numbers",
+  "passwords_nomatch": "Passwords do not match",
+  "registration_ok": "Registration successful. You may now log in using your credentials.",
+  "unknown_error": "Unknown error occured"
 }

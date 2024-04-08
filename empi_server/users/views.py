@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.http import HttpResponseRedirect
 from research.models import Research
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
@@ -18,7 +19,7 @@ from .serializers import (
 class UserViewSet(viewsets.ModelViewSet):
     queryset = EmpiUser.objects.get_queryset().order_by("date_joined")
     serializer_class = UserSerializer
-    permission_classes = [CreateOnly | (IsAuthenticatedOrReadOnly & IsSelf) | IsAdminUser]
+    permission_classes = [(IsAuthenticatedOrReadOnly & IsSelf) | IsAdminUser]
 
     @action(
         detail=True,
@@ -28,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def change_password(self, request, pk=None):
         user: EmpiUser = self.get_object()
-        if isinstance(request.user, AnonymousUser) or request.user == self.get_object():
+        if isinstance(request.user, AnonymousUser) or request.user != self.get_object():
             raise exceptions.AuthenticationFailed("only changing own password is allowed")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -41,6 +42,17 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response(status=status.HTTP_200_OK)
 
+    @action(
+        detail=False,
+        name="Get own details",
+        methods=[HTTPMethod.GET],
+        permission_classes=[IsAuthenticated]
+    )
+    def get_self(self, request):
+        user: EmpiUser = request.user
+        serializer = self.get_serializer(instance=user, context={'request': request})
+        return HttpResponseRedirect(serializer.data['url'])
+
 
 class ParticipantViewSet(
     mixins.CreateModelMixin,
@@ -51,7 +63,23 @@ class ParticipantViewSet(
 ):
     queryset = Participant.objects.get_queryset().order_by("pk")
     serializer_class = ParticipantSerializer
-    permission_classes = [CreateOnly | ReadOnly | IsAdminUser]
+    permission_classes = [ReadOnly | IsAdminUser]
+
+    @action(
+        detail=False,
+        name="Register",
+        methods=[HTTPMethod.POST],
+        permission_classes=[AllowAny],
+        serializer_class=UserSerializer
+    )
+    def register(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user: EmpiUser = serializer.save()
+        participant = Participant(user=user)
+        participant.save()
+        participant_serializer = ParticipantSerializer(instance=participant, context={'request': request})
+        return Response(participant_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class AttributeViewSet(viewsets.ModelViewSet):

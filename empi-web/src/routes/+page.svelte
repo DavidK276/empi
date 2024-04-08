@@ -1,10 +1,11 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+    import type { LayoutServerData } from './$types';
 
-    export let data: PageData;
+    export let data: LayoutServerData;
 </script>
 
-<h1>Welcome to SvelteKit</h1>
+<h1>EMPI</h1>
+<p>tu bude hlavná stránka</p>
 {#if data.user != null }
     <p>Vitajte, {data.user.first_name} {data.user.last_name}</p>
 {/if}

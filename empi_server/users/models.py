@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
 from collections.abc import Mapping, Sequence, Iterable
@@ -11,7 +12,6 @@ from django.dispatch import receiver
 from rest_framework import exceptions
 
 from .utils.keys import export_privkey, get_keydir
-from .utils.validators import validate_acad_year
 
 
 class EmpiUser(AbstractUser):
@@ -143,14 +143,21 @@ def generate_token():
             return result
 
 
+def generate_acad_year():
+    now = datetime.datetime.now()
+    if now.month >= 8:
+        year = now.year
+    else:
+        year = now.year - 1
+    return f"{year}/{(year + 1) % 100}"
+
+
 class Participant(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
     acad_year = models.CharField(
         verbose_name="akademický rok",
-        max_length=9,
-        blank=False,
-        null=False,
-        validators=[validate_acad_year],
+        default=generate_acad_year,
+        max_length=7
     )
     chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)

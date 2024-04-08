@@ -1,4 +1,4 @@
-function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: boolean) {
+export function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: boolean) {
 	if (deleteFirst !== undefined && deleteFirst) {
 		document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
 	}
@@ -8,7 +8,7 @@ function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: 
 	document.cookie = `${cname}=${cvalue}; ${expires};`;
 }
 
-function parseCookie(cookieString: string): {
+export function parseCookie(cookieString: string): {
 	name: string,
 	value: string,
 	opts: Record<string, string> & { path: string }
@@ -64,13 +64,25 @@ function parseCookie(cookieString: string): {
 	return result;
 }
 
-const toggleDropdown = (event: MouseEvent) => {
+export const toggleDropdown = (event: MouseEvent) => {
 	const target = event.target as HTMLElement;
 	target.parentElement?.classList.toggle('show');
 };
 
-export {
-	setCookie,
-	parseCookie,
-	toggleDropdown
+export const addFormError = (element: HTMLElement, text: string) => {
+	const errorElement = document.getElementById(`${element.id}_error`);
+	if (errorElement == null) {
+		const error = `<span style="color: red; display: block; margin: 4px 0" id="${element.id}_error">${text}</span>`;
+		element.insertAdjacentHTML('afterend', error);
+		element.classList.add('error');
+	}
+	else {
+		errorElement.innerText = text;
+	}
+};
+
+export const removeFormError = (element: HTMLElement) => {
+	element.classList.remove('error');
+	const errorElement = document.getElementById(`${element.id}_error`);
+	errorElement?.remove();
 };
