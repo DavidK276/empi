@@ -42,16 +42,11 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response(status=status.HTTP_200_OK)
 
-    @action(
-        detail=False,
-        name="Get own details",
-        methods=[HTTPMethod.GET],
-        permission_classes=[IsAuthenticated]
-    )
+    @action(detail=False, name="Get own details", methods=[HTTPMethod.GET], permission_classes=[IsAuthenticated])
     def get_self(self, request):
         user: EmpiUser = request.user
-        serializer = self.get_serializer(instance=user, context={'request': request})
-        return HttpResponseRedirect(serializer.data['url'])
+        serializer = self.get_serializer(instance=user, context={"request": request})
+        return HttpResponseRedirect(serializer.data["url"])
 
 
 class ParticipantViewSet(
@@ -70,7 +65,7 @@ class ParticipantViewSet(
         name="Register",
         methods=[HTTPMethod.POST],
         permission_classes=[AllowAny],
-        serializer_class=UserSerializer
+        serializer_class=UserSerializer,
     )
     def register(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -78,7 +73,7 @@ class ParticipantViewSet(
         user: EmpiUser = serializer.save()
         participant = Participant(user=user)
         participant.save()
-        participant_serializer = ParticipantSerializer(instance=participant, context={'request': request})
+        participant_serializer = ParticipantSerializer(instance=participant, context={"request": request})
         return Response(participant_serializer.data, status=status.HTTP_201_CREATED)
 
 

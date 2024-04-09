@@ -113,7 +113,7 @@ class AttributeValue(models.Model):
         return "%s > %s" % (str(self.attribute), self.value.capitalize())
 
     @classmethod
-    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str: Sequence[str]]:
+    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str : Sequence[str]]:
         result = {}
         if all:
             for attr in Attribute.objects.all():
@@ -124,7 +124,7 @@ class AttributeValue(models.Model):
         return result
 
     @classmethod
-    def from_groups(cls, groups: Mapping[str: Sequence[str]]) -> Iterable[Self]:
+    def from_groups(cls, groups: Mapping[str : Sequence[str]]) -> Iterable[Self]:
         result = []
         for name, values in groups.items():
             result.extend(cls.objects.filter(attribute__name=name).filter(value__in=values))
@@ -154,10 +154,6 @@ def generate_acad_year():
 
 class Participant(models.Model):
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
-    acad_year = models.CharField(
-        verbose_name="akademický rok",
-        default=generate_acad_year,
-        max_length=7
-    )
+    acad_year = models.CharField(verbose_name="akademický rok", default=generate_acad_year, max_length=7)
     chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)
