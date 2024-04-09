@@ -3,6 +3,9 @@
   "about": "About",
   "logout": "Log out",
   "login": "Log in",
+  "logging_in": "Logging in…",
+  "logging_out": "Logging out…",
+  "wrong_login": "Invalid username or password.",
   "username": "Username",
   "password": "Password",
   "account": "Account",
@@ -14,6 +17,7 @@
   "username_hint": "A nickname that you'll use to log in",
   "username_wrong": "Username con only contain letters and numbers",
   "passwords_nomatch": "Passwords do not match",
+  "password_hint": "This password is used to encrypt your data! If you forget it, you will be locked out of your account.",
   "registration_ok": "Registration successful. You may now log in using your credentials.",
   "unknown_error": "Unknown error occured"
 }

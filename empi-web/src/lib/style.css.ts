@@ -36,7 +36,7 @@ export const dropdownContent = style({
 	display: 'none',
 	position: 'absolute',
 	right: 0,
-	minWidth: '220px',
+	minWidth: '250px',
 	boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.4)',
 	backgroundColor: vars.backgroundPrimary,
 	zIndex: 1,
@@ -84,6 +84,16 @@ export const tooltiptext = style({
 export const content = style({
 	maxWidth: 1280,
 	width: '100%'
+});
+
+export const hidden = style({
+	display: 'none'
+});
+
+export const error = style({
+	color: 'red',
+	display: 'block',
+	margin: '4px 0'
 });
 
 globalStyle('body', {
@@ -134,6 +144,7 @@ globalStyle('input', {
 	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
 	boxShadow: `0 0 2px gray`,
+	boxSizing: 'border-box'
 });
 
 globalStyle('input.error', {

@@ -1,3 +1,5 @@
+import { error as e } from '$lib/style.css';
+
 export function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: boolean) {
 	if (deleteFirst !== undefined && deleteFirst) {
 		document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
@@ -72,7 +74,7 @@ export const toggleDropdown = (event: MouseEvent) => {
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {
-		const error = `<span style="color: red; display: block; margin: 4px 0" id="${element.id}_error">${text}</span>`;
+		const error = `<span class="${e}" id="${element.id}_error">${text}</span>`;
 		element.insertAdjacentHTML('afterend', error);
 		element.classList.add('error');
 	}

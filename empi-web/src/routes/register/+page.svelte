@@ -74,10 +74,13 @@
 	<input type="text" name="last_name" id="last_name" required>
 	<label for="email">Email</label>
 	<input type="email" name="email" id="email" required>
-	<label for="password">{$t('common.password')}</label>
-	<input type="password" name="password" id="password" required>
-	<label for="repeat_password">{$t('common.repeat_password')}</label>
-	<input type="password" id="repeat_password" required>
+	<label for="password" title="{$t('common.password_hint')}">
+		{$t('common.password')}
+		<span class="material-symbols-outlined">warning</span>
+	</label>
+	<input type="password" name="password" id="password" required minlength="8">
+	<label for="repeat_password" title="{$t('common.password_hint')}">{$t('common.repeat_password')}</label>
+	<input type="password" id="repeat_password" required minlength="8">
 	<button type="submit" name="submit" disabled>{$t('common.register')}</button>
 	{#if form?.success}
 		<span style="color: green">{$t('common.registration_ok')}</span>

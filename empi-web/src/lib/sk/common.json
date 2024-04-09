@@ -3,6 +3,9 @@
   "about": "O systéme",
   "logout": "Odhlásiť sa",
   "login": "Prihlásiť sa",
+  "logging_in": "Prihlasujem sa…",
+  "logging_out": "Odhlasujem sa…",
+  "wrong_login": "Nesprávne prihlasovacie údaje.",
   "username": "Prihlasovacie meno",
   "password": "Heslo",
   "account": "Účet",
@@ -14,6 +17,7 @@
   "username_hint": "Prezývka, ktorú budete používať pri prihlasovaní",
   "username_wrong": "Prihlasovacie meno môže obsahovať len písmená a čísla",
   "passwords_nomatch": "Heslá sa nezhodujú",
+  "password_hint": "Heslo sa používa na šifrovanie vašich dát! Ak ho zabudnete, stratíte prístup k účtu.",
   "registration_ok": "Registrácia úspešná. Teraz sa môžete prihlásiť s vašimi údajmi.",
   "unknown_error": "Nastala neznáma chyba"
 }

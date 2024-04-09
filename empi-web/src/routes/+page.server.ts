@@ -15,6 +15,9 @@ export const actions = {
 			const expires = new Date(Date.parse(responseJSON.expiry));
 			cookies.set(consts.TOKEN_COOKIE, responseJSON.token, { path: '/', httpOnly: true, expires });
 		}
+		return {
+			login: response.ok
+		}
 	},
 	logout: async ({ cookies }) => {
 		const authToken = cookies.get(consts.TOKEN_COOKIE);
