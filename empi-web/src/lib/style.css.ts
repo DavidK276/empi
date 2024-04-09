@@ -41,7 +41,10 @@ export const dropdownContent = style({
 	backgroundColor: vars.backgroundPrimary,
 	zIndex: 1,
 	borderRadius: vars.sm,
-	padding: vars.lg,
+	paddingLeft: vars.lg,
+	paddingRight: vars.lg,
+	paddingTop: 0,
+	paddingBottom: vars.lg,
 	gap: vars.lg,
 	selectors: {
 		[`${dropdown}:hover &,${dropdown}.show &`]: {
@@ -104,7 +107,9 @@ globalStyle('a', {
 	textDecoration: 'none',
 	fontWeight: 700,
 	margin: `0 ${vars.sm}`,
-	color: vars.link
+	color: vars.link,
+	display: 'inline-flex',
+	alignItems: 'center'
 });
 
 globalStyle('button', {
@@ -148,7 +153,7 @@ globalStyle('input', {
 });
 
 globalStyle('input.error', {
-	boxShadow: `0 0 2px red`,
+	boxShadow: `0 0 2px red`
 });
 
 globalStyle('header', {

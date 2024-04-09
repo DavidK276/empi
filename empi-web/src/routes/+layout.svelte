@@ -9,6 +9,7 @@
 	import type { LayoutServerData } from './$types';
 	import { page } from '$app/stores';
 	import { toggleDropdown } from '$lib/functions';
+	import { goto } from '$app/navigation';
 
 	export let data: LayoutServerData;
 	let logging_in = false;
@@ -23,20 +24,22 @@
 		</nav>
 		{#if data.user != null}
 			<div class="{dropdown}">
-				<button>
+				<button on:click={toggleDropdown}>
 					{data.user.first_name} {data.user.last_name}
 					<span class="material-symbols-outlined">expand_more</span>
 				</button>
 				<div class="{dropdownContent}">
-					<form method="POST" action="?/logout"
+					<form method="POST" action="/?/logout"
 								use:enhance={() => {
 									logging_out = true;
 
 									return async ({ update }) => {
 										await update();
+										await goto("/");
 										logging_out = false;
 									};
 								}}>
+						<a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 						{#if logging_out}
 							<button type="submit" disabled>{$t('common.logging_out')}</button>
 						{:else}
@@ -64,7 +67,7 @@
 						<label for="username">{$t('common.username')}: </label>
 						<input type="text" id="username" name="username" required>
 						<label for="password">{$t('common.password')}: </label>
-						<input type="password" id="password" name="password" required minlength="8">
+						<input type="password" id="password" name="password" required minlength="4">
 						{#if $page.form?.login === false}
 							<p class="{error}">{$t('common.wrong_login')}</p>
 						{/if}
