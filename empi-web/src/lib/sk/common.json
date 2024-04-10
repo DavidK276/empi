@@ -19,5 +19,6 @@
   "passwords_nomatch": "Heslá sa nezhodujú",
   "password_hint": "Heslo sa používa na šifrovanie vašich dát! Ak ho zabudnete, stratíte prístup k účtu.",
   "registration_ok": "Registrácia úspešná. Teraz sa môžete prihlásiť s vašimi údajmi.",
-  "unknown_error": "Nastala neznáma chyba"
+  "unknown_error": "Nastala neznáma chyba",
+  "token_hint": "Toto je váš anonymný identifikátor, ktorý odovzdáte pri účasti na výskume."
 }

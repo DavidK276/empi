@@ -88,3 +88,11 @@ export const removeFormError = (element: HTMLElement) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	errorElement?.remove();
 };
+
+export const getUserIdFromUrl = (url: string) => {
+	const match = url.match(/\/user\/([0-9]+)\/?/);
+	if (match != null) {
+		return parseInt(match[1]);
+	}
+	return null;
+}

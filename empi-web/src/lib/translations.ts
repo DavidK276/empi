@@ -19,6 +19,14 @@ const config: Config = {
 			).default
 		},
 		{
+			locale: 'en',
+			key: 'account',
+			routes: ['/account'], // you can use regexes as well!
+			loader: async () => (
+				await import('./en/account.json')
+			).default
+		},
+		{
 			locale: 'sk',
 			key: 'common',
 			loader: async () => (
@@ -31,6 +39,14 @@ const config: Config = {
 			routes: ['/'], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/home.json')
+			).default
+		},
+		{
+			locale: 'sk',
+			key: 'account',
+			routes: ['/account'], // you can use regexes as well!
+			loader: async () => (
+				await import('./sk/account.json')
 			).default
 		}
 	]

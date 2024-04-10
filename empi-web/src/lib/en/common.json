@@ -19,5 +19,6 @@
   "passwords_nomatch": "Passwords do not match",
   "password_hint": "This password is used to encrypt your data! If you forget it, you will be locked out of your account.",
   "registration_ok": "Registration successful. You may now log in using your credentials.",
-  "unknown_error": "Unknown error occured"
+  "unknown_error": "Unknown error occured",
+  "token_hint": "This is your anonymous identifier that you will submit when you participate in a research."
 }

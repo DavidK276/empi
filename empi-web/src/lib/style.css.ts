@@ -1,9 +1,29 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from './theme.css';
 
-export const container = style({
+export const row = style({
 	display: 'flex',
 	flexDirection: 'row',
+	gap: vars.md,
+	selectors: {
+		'.ver-top&': {
+			alignItems: 'top'
+		},
+		'.ver-center&': {
+			alignItems: 'center'
+		},
+		'.hor-left&': {
+			justifyContent: 'start'
+		},
+		'.hor-center&': {
+			justifyContent: 'center'
+		}
+	}
+});
+
+export const col = style({
+	display: 'flex',
+	flexDirection: 'column',
 	gap: vars.md,
 	selectors: {
 		'.ver-top&': {
@@ -97,6 +117,21 @@ export const error = style({
 	color: 'red',
 	display: 'block',
 	margin: '4px 0'
+});
+
+export const badge = style({
+	display: 'inline-flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	gap: vars.sm,
+	borderRadius: vars.xs,
+	paddingLeft: vars.md,
+	paddingRight: vars.md,
+	paddingTop: vars.sm,
+	paddingBottom: vars.sm,
+	backgroundColor: vars.buttonPrimary,
+	color: vars.textSecondary,
+	border: 'none'
 });
 
 globalStyle('body', {

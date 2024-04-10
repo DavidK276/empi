@@ -7,6 +7,7 @@ export const [themeClass, vars] = createTheme({
 	lg: '1rem',
 	xl: '2rem',
 	xl2: '3rem',
+	danger: '#b00020',
 	textSecondary: '#fff',
 	textPrimary: '#000',
 	textTertiary: 'rgb(17 24 39)',
