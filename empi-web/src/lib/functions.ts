@@ -95,4 +95,21 @@ export const getUserIdFromUrl = (url: string) => {
 		return parseInt(match[1]);
 	}
 	return null;
+};
+
+export const convertFormData = (formData: FormData) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const object: any = {};
+	formData.forEach((value, key) => {
+		// Reflect.has in favor of: object.hasOwnProperty(key)
+		if (!Reflect.has(object, key)) {
+			object[key] = value;
+			return;
+		}
+		if (!Array.isArray(object[key])) {
+			object[key] = [object[key]];
+		}
+		object[key].push(value);
+	});
+	return JSON.stringify(object);
 }

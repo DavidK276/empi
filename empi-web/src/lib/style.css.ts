@@ -78,32 +78,6 @@ export const dropdownContent = style({
 	}
 });
 
-export const tooltip = style({
-	position: 'relative',
-	display: 'inline-block'
-});
-
-export const tooltiptext = style({
-	selectors: {
-		[`${tooltip} &`]: {
-			visibility: 'hidden',
-			width: '120px',
-			backgroundColor: vars.backgroundSecondary,
-			color: vars.textSecondary,
-			textAlign: 'center',
-			padding: '5px 0',
-			borderRadius: vars.sm,
-			position: 'absolute',
-			zIndex: 1,
-			top: '-5px',
-			left: '105%'
-		},
-		[`${tooltip}:hover &`]: {
-			visibility: 'visible'
-		}
-	}
-});
-
 export const content = style({
 	maxWidth: 1280,
 	width: '100%'
@@ -119,20 +93,13 @@ export const error = style({
 	margin: '4px 0'
 });
 
-export const badge = style({
-	display: 'inline-flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	gap: vars.sm,
+export const box = style({
+	border: '1px solid gray',
 	borderRadius: vars.xs,
-	paddingLeft: vars.md,
-	paddingRight: vars.md,
-	paddingTop: vars.sm,
-	paddingBottom: vars.sm,
-	backgroundColor: vars.buttonPrimary,
-	color: vars.textSecondary,
-	border: 'none'
-});
+	boxShadow: '0 0 4px gray',
+	margin: `${vars.sm} 0`,
+	padding: `${vars.sm}`
+})
 
 globalStyle('body', {
 	fontFamily: '"Source Sans Pro",sans-serif'
@@ -177,6 +144,17 @@ globalStyle('label', {
 });
 
 globalStyle('input', {
+	display: 'block',
+	marginTop: vars.sm,
+	width: '100%',
+	borderRadius: vars.xs,
+	borderWidth: 0,
+	padding: `${vars.xs} ${vars.sm}`,
+	boxShadow: `0 0 2px gray`,
+	boxSizing: 'border-box'
+});
+
+globalStyle('select', {
 	display: 'block',
 	marginTop: vars.sm,
 	width: '100%',

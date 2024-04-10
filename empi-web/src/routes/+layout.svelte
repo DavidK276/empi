@@ -2,8 +2,8 @@
 	import 'material-symbols';
 	import '@fontsource/source-sans-pro';
 	import { enhance } from '$app/forms';
-	import { row, content, dropdown, dropdownContent, error } from '$lib/style.css';
-	import { themeClass } from '$lib/theme.css';
+	import { content, dropdown, dropdownContent, error, row } from '$lib/style.css';
+	import { themeClass, vars } from '$lib/theme.css';
 
 	import { t } from '$lib/translations';
 	import type { LayoutServerData } from './$types';
@@ -78,6 +78,17 @@
 						{/if}
 						<a href="/register">{$t('common.registration')}</a>
 					</form>
+				</div>
+			</div>
+		{/if}
+		{#if data.user?.is_staff}
+			<div class="{dropdown}">
+				<button on:click={toggleDropdown}>
+					{$t('common.administration')}
+					<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>
+				</button>
+				<div class="{dropdownContent}" style="padding-top: {vars.lg}">
+					<a href="/attributes">{$t('common.attributes')}</a>
 				</div>
 			</div>
 		{/if}
