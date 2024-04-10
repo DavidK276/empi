@@ -2,7 +2,7 @@
 	import 'material-symbols';
 	import '@fontsource/source-sans-pro';
 	import { enhance } from '$app/forms';
-	import { container, content, dropdown, dropdownContent, error } from '$lib/style.css';
+	import { row, content, dropdown, dropdownContent, error } from '$lib/style.css';
 	import { themeClass } from '$lib/theme.css';
 
 	import { t } from '$lib/translations';
@@ -17,7 +17,7 @@
 </script>
 
 <div class="{themeClass}">
-	<header class="{container} hor-center ver-center">
+	<header class="{row} hor-center ver-center">
 		<nav>
 			<a href="/">{$t('common.home')}</a>
 			<a href="/about">{$t('common.about')}</a>
@@ -55,7 +55,7 @@
 					<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>
 				</button>
 				<div class="{dropdownContent}">
-					<form method="POST" action="?/login" style="width: 100%"
+					<form method="POST" action="/?/login" style="width: 100%"
 								use:enhance={() => {
 									logging_in = true;
 
@@ -82,12 +82,12 @@
 			</div>
 		{/if}
 	</header>
-	<div class="{container} ver-top hor-center">
+	<div class="{row} ver-top hor-center">
 		<div class="{content}">
 			<slot></slot>
 		</div>
 	</div>
-	<footer class="{container} ver-center hor-center">
+	<footer class="{row} ver-center hor-center">
 		<div>
 			<p>EMPI verzia 0.0.0. Pôvodne navrhol a vytvoril David Krchňavý v 2024 ako bakalársku prácu na Univerzite
 				Komenského
