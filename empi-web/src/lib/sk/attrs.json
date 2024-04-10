@@ -1,0 +1,8 @@
+{
+  "name": "Názov",
+  "type": "Typ",
+  "options": "Možnosti",
+  "single_choice": "Výber jednej možnosti",
+  "multiple_choice": "Výber viacerých možností",
+  "enter_text": "Zadanie textu"
+}

@@ -11,6 +11,8 @@
   "password": "Heslo",
   "account": "Účet",
   "registration": "Registrácia",
+  "administration": "Administrácia",
+  "attributes": "Atribúty",
   "register": "Registrovať",
   "first_name": "Meno",
   "last_name": "Priezvisko",

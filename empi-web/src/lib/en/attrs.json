@@ -1,0 +1,8 @@
+{
+  "name": "Name",
+  "type": "Type",
+  "options": "Options",
+  "single_choice": "Single choice",
+  "multiple_choice": "Multiple choice",
+  "enter_text": "Text entry"
+}
