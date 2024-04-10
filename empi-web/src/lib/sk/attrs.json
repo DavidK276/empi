@@ -4,5 +4,7 @@
   "options": "Možnosti",
   "single_choice": "Výber jednej možnosti",
   "multiple_choice": "Výber viacerých možností",
-  "enter_text": "Zadanie textu"
+  "enter_text": "Zadanie textu",
+  "delete": "Zmazať",
+  "add": "Pridať novú"
 }

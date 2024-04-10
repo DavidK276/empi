@@ -12,10 +12,10 @@ const config: Config = {
 		},
 		{
 			locale: 'en',
-			key: 'home',
-			routes: ['/'], // you can use regexes as well!
+			key: 'attrs',
+			routes: ['/attributes'], // you can use regexes as well!
 			loader: async () => (
-				await import('./en/home.json')
+				await import('./en/attrs.json')
 			).default
 		},
 		{
@@ -35,10 +35,10 @@ const config: Config = {
 		},
 		{
 			locale: 'sk',
-			key: 'home',
-			routes: ['/'], // you can use regexes as well!
+			key: 'attrs',
+			routes: ['/attributes'], // you can use regexes as well!
 			loader: async () => (
-				await import('./sk/home.json')
+				await import('./sk/attrs.json')
 			).default
 		},
 		{

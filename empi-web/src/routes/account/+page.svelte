@@ -6,8 +6,6 @@
 
 	let user = $page.data.user;
 	let participant = $page.data.participant;
-	console.log(user);
-	console.log(participant);
 </script>
 <div class="{row}">
 	<h1 style="margin: 1rem 0">{$t('account.my_account')}</h1>

@@ -15,9 +15,9 @@
 
 <label class="{row} ver-top">
 	{#if value}
-		<input type="text" name="values" value="{value}" style="margin: 0" readonly>
+		<input type="text" name="values[]" value="{value}" style="margin: 0" readonly>
 	{:else}
-		<input type="text" name="values" style="margin: 0">
+		<input type="text" name="values[]" style="margin: 0">
 	{/if}
 	<button type="button" style="background-color: {vars.danger}" on:click={deleteOption}>-</button>
 </label>

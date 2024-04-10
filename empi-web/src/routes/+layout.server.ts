@@ -30,7 +30,7 @@ export const load: LayoutServerLoad = async ({ cookies, fetch }) => {
 		const user = await response.json() as User;
 		const userId = getUserIdFromUrl(user.url);
 		let participant = null;
-		if (userId != null) {
+		if (userId != null && !user.is_staff) {
 			participant = await tryGetParticipant(userId);
 		}
 		return {
