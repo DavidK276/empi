@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 from research.models import Research
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
@@ -80,23 +81,24 @@ class ParticipantViewSet(
 class AttributeViewSet(viewsets.ModelViewSet):
     queryset = Attribute.objects.get_queryset().order_by("pk")
     serializer_class = AttributeSerializer
-    permission_classes = [ReadOnly | IsAdminUser]
+    permission_classes = [IsSelf | ReadOnly | IsAdminUser]
 
     @action(
         detail=False,
-        name="Get attributes for user",
+        name="Attributes for participant",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
-        url_path="participant/(?P<participant_pk>[0-9]+/?)",
+        url_path="participant/(?P<pk>[0-9]+/?)"
     )
-    def participant(self, request, participant_pk=None):
+    def participant(self, request, pk=None):
         try:
-            participant: Participant = Participant.objects.get(pk=participant_pk)
+            participant: Participant = Participant.objects.get(pk=pk)
         except Participant.DoesNotExist:
             raise exceptions.NotFound("participant does not exist")
         if request.method == HTTPMethod.POST:
             for name, values in request.data.items():
                 new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)
-                participant.chosen_attribute_values.set(new_chosen_values)
+                to_keep = participant.chosen_attribute_values.filter(~Q(attribute__name=name))
+                participant.chosen_attribute_values.set(to_keep.union(new_chosen_values))
             participant.save()
         return Response(AttributeValue.group_by_attribute(participant.chosen_attribute_values.all()))
 
@@ -114,6 +116,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
         if request.method == HTTPMethod.POST:
             for name, values in request.data.items():
                 new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)
-                research.chosen_attribute_values.set(new_chosen_values)
+                to_keep = research.chosen_attribute_values.filter(~Q(attribute__name=name))
+                research.chosen_attribute_values.set(to_keep.union(new_chosen_values))
             research.save()
         return Response(AttributeValue.group_by_attribute(research.chosen_attribute_values.all()))
