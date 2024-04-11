@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
-from django.http import HttpResponseRedirect
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from research.models import Research
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
@@ -87,7 +87,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
         detail=False,
         name="Attributes for participant",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
-        url_path="participant/(?P<pk>[0-9]+/?)"
+        url_path="participant/(?P<pk>[0-9]+/?)",
     )
     def participant(self, request, pk=None):
         try:
@@ -104,13 +104,24 @@ class AttributeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=False,
+        name="Attributes for current user",
+        methods=[HTTPMethod.GET, HTTPMethod.POST],
+        url_path="participant",
+        permission_classes=[IsAuthenticated]
+    )
+    def get_self(self, request):
+        pk = request.user.pk
+        return self.participant(request, pk)
+
+    @action(
+        detail=False,
         name="Attributes for research",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
-        url_path="research/(?P<research_pk>[0-9]+/?)",
+        url_path="research/(?P<pk>[0-9]+/?)",
     )
-    def research(self, request, research_pk=None):
+    def research(self, request, pk=None):
         try:
-            research: Research = Research.objects.get(pk=research_pk)
+            research: Research = Research.objects.get(pk=pk)
         except Research.DoesNotExist:
             raise exceptions.NotFound("research does not exist")
         if request.method == HTTPMethod.POST:
