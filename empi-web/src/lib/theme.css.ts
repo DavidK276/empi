@@ -71,6 +71,11 @@ globalStyle('input', {
 	boxSizing: 'border-box'
 });
 
+globalStyle('input[type="radio"],input[type="checkbox"]', {
+	display: 'inline',
+	width: 'initial'
+});
+
 globalStyle('select', {
 	display: 'block',
 	marginTop: vars.sm,

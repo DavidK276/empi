@@ -6,5 +6,6 @@
   "multiple_choice": "Výber viacerých možností",
   "enter_text": "Zadanie textu",
   "delete": "Zmazať",
-  "add": "Pridať novú"
+  "add": "Pridať novú",
+  "success": "Hodnoty sa uložili"
 }

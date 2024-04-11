@@ -106,7 +106,9 @@ export const convertFormData = (formData: FormData) => {
 			if (!Reflect.has(object, key)) {
 				object[key] = [];
 			}
-			object[key].push(value);
+			if (key !== '__blank__') {
+				object[key].push(value);
+			}
 		}
 		else {
 			if (!Reflect.has(object, key)) {

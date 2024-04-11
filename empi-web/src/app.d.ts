@@ -1,10 +1,17 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
+// import type { User } from '$lib/objects/user';
+// import type { Attribute } from '$lib/objects/attribute';
+
+
 declare global {
     namespace App {
         // interface Error {}
         // interface Locals {}
-        // interface PageData {}
+        // interface PageData {
+        //     user: User | undefined
+        //     attrs: Attribute[] | undefined
+        // }
         // interface PageState {}
         // interface Platform {}
     }

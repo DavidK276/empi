@@ -2,7 +2,7 @@ import type { PageLoad } from './$types';
 import * as consts from '$lib/constants';
 import { Attribute } from '$lib/objects/attribute';
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageLoad = async ({ fetch, parent, data }) => {
 	let response = await fetch(consts.API_ENDPOINT + 'attr/');
 
 	const attrs: Attribute[] = [];
@@ -19,7 +19,9 @@ export const load: PageLoad = async ({ fetch }) => {
 			}
 		}
 	}
+	await parent();
 	return {
-		attrs: attrs
+		attrs: attrs,
+		user_attrs: data.user_attrs
 	};
 };

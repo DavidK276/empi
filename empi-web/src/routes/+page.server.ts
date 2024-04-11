@@ -9,6 +9,7 @@ export const actions = {
 			method: 'POST'
 		});
 		cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
+		cookies.delete(consts.SELF_URL_COOKIE, { path: '/' });
 
 		if (response.ok) {
 			const responseJSON = await response.json();
@@ -17,7 +18,7 @@ export const actions = {
 		}
 		return {
 			login: response.ok
-		}
+		};
 	},
 	logout: async ({ cookies }) => {
 		const authToken = cookies.get(consts.TOKEN_COOKIE);

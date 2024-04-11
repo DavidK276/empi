@@ -6,5 +6,6 @@
   "multiple_choice": "Multiple choice",
   "enter_text": "Text entry",
   "delete": "Delete",
-  "add": "Add new"
+  "add": "Add new",
+  "success": "Values were saved"
 }

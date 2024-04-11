@@ -19,7 +19,7 @@
 </script>
 {#if attr != null}
 	<div class="{box}">
-		<form method="POST">
+		<form method="POST" action="?/admin">
 			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" value="{attr.name}" required>
 			<label for="type">{$t('attrs.type')}</label>
@@ -46,7 +46,7 @@
 	</div>
 {:else}
 	<div class="{box}">
-		<form method="POST">
+		<form method="POST" action="?/admin">
 			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" required>
 			<label for="type">{$t('attrs.type')}</label>

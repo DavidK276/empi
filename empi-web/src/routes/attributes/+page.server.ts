@@ -1,11 +1,11 @@
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
 import { fail } from '@sveltejs/kit';
 import { convertFormData } from '$lib/functions';
 
 
 export const actions = {
-	default: async ({ cookies, request, fetch }) => {
+	admin: async ({ cookies, request, fetch }) => {
 		const formData = await request.formData();
 		const authToken = cookies.get(consts.TOKEN_COOKIE);
 		if (authToken) {
@@ -54,5 +54,44 @@ export const actions = {
 				return {};
 			}
 		}
+	},
+	user: async ({ cookies, request, fetch }) => {
+		const formData = await request.formData();
+		const authToken = cookies.get(consts.TOKEN_COOKIE);
+		if (authToken) {
+			const response = await fetch(consts.API_ENDPOINT + 'attr/participant/', {
+				method: 'POST',
+				body: convertFormData(formData),
+				headers: {
+					'Authorization': `Token ${authToken}`,
+					'Content-Type': 'application/json'
+				}
+			});
+			return {
+				success: response.ok
+			};
+		}
+		return {
+			success: false
+		};
 	}
 } satisfies Actions;
+
+export const load: PageServerLoad = async ({ cookies, fetch }) => {
+	const authToken = cookies.get(consts.TOKEN_COOKIE);
+	if (authToken) {
+		const response = await fetch(consts.API_ENDPOINT + 'attr/participant/', {
+			method: 'GET',
+			headers: {
+				'Authorization': `Token ${authToken}`
+			}
+		});
+		if (response.ok) {
+			const responseJSON = await response.json();
+			return {
+				user_attrs: responseJSON
+			};
+		}
+	}
+	return {};
+};
