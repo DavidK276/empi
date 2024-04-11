@@ -17,7 +17,7 @@
 </script>
 
 <div class="{themeClass}">
-	<header class="{row} hor-center ver-center">
+	<header class="{row} hor-center ver-center m-col">
 		<nav>
 			<a href="/">{$t('common.home')}</a>
 			<a href="/about">{$t('common.about')}</a>
