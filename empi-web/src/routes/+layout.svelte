@@ -1,5 +1,4 @@
 <script lang="ts">
-	import 'material-symbols';
 	import '@fontsource/source-sans-pro';
 	import { enhance } from '$app/forms';
 	import { content, dropdown, dropdownContent, error, row } from '$lib/style.css';
@@ -28,7 +27,11 @@
 					{data.user.first_name} {data.user.last_name}
 					<span class="material-symbols-outlined">expand_more</span>
 				</button>
-				<div class="{dropdownContent}">
+				<div class="{dropdownContent}" style="flex-direction: column">
+					<div><a href="/attributes">{$t('common.attributes')}<span
+						class="material-symbols-outlined">navigate_next</span></a></div>
+					<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
+					</div>
 					<form method="POST" action="/?/logout"
 								use:enhance={() => {
 									logging_out = true;
@@ -39,7 +42,6 @@
 										logging_out = false;
 									};
 								}}>
-						<a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 						{#if logging_out}
 							<button type="submit" disabled>{$t('common.logging_out')}</button>
 						{:else}
@@ -69,14 +71,16 @@
 						<label for="password">{$t('common.password')}: </label>
 						<input type="password" id="password" name="password" required minlength="4">
 						{#if $page.form?.login === false}
-							<p class="{error}">{$t('common.wrong_login')}</p>
+							<p class="{error}" style="white-space: nowrap">{$t('common.wrong_login')}</p>
 						{/if}
-						{#if logging_in}
-							<button type="submit" disabled>{$t('common.logging_in')}</button>
-						{:else}
-							<button type="submit" name="submit">{$t('common.login')}</button>
-						{/if}
-						<a href="/register">{$t('common.registration')}</a>
+						<div style="display: flex; flex-wrap: nowrap">
+							{#if logging_in}
+								<button type="submit" disabled>{$t('common.logging_in')}</button>
+							{:else}
+								<button type="submit" name="submit">{$t('common.login')}</button>
+							{/if}
+							<a href="/register">{$t('common.registration')}</a>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -100,9 +104,7 @@
 	</div>
 	<footer class="{row} ver-center hor-center">
 		<div>
-			<p>EMPI verzia 0.0.0. Pôvodne navrhol a vytvoril David Krchňavý v 2024 ako bakalársku prácu na Univerzite
-				Komenského
-				v Bratislave, Fakulta matematiky, fyziky a informatiky.</p>
+			<p style="text-align: justify">{$t('common.author_text')}</p>
 		</div>
 	</footer>
 </div>

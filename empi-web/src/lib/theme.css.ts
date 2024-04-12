@@ -43,11 +43,8 @@ globalStyle('button', {
 	paddingBottom: vars.sm,
 	backgroundColor: vars.buttonPrimary,
 	color: vars.textSecondary,
-	border: 'none'
-});
-
-globalStyle('button[type="submit"]', {
-	marginTop: vars.md
+	border: 'none',
+	whiteSpace: 'nowrap'
 });
 
 globalStyle('button[disabled]', {
@@ -56,7 +53,6 @@ globalStyle('button[disabled]', {
 
 globalStyle('label', {
 	display: 'flex',
-	marginTop: vars.lg,
 	color: vars.textTertiary
 });
 
@@ -67,13 +63,20 @@ globalStyle('input', {
 	borderRadius: vars.xs,
 	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
+	marginBottom: vars.lg,
 	boxShadow: `0 0 2px gray`,
 	boxSizing: 'border-box'
 });
 
+globalStyle('input[type="text"]', {
+	minWidth: '200px'
+});
+
 globalStyle('input[type="radio"],input[type="checkbox"]', {
 	display: 'inline',
-	width: 'initial'
+	width: 'initial',
+	marginLeft: vars.lg,
+	marginBottom: 'initial'
 });
 
 globalStyle('select', {
@@ -96,5 +99,5 @@ globalStyle('header', {
 });
 
 globalStyle('footer', {
-	paddingTop: vars.md
+	marginTop: vars.md,
 });
