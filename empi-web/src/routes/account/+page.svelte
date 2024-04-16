@@ -7,12 +7,12 @@
 	let user = $page.data.user;
 	let participant = $page.data.participant;
 </script>
-<div class="{row}">
-	<h1 style="margin: 1rem 0">{$t('account.my_account')}</h1>
+<div class="{row} ver-center">
+	<h1>{$t('account.my_account')}</h1>
 	{#if user?.is_staff}
-		<button style="margin: 1rem 0; background-color: {vars.danger}">Superuser</button>
+		<button style="background-color: {vars.danger}">Superuser</button>
 	{:else}
-		<button style="margin: 1rem 0;">Participant</button>
+		<button>Participant</button>
 	{/if}
 </div>
 <h2>{$t('account.personal_info')}</h2>

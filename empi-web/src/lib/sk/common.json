@@ -2,6 +2,7 @@
   "author_text": "EMPI verzia 0.0.0. Pôvodne navrhol a vytvoril David Krchňavý v 2024 ako bakalársku prácu na FMFI UK v Bratislave.",
   "submit": "Uložiť",
   "submitting": "Ukladám…",
+  "saved": "Uložené",
   "home": "Domov",
   "about": "O systéme",
   "logout": "Odhlásiť sa",
@@ -25,5 +26,6 @@
   "password_hint": "Heslo sa používa na šifrovanie vašich dát! Ak ho zabudnete, stratíte prístup k účtu.",
   "registration_ok": "Registrácia úspešná. Teraz sa môžete prihlásiť s vašimi údajmi.",
   "unknown_error": "Nastala neznáma chyba",
-  "token_hint": "Toto je váš anonymný identifikátor, ktorý odovzdáte pri účasti na výskume."
+  "token_hint": "Toto je váš anonymný identifikátor, ktorý odovzdáte pri účasti na výskume.",
+  "research": "Výskum"
 }

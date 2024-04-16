@@ -13,7 +13,7 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'attrs',
-			routes: ['/attributes'], // you can use regexes as well!
+			routes: ['/attributes', /\/research.*/], // you can use regexes as well!
 			loader: async () => (
 				await import('./en/attrs.json')
 			).default
@@ -36,7 +36,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'attrs',
-			routes: ['/attributes'], // you can use regexes as well!
+			routes: ['/attributes', /\/research.*/], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/attrs.json')
 			).default

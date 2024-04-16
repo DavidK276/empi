@@ -67,13 +67,18 @@ export const actions = {
 					'Content-Type': 'application/json'
 				}
 			});
-			return {
-				success: response.ok
-			};
+			if (response.ok) {
+				return {
+					success: true
+				};
+			}
+			return fail(response.status, {
+				success: false
+			});
 		}
-		return {
+		return fail(401, {
 			success: false
-		};
+		});
 	}
 } satisfies Actions;
 

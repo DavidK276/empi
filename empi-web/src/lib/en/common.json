@@ -2,6 +2,7 @@
   "author_text": "EMPI v0.0.0. Created and developed by David Krchňavý in 2024 as a bachelor thesis at FMFI UK in Bratislava.",
   "submit": "Submit",
   "submitting": "Submitting…",
+  "saved": "Saved",
   "home": "Home",
   "about": "About",
   "logout": "Log out",
@@ -25,5 +26,6 @@
   "password_hint": "This password is used to encrypt your data! If you forget it, you will be locked out of your account.",
   "registration_ok": "Registration successful. You may now log in using your credentials.",
   "unknown_error": "Unknown error occured",
-  "token_hint": "This is your anonymous identifier that you will submit when you participate in a research."
+  "token_hint": "This is your anonymous identifier that you will submit when you participate in a research.",
+  "research": "Research"
 }

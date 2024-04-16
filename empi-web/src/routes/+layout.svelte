@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '@fontsource/source-sans-pro';
 	import { enhance } from '$app/forms';
-	import { content, dropdown, dropdownContent, error, row } from '$lib/style.css';
+	import { col, content, dropdown, dropdownContent, error, row } from '$lib/style.css';
 	import { themeClass, vars } from '$lib/theme.css';
 
 	import { t } from '$lib/translations';
@@ -91,8 +91,9 @@
 					{$t('common.administration')}
 					<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>
 				</button>
-				<div class="{dropdownContent}" style="padding-top: {vars.lg}">
-					<a href="/attributes">{$t('common.attributes')}</a>
+				<div class="{dropdownContent} {col}" style="padding-top: {vars.lg}">
+					<div><a href="/attributes">{$t('common.attributes')}</a></div>
+					<div><a href="/admin/points">{$t('common.points')}</a></div>
 				</div>
 			</div>
 		{/if}
