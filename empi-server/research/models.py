@@ -26,7 +26,7 @@ class Research(models.Model):
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
-    points = models.PositiveIntegerField(verbose_name="body")
+    points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
     protected = models.BooleanField(default=False, null=False)
