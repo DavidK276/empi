@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from './theme.css';
 
 export const row = style({
@@ -104,4 +104,36 @@ export const box = style({
 	boxShadow: '0 0 4px gray',
 	margin: `${vars.sm} 0`,
 	padding: `${vars.sm}`
+});
+
+export const accordion = style({
+	border: `1px solid ${vars.buttonPrimary}`,
+	borderRadius: vars.xs,
+	overflow: 'hidden',
+});
+
+export const accordionTabContent = style({
+	maxHeight: 0,
+	overflow: 'hidden',
+});
+
+export const accordionTab = style({});
+
+export const accordionTabLabel = style({
+	cursor: 'pointer',
+	padding: vars.sm,
+	backgroundColor: vars.buttonPrimary,
+	color: vars.textSecondary,
+	justifyContent: 'space-between'
+});
+
+export const accordionTabInput = style({
+	position: 'absolute',
+	opacity: 0,
+	zIndex: -1
+});
+
+globalStyle(`${accordionTab} input:checked ~ ${accordionTabContent}`, {
+	maxHeight: 'initial',
+	margin: vars.sm
 });
