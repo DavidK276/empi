@@ -4,3 +4,4 @@ export const TOKEN_COOKIE = 'sessiontoken';
 export const SELF_URL_COOKIE = 'userurl';
 export const SUPPORTED_LANGS = ['en', 'sk'];
 export const ALLOW_TEXTENTRY_ATTR = false;
+export const PAGE_SIZE = 10;

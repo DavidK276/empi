@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
-import { fail } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Research } from '$lib/objects/research';
 
 export const actions = {
@@ -60,5 +60,5 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 			};
 		}
 	}
-	return fail(401, { researches: null });
+	return {};
 };
