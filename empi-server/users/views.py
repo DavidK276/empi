@@ -108,7 +108,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
         name="Attributes for current user",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
         url_path="participant",
-        permission_classes=[IsAuthenticated]
+        permission_classes=[IsAuthenticated],
     )
     def get_self(self, request):
         pk = request.user.pk
@@ -119,7 +119,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
         name="Attributes for research",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
         url_path=f"research/(?P<research_pk>{UUID_REGEX}/?)",
-        permission_classes=[AllowAny]
+        permission_classes=[AllowAny],
     )
     def research(self, request, research_pk=None):
         try:

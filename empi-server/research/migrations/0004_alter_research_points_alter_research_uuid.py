@@ -14,9 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="research",
             name="points",
-            field=models.PositiveIntegerField(
-                blank=True, null=True, verbose_name="body"
-            ),
+            field=models.PositiveIntegerField(blank=True, null=True, verbose_name="body"),
         ),
         migrations.AlterField(
             model_name="research",
