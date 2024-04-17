@@ -3,7 +3,7 @@
 
 	import type { PageData } from './$types';
 	import Attribute from './Attribute.svelte';
-	import Setting from './Setting.svelte';
+	import Setting from '$lib/components/Setting.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';

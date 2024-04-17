@@ -2,14 +2,13 @@
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
 	import { vars } from '$lib/theme.css';
-	import Setting from '../../attributes/Setting.svelte';
+	import Setting from '$lib/components/Setting.svelte';
 	import { enhance } from '$app/forms';
 	import { row } from '$lib/style.css';
 
 	export let data: PageData;
 	let submitting = false;
 	let submit_success: boolean | null = null;
-	console.log(data);
 </script>
 <div class="{row} ver-center">
 	<h1>{data.research.name}</h1>
