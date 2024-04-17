@@ -27,5 +27,6 @@
   "registration_ok": "Registration successful. You may now log in using your credentials.",
   "unknown_error": "Unknown error occured",
   "token_hint": "This is your anonymous identifier that you will submit when you participate in a research.",
-  "research": "Research"
+  "research": "Research",
+  "points": "Points"
 }

@@ -27,5 +27,6 @@
   "registration_ok": "Registrácia úspešná. Teraz sa môžete prihlásiť s vašimi údajmi.",
   "unknown_error": "Nastala neznáma chyba",
   "token_hint": "Toto je váš anonymný identifikátor, ktorý odovzdáte pri účasti na výskume.",
-  "research": "Výskum"
+  "research": "Výskum",
+  "points": "Body"
 }
