@@ -3,6 +3,9 @@ from collections.abc import Iterable
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
 from django.contrib.auth.models import AnonymousUser
+from django.db import transaction
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.request import Request
@@ -40,6 +43,31 @@ class ResearchViewSet(viewsets.ModelViewSet):
         new_password = serializer.validated_data["new_password"]
         research.change_password(current_password, new_password)
         return Response(status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
+        methods=[HTTPMethod.GET, HTTPMethod.PUT],
+        serializer_class=AppointmentSerializer
+    )
+    @transaction.atomic
+    def appointments(self, request, pk=None):
+        research: Research = get_object_or_404(Research, pk=pk)
+        to_keep = []
+        if request.method == HTTPMethod.PUT:
+            for data in request.data:
+                if appointment_id := data.pop('id', None):
+                    appointment = get_object_or_404(Appointment, pk=appointment_id)
+                    serializer: AppointmentSerializer = self.get_serializer(appointment, data=data)
+                else:
+                    serializer: AppointmentSerializer = self.get_serializer(data=data)
+                serializer.is_valid(raise_exception=True)
+                appointment: Appointment = serializer.save()
+                to_keep.append(appointment.pk)
+            Appointment.objects.filter(~Q(pk__in=to_keep)).delete()
+
+        appointments = Appointment.objects.filter(research=research)
+        serializer = self.get_serializer(appointments, many=True)
+        return Response(serializer.data)
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
@@ -103,22 +131,19 @@ class ParticipationViewSet(
 
         return Response(self.get_participations_for_key(private_key, participations, request))
 
-    def get_research_participations(self, request: Request) -> Response:
-        try:
-            research: Research = Research.objects.get(pk=request.GET["research"])
-            _, encrypted_key = research.get_keypair()
-            private_key = RSA.import_key(encrypted_key, "unprotected")
+    def get_research_participations(self, request: Request, research_id: int) -> Response:
+        research: Research = get_object_or_404(Research, pk=research_id)
+        _, encrypted_key = research.get_keypair()
+        private_key = RSA.import_key(encrypted_key, "unprotected")
 
-            participations = Participation.objects.filter(appointment__research=research)
-            return Response(self.get_participations_for_key(private_key, participations, request))
-        except Research.DoesNotExist:
-            raise exceptions.NotFound("the specified research does not exist")
+        participations = Participation.objects.filter(appointment__research=research)
+        return Response(self.get_participations_for_key(private_key, participations, request))
 
     @action(detail=False, name="Get decrypted", methods=[HTTPMethod.GET])
     def get_decrypted_participations(self, request: Request):
         research_id = request.GET.get("research", default=None)
         if research_id:
-            return self.get_research_participations(request)
+            return self.get_research_participations(request, research_id)
         if not isinstance(request.user, AnonymousUser):
             return self.get_user_participations(request)
         raise exceptions.ParseError("missing research query parameter")

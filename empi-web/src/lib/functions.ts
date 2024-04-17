@@ -97,10 +97,10 @@ export const getUserIdFromUrl = (url: string) => {
 	return null;
 };
 
-export const convertFormData = (formData: FormData) => {
+export const convertFormData = (args: { formData: FormData, stringify?: boolean}) => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const object: any = {};
-	formData.forEach((value, key) => {
+	args.formData.forEach((value, key) => {
 		if (key.endsWith('[]')) {
 			key = key.slice(0, -2);
 			if (!Reflect.has(object, key)) {
@@ -121,5 +121,8 @@ export const convertFormData = (formData: FormData) => {
 			object[key].push(value);
 		}
 	});
+	if (args.stringify === false) {
+		return object;
+	}
 	return JSON.stringify(object);
 };

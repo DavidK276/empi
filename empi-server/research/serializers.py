@@ -12,7 +12,7 @@ class ResearchSerializer(serializers.HyperlinkedModelSerializer):
         exclude = ["chosen_attribute_values"]
 
 
-class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
+class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Appointment
         fields = "__all__"

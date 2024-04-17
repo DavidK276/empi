@@ -28,7 +28,7 @@ export const actions = {
 				formData.delete('create');
 				const response = await fetch(consts.API_ENDPOINT + 'attr/', {
 					method: 'POST',
-					body: convertFormData(formData), // this is needed to support multiple form values with same name
+					body: convertFormData({ formData }), // this is needed to support multiple form values with same name
 					headers: {
 						'Authorization': `Token ${authToken}`,
 						'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ export const actions = {
 			if (url != null) {
 				const response = await fetch(url, {
 					method: 'PUT',
-					body: convertFormData(formData), // this is needed to support multiple form values with same name
+					body: convertFormData({ formData }), // this is needed to support multiple form values with same name
 					headers: {
 						'Authorization': `Token ${authToken}`,
 						'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ export const actions = {
 		if (authToken) {
 			const response = await fetch(consts.API_ENDPOINT + 'attr/participant/', {
 				method: 'POST',
-				body: convertFormData(formData),
+				body: convertFormData({ formData }),
 				headers: {
 					'Authorization': `Token ${authToken}`,
 					'Content-Type': 'application/json'

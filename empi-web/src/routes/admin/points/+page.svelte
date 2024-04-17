@@ -20,7 +20,7 @@
 		const parent = target.parentElement as HTMLDivElement;
 		const submitButton = parent.children.namedItem('submit') as HTMLButtonElement | null;
 		if (submitButton != null) {
-			submitButton.innerHTML = $t('common.submit');
+			submitButton.innerText = $t('common.submit');
 			submitButton.style['background-color'] = '';
 		}
 	}
@@ -35,7 +35,7 @@
 			<form method="POST" use:enhance={({submitter}) => {
 			return async ({result, update}) => {
 				if (result.type === 'success' && submitter != null) {
-					submitter.innerHTML = $t('common.saved');
+					submitter.innerText = $t('common.saved');
 					submitter.style['background-color'] = 'green';
 				}
 				await update({reset: false});

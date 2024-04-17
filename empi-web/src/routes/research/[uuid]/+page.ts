@@ -2,6 +2,7 @@ import type { PageLoad } from './$types';
 import { API_ENDPOINT } from '$lib/constants';
 import { error } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
+import type { Appointment } from '$lib/objects/appointment';
 
 export const load: PageLoad = async ({ params, fetch }) => {
 	let research = null;
@@ -40,9 +41,20 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	else {
 		error(response.status);
 	}
+
+	let appointments: Appointment[] = [];
+	response = await fetch(API_ENDPOINT + `research/${params.uuid}/appointments/`);
+	if (response.ok) {
+		appointments = await response.json();
+	}
+	else {
+		error(response.status)
+	}
+
 	return {
 		research,
 		attrs,
-		research_attrs
+		research_attrs,
+		appointments
 	};
 };
