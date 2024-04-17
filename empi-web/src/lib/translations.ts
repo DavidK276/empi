@@ -27,6 +27,14 @@ const config: Config = {
 			).default
 		},
 		{
+			locale: 'en',
+			key: 'research',
+			routes: [/\/research.*/], // you can use regexes as well!
+			loader: async () => (
+				await import('./en/research.json')
+			).default
+		},
+		{
 			locale: 'sk',
 			key: 'common',
 			loader: async () => (
@@ -47,6 +55,14 @@ const config: Config = {
 			routes: ['/account'], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/account.json')
+			).default
+		},
+		{
+			locale: 'sk',
+			key: 'research',
+			routes: [/\/research.*/], // you can use regexes as well!
+			loader: async () => (
+				await import('./sk/research.json')
 			).default
 		}
 	]

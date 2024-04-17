@@ -44,7 +44,8 @@ globalStyle('button', {
 	backgroundColor: vars.buttonPrimary,
 	color: vars.textSecondary,
 	border: 'none',
-	whiteSpace: 'nowrap'
+	whiteSpace: 'nowrap',
+	height: 'fit-content'
 });
 
 globalStyle('button[disabled]', {
