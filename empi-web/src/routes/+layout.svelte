@@ -28,8 +28,10 @@
 					<span class="material-symbols-outlined">expand_more</span>
 				</button>
 				<div class="{dropdownContent}" style="flex-direction: column">
-					<div><a href="/attributes">{$t('common.attributes')}<span
-						class="material-symbols-outlined">navigate_next</span></a></div>
+					{#if !data.user.is_staff}
+						<div><a href="/attributes">{$t('common.attributes')}<span
+							class="material-symbols-outlined">navigate_next</span></a></div>
+					{/if}
 					<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 					</div>
 					<form method="POST" action="/?/logout"

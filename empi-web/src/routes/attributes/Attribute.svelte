@@ -36,7 +36,7 @@
 					{#each attr.values as value}
 						<Option {value}></Option>
 					{/each}
-					<button type="button" style="margin-top: {vars.sm}" on:click={addOption}>+</button>
+					<button type="button" on:click={addOption}>+</button>
 				</fieldset>
 			{/if}
 			<input type="hidden" name="url" value="{attr.url}">

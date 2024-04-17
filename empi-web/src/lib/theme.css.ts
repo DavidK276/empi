@@ -82,6 +82,7 @@ globalStyle('input[type="radio"],input[type="checkbox"]', {
 globalStyle('select', {
 	display: 'block',
 	marginTop: vars.sm,
+	marginBottom: vars.lg,
 	width: '100%',
 	borderRadius: vars.xs,
 	borderWidth: 0,
@@ -100,4 +101,8 @@ globalStyle('header', {
 
 globalStyle('footer', {
 	marginTop: vars.md,
+});
+
+globalStyle('fieldset', {
+	margin: `0 0 ${vars.lg} 0`
 });
