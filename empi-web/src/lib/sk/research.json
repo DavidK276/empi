@@ -1,0 +1,12 @@
+{
+  "published": "Publikovaný",
+  "unpublished": "Koncept",
+  "publish": "Publikovať",
+  "unpublish": "Zmenit na koncept",
+  "info_url": "URL výskumu",
+  "name": "Názov",
+  "create": "Vytvoriť",
+  "create_research": "Vytvoriť výskum",
+  "creation_info": "Výskum bude vytvorený ako koncept. Budete ho môcť kedykoľvek publikovať.",
+  "error": "Nastala neznáma chyba"
+}

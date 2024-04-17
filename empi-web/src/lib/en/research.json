@@ -1,0 +1,12 @@
+{
+  "published": "Published",
+  "unpublished": "Draft",
+  "publish": "Publish",
+  "unpublish": "Change to draft",
+  "info_url": "Research URL",
+  "name": "Title",
+  "create": "Create",
+  "create_research": "Create research",
+  "creation_info": "The research will be created as a draft. You'll be able to publish it anytime.",
+  "error": "Unknown error occured"
+}
