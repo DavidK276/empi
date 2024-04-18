@@ -21,7 +21,7 @@
 		}
 
 		const usernameInput = form.elements.namedItem('username') as HTMLInputElement;
-		if (/^[a-zA-Z0-9]+$/.test(usernameInput.value)) {
+		if (!/^[a-zA-Z0-9]+$/.test(usernameInput.value)) {
 			addFormError(usernameInput, $t('common.username_wrong'));
 			result = false;
 		}
