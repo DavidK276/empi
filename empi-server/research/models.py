@@ -23,7 +23,7 @@ from rest_framework import exceptions
 
 
 class Research(models.Model):
-    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)

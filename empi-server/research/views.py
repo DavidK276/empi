@@ -8,33 +8,48 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.permissions import *
 from users.models import Participant
 from users.serializers import PasswordSerializer
+from users.utils.consts import UUID_REGEX
 
 from .models import Appointment, Research, Participation, EncryptedToken
+from .permissions import *
 from .serializers import (
     AppointmentSerializer,
-    ResearchSerializer,
+    ResearchUserSerializer,
+    ResearchAdminSerializer,
     ParticipationSerializer,
 )
-from .permissions import *
 
 
-class ResearchViewSet(viewsets.ModelViewSet):
+class ResearchUserViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Research.objects.get_queryset().order_by("-created")
-    serializer_class = ResearchSerializer
+    serializer_class = ResearchUserSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "id"
+
+
+class ResearchAdminViewSet(viewsets.ModelViewSet):
+    queryset = Research.objects.get_queryset().order_by("-created")
+    serializer_class = ResearchAdminSerializer
     permission_classes = [AllowAllExceptList | IsAdminUser]
+    lookup_field = "uuid"
 
     @action(
         detail=True,
         name="Change password",
-        methods=[HTTPMethod.POST],
+        methods=[HTTPMethod.PUT],
         serializer_class=PasswordSerializer,
     )
-    def change_password(self, request, pk=None):
+    def change_password(self, request, uuid=None):
         research: Research = self.get_object()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -47,22 +62,32 @@ class ResearchViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=[HTTPMethod.GET, HTTPMethod.PUT],
-        serializer_class=AppointmentSerializer
+        serializer_class=AppointmentSerializer,
     )
     @transaction.atomic
-    def appointments(self, request, pk=None):
-        research: Research = get_object_or_404(Research, pk=pk)
-        to_keep = []
+    def appointments(self, request, uuid=None):
+        research: Research = self.get_object()
+
         if request.method == HTTPMethod.PUT:
+            to_keep = []
             for data in request.data:
+                if data['research'] != str(research.uuid):
+                    raise exceptions.PermissionDenied()
+                data['research'] = research.id
+
+                if 'utc-offset' in data:
+                    data['when'] = data['when'] + data.pop('utc-offset')
+
                 if appointment_id := data.pop('id', None):
                     appointment = get_object_or_404(Appointment, pk=appointment_id)
                     serializer: AppointmentSerializer = self.get_serializer(appointment, data=data)
                 else:
                     serializer: AppointmentSerializer = self.get_serializer(data=data)
+
                 serializer.is_valid(raise_exception=True)
                 appointment: Appointment = serializer.save()
                 to_keep.append(appointment.pk)
+
             Appointment.objects.filter(~Q(pk__in=to_keep)).delete()
 
         appointments = Appointment.objects.filter(research=research)

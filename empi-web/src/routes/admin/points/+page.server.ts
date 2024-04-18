@@ -27,7 +27,7 @@ export const actions = {
 export const load: PageServerLoad = async ({ cookies, fetch }) => {
 	const authToken = cookies.get(consts.TOKEN_COOKIE);
 	if (authToken) {
-		let response = await fetch(consts.API_ENDPOINT + 'research/', {
+		let response = await fetch(consts.API_ENDPOINT + 'research-admin/', {
 			method: 'GET',
 			headers: {
 				'Authorization': `Token ${authToken}`

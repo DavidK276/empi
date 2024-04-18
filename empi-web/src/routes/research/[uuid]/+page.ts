@@ -6,7 +6,7 @@ import type { Appointment } from '$lib/objects/appointment';
 
 export const load: PageLoad = async ({ params, fetch }) => {
 	let research = null;
-	let response = await fetch(API_ENDPOINT + `research/${params.uuid}/`);
+	let response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/`);
 	if (response.ok) {
 		research = await response.json();
 	}
@@ -43,7 +43,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	}
 
 	let appointments: Appointment[] = [];
-	response = await fetch(API_ENDPOINT + `research/${params.uuid}/appointments/`);
+	response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/appointments/`);
 	if (response.ok) {
 		appointments = await response.json();
 	}

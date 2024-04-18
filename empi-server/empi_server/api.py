@@ -30,7 +30,8 @@ router.register(r"attr", users_views.AttributeViewSet)
 router.register(r"email", emails_views.EmailViewSet)
 router.register(r"attachment", emails_views.AttachmentViewSet)
 
-router.register(r"research", research_views.ResearchViewSet)
+router.register(r"research-user", research_views.ResearchUserViewSet, basename="research-user")
+router.register(r"research-admin", research_views.ResearchAdminViewSet, basename="research-admin")
 # router.register(r"appointment", research_views.AppointmentViewSet)
 router.register(r"participation", research_views.ParticipationViewSet)
 

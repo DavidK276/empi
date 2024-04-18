@@ -23,7 +23,7 @@ export const actions = {
 		});
 	},
 	appointments: async ({fetch, params, request}) => {
-		const response = await fetch(API_ENDPOINT + `research/${params.uuid}/appointments/`, {
+		const response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/appointments/`, {
 			method: 'PUT',
 			body: await request.text(),
 			headers: {
@@ -40,7 +40,7 @@ export const actions = {
 		});
 	},
 	publish: async ({ fetch, params }) => {
-		await fetch(consts.API_ENDPOINT + `research/${params.uuid}/`, {
+		await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/`, {
 			method: 'PATCH',
 			body: JSON.stringify({ is_published: true }),
 			headers: {
@@ -49,7 +49,7 @@ export const actions = {
 		});
 	},
 	unpublish: async ({ fetch, params }) => {
-		await fetch(consts.API_ENDPOINT + `research/${params.uuid}/`, {
+		await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/`, {
 			method: 'PATCH',
 			body: JSON.stringify({ is_published: false }),
 			headers: {

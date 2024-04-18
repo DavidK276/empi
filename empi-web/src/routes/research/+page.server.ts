@@ -5,7 +5,7 @@ import { fail, redirect } from '@sveltejs/kit';
 export const actions = {
 	new: async ({ request }) => {
 		const formData = await request.formData();
-		const response = await fetch(consts.API_ENDPOINT + 'research/', {
+		const response = await fetch(consts.API_ENDPOINT + 'research-admin/', {
 			body: formData,
 			method: 'POST'
 		});
@@ -18,7 +18,7 @@ export const actions = {
 			}
 			const researchUUID = pathParts[pathParts.length - 1];
 			// this should be using response.status instead of 302, but the method doesn't allow 201 redirects
-			throw redirect(302, `research/${researchUUID}`)
+			throw redirect(302, `research/${researchUUID}/`)
 		}
 		return fail(response.status, { success: false });
 	}

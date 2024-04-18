@@ -1,19 +1,33 @@
 from rest_framework import serializers
 
-from .models import Participation
 from . import models
+from .models import Participation
 
 
-class ResearchSerializer(serializers.HyperlinkedModelSerializer):
+class ResearchUserSerializer(serializers.HyperlinkedModelSerializer):
     protected = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = models.Research
         exclude = ["chosen_attribute_values"]
+        extra_kwargs = {
+            'url': {'view_name': 'research-user-detail', 'lookup_field': 'id'}
+        }
+
+
+class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
+    protected = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = models.Research
+        exclude = ["chosen_attribute_values"]
+        extra_kwargs = {
+            'url': {'view_name': 'research-admin-detail', 'lookup_field': 'uuid'},
+        }
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    free_capacity = serializers.IntegerField()
+    free_capacity = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Appointment

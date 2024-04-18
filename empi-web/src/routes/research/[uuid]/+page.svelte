@@ -14,10 +14,12 @@
 		row
 	} from '$lib/style.css';
 	import Appointment from './Appointment.svelte';
-	import type { Appointment as Appt } from '$lib/objects/appointment';
+	import { Appointment as Appt } from '$lib/objects/appointment';
 	import { convertFormData } from '$lib/functions';
+	import { plainToInstance } from 'class-transformer';
 
 	export let data: PageData;
+	let appointments = plainToInstance(Appt, data.appointments);
 	let submitting_attrs = false;
 	let submit_success_attrs: boolean | null = null;
 	let submitting_appointments = false;
@@ -29,7 +31,7 @@
 		new Appointment({ target: parent!, anchor: target, props: { uuid: $page.params.uuid } });
 	}
 
-	async function submitAppointments(e: Event) {
+	async function submitAppointments() {
 		const forms = document.getElementsByClassName('appointment-form');
 		const appointments: Appt[] = [];
 		for (const element of forms) {
@@ -113,7 +115,7 @@
 			<span class="material-symbols-outlined">expand_more</span>
 		</label>
 		<div class="{accordionTabContent}">
-			{#each data.appointments as appointment}
+			{#each appointments as appointment}
 				<Appointment {appointment} uuid="{$page.params.uuid}"></Appointment>
 			{/each}
 			<button type="button" on:click={addAppointment}>+</button>

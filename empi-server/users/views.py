@@ -118,12 +118,12 @@ class AttributeViewSet(viewsets.ModelViewSet):
         detail=False,
         name="Attributes for research",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
-        url_path=f"research/(?P<research_pk>{UUID_REGEX}/?)",
+        url_path=f"research/(?P<uuid>{UUID_REGEX}/?)",
         permission_classes=[AllowAny],
     )
-    def research(self, request, research_pk=None):
+    def research(self, request, uuid=None):
         try:
-            research: Research = Research.objects.get(pk=research_pk)
+            research: Research = Research.objects.get(uuid=uuid)
         except Research.DoesNotExist:
             raise exceptions.NotFound("research does not exist")
         if request.method == HTTPMethod.POST:
