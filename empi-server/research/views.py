@@ -70,16 +70,6 @@ class ResearchViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.get_queryset().order_by("pk")
-    serializer_class = AppointmentSerializer
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data + {"type": instance.get_type()})
-
-
 class ParticipationViewSet(
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,

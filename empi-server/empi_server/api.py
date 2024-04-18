@@ -31,7 +31,7 @@ router.register(r"email", emails_views.EmailViewSet)
 router.register(r"attachment", emails_views.AttachmentViewSet)
 
 router.register(r"research", research_views.ResearchViewSet)
-router.register(r"appointment", research_views.AppointmentViewSet)
+# router.register(r"appointment", research_views.AppointmentViewSet)
 router.register(r"participation", research_views.ParticipationViewSet)
 
 urlpatterns = [

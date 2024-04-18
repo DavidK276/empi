@@ -48,7 +48,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		appointments = await response.json();
 	}
 	else {
-		error(response.status)
+		error(response.status);
 	}
 
 	return {
