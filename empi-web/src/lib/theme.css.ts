@@ -57,7 +57,7 @@ globalStyle('label', {
 	color: vars.textTertiary
 });
 
-globalStyle('input', {
+globalStyle('input, textarea', {
 	display: 'block',
 	marginTop: vars.sm,
 	width: '100%',
@@ -89,7 +89,8 @@ globalStyle('select', {
 	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
 	boxShadow: `0 0 2px gray`,
-	boxSizing: 'border-box'
+	boxSizing: 'border-box',
+	backgroundColor: vars.backgroundPrimary
 });
 
 globalStyle('input.error', {
