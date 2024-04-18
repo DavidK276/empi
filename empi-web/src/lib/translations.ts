@@ -60,7 +60,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'research',
-			routes: [/\/research.*/], // you can use regexes as well!
+			routes: ['/', /\/research.*/], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/research.json')
 			).default

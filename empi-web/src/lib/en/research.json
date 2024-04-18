@@ -16,5 +16,6 @@
   "capacity": "Capacity",
   "comment": "Description",
   "appointment_url": "URL for joining",
-  "location": "Location"
+  "location": "Location",
+  "occupancy": "Signed up"
 }

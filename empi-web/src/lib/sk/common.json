@@ -28,5 +28,9 @@
   "unknown_error": "Nastala neznáma chyba",
   "token_hint": "Toto je váš anonymný identifikátor, ktorý odovzdáte pri účasti na výskume.",
   "research": "Výskum",
-  "points": "Body"
+  "points": "Body",
+  "details": "Detaily",
+  "password_entry_title": "Overenie hesla",
+  "password_entry_text": "Táto akcia vyžaduje zadanie vášho hesla.",
+  "check": "Skontrolovať"
 }

@@ -73,9 +73,7 @@ class Migration(migrations.Migration):
                 ("info_url", models.URLField()),
                 (
                     "points",
-                    models.PositiveIntegerField(
-                        blank=True, null=True, verbose_name="body"
-                    ),
+                    models.PositiveIntegerField(blank=True, null=True, verbose_name="body"),
                 ),
                 ("created", models.DateTimeField(auto_now_add=True)),
                 ("protected", models.BooleanField(default=False)),

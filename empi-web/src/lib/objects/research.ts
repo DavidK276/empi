@@ -1,5 +1,6 @@
 export class Research {
-	url!: string;
+	url?: string;
+	id?: number;
 	protected!: boolean;
 	name!: string;
 	info_url!: string;

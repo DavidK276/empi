@@ -49,9 +49,7 @@ class Migration(migrations.Migration):
                 ("body", models.TextField(verbose_name="telo")),
                 (
                     "send_when",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="dátum a čas odoslania"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="dátum a čas odoslania"),
                 ),
                 (
                     "is_finalized",

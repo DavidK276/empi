@@ -4,15 +4,12 @@ from . import models
 from .models import Participation
 
 
-class ResearchUserSerializer(serializers.HyperlinkedModelSerializer):
+class ResearchUserSerializer(serializers.ModelSerializer):
     protected = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = models.Research
         exclude = ["chosen_attribute_values"]
-        extra_kwargs = {
-            'url': {'view_name': 'research-user-detail', 'lookup_field': 'id'}
-        }
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,7 +19,7 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Research
         exclude = ["chosen_attribute_values"]
         extra_kwargs = {
-            'url': {'view_name': 'research-admin-detail', 'lookup_field': 'uuid'},
+            "url": {"view_name": "research-admin-detail", "lookup_field": "uuid"},
         }
 
 
@@ -38,7 +35,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return super().to_representation(instance)
 
 
-class ParticipationSerializer(serializers.HyperlinkedModelSerializer):
+class ParticipationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Participation
         fields = ["appointment", "has_participated"]

@@ -13,7 +13,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from users.models import Participant
 from users.serializers import PasswordSerializer
-from users.utils.consts import UUID_REGEX
 
 from .models import Appointment, Research, Participation, EncryptedToken
 from .permissions import *
@@ -26,15 +25,25 @@ from .serializers import (
 
 
 class ResearchUserViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
-    queryset = Research.objects.get_queryset().order_by("-created")
+    queryset = Research.objects.get_queryset().filter(is_published=True).order_by("-created")
     serializer_class = ResearchUserSerializer
     permission_classes = [AllowAny]
     lookup_field = "id"
+
+    @action(
+        detail=True,
+        methods=[HTTPMethod.GET],
+        serializer_class=AppointmentSerializer,
+    )
+    @transaction.atomic
+    def appointments(self, request, id=None):
+        research: Research = self.get_object()
+
+        appointments = Appointment.objects.filter(research=research)
+        serializer = self.get_serializer(appointments, many=True)
+        return Response(serializer.data)
 
 
 class ResearchAdminViewSet(viewsets.ModelViewSet):
@@ -71,14 +80,14 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         if request.method == HTTPMethod.PUT:
             to_keep = []
             for data in request.data:
-                if data['research'] != str(research.uuid):
+                if data["research"] != str(research.uuid):
                     raise exceptions.PermissionDenied()
-                data['research'] = research.id
+                data["research"] = research.id
 
-                if 'utc-offset' in data:
-                    data['when'] = data['when'] + data.pop('utc-offset')
+                if "utc-offset" in data:
+                    data["when"] = data["when"] + data.pop("utc-offset")
 
-                if appointment_id := data.pop('id', None):
+                if appointment_id := data.pop("id", None):
                     appointment = get_object_or_404(Appointment, pk=appointment_id)
                     serializer: AppointmentSerializer = self.get_serializer(appointment, data=data)
                 else:
@@ -101,16 +110,12 @@ class ParticipationViewSet(
 ):
     queryset = Participation.objects.get_queryset().order_by("pk")
     serializer_class = ParticipationSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        if isinstance(request.user, AnonymousUser):
-            raise exceptions.NotAuthenticated()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        try:
-            token = Participant.objects.get(pk=request.user.pk).token
-        except Participant.DoesNotExist:
-            raise exceptions.NotFound("user is not a participant")
+        token = get_object_or_404(Participant, pk=request.user.pk).token
 
         appointment: Appointment = serializer.validated_data["appointment"]
         pubkeys = appointment.get_pubkeys(request.user)
@@ -154,7 +159,13 @@ class ParticipationViewSet(
         participations = Participation.objects.filter(appointment__research=research)
         return Response(self.get_participations_for_key(private_key, participations, request))
 
-    @action(detail=False, name="Get decrypted", methods=[HTTPMethod.GET])
+    @action(
+        detail=False,
+        name="Get decrypted",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        permission_classes=[AllowAny],
+    )
     def get_decrypted_participations(self, request: Request):
         research_id = request.GET.get("research", default=None)
         if research_id:

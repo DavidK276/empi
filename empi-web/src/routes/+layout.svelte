@@ -9,10 +9,21 @@
 	import { page } from '$app/stores';
 	import { toggleDropdown } from '$lib/functions';
 	import { goto } from '$app/navigation';
+	import { store } from '$lib/stores';
 
 	export let data: LayoutServerData;
 	let logging_in = false;
 	let logging_out = false;
+
+	function setPasswordSession(event: Event) {
+		const form = event.target as HTMLFormElement;
+		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
+		$store.password = passwordInput?.value;
+	}
+
+	function unsetPasswordSession() {
+		$store.password = '';
+	}
 </script>
 
 <div class="{themeClass}">
@@ -34,7 +45,7 @@
 					{/if}
 					<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 					</div>
-					<form method="POST" action="/?/logout"
+					<form method="POST" action="/?/logout" on:submit={unsetPasswordSession}
 								use:enhance={() => {
 									logging_out = true;
 
@@ -59,7 +70,7 @@
 					<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>
 				</button>
 				<div class="{dropdownContent}">
-					<form method="POST" action="/?/login" style="width: 100%"
+					<form method="POST" action="/?/login" style="width: 100%" on:submit={setPasswordSession}
 								use:enhance={() => {
 									logging_in = true;
 

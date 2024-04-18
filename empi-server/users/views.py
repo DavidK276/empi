@@ -44,6 +44,18 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response(status=status.HTTP_200_OK)
 
+    @action(detail=False, name="Check password", methods=[HTTPMethod.POST], serializer_class=PasswordSerializer)
+    def check_password(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if isinstance(request.user, AnonymousUser):
+            return exceptions.NotAuthenticated()
+        user: EmpiUser = request.user
+        if user.check_password(request.data["current_password"]):
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     @action(detail=False, name="Get own details", methods=[HTTPMethod.GET], permission_classes=[IsAuthenticated])
     def get_self(self, request):
         user: EmpiUser = request.user

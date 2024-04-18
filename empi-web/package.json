@@ -36,6 +36,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/source-sans-pro": "^5.0.8",
+		"@furudean/svelte-persistent-store": "^0.9.0",
 		"@vanilla-extract/css": "^1.14.1",
 		"class-transformer": "^0.5.1",
 		"material-symbols": "^0.17.0",

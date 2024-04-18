@@ -17,5 +17,6 @@
   "capacity": "Kapacita",
   "comment": "Popis",
   "appointment_url": "Link na pripojenie pre účastníka",
-  "location": "Miesto konania"
+  "location": "Miesto konania",
+  "occupancy": "Počet prihlásených"
 }

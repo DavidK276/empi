@@ -1,5 +1,6 @@
 import type { Actions } from './$types';
 import * as consts from '$lib/constants';
+import { error } from '@sveltejs/kit';
 
 export const actions = {
 	login: async ({ cookies, request }) => {
@@ -31,5 +32,24 @@ export const actions = {
 			});
 			cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
 		}
+	},
+	checkPassword: async ({ request, fetch, cookies }) => {
+		const authToken = cookies.get(consts.TOKEN_COOKIE);
+		let status = 401;
+		if (authToken != null) {
+			const formData = await request.formData();
+			const response = await fetch(consts.API_ENDPOINT + 'user/check_password/', {
+				body: formData,
+				method: 'POST',
+				headers: {
+					'Authorization': `Token ${authToken}`
+				}
+			});
+			if (response.ok) {
+				return {};
+			}
+			status = response.status;
+		}
+		throw error(status);
 	}
 } satisfies Actions;

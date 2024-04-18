@@ -31,8 +31,16 @@
 			<label for="when">{$t('research.when')}</label>
 			<input type="datetime-local" name="when" id="when" required
 						 value="{appointment.getUTCDatetimeAndOffset().datetime}">
-			<label for="capacity">{$t('research.capacity')}</label>
-			<input type="number" step="1" name="capacity" id="capacity" value="{appointment.capacity}">
+			<div style="display: flex; width: 100%; gap: {vars.sm}">
+				<div style="display: inline-flex; flex-direction: column; width: 50%">
+					<label for="capacity">{$t('research.capacity')}</label>
+					<input type="number" step="1" name="capacity" id="capacity" value="{appointment.capacity}">
+				</div>
+				<div style="display: inline-flex; flex-direction: column; width: 50%">
+					<label for="capacity">{$t('research.occupancy')}</label>
+					<input type="text" readonly id="remaining" value="{appointment.capacity - appointment.free_capacity}">
+				</div>
+			</div>
 			<label for="comment">{$t('research.comment')}</label>
 			<textarea name="comment" id="comment">{appointment.comment}</textarea>
 			{#if type === 'online'}

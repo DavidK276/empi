@@ -69,10 +69,6 @@ globalStyle('input, textarea', {
 	boxSizing: 'border-box'
 });
 
-globalStyle('input[type="text"]', {
-	minWidth: '200px'
-});
-
 globalStyle('input[type="radio"],input[type="checkbox"]', {
 	display: 'inline',
 	width: 'initial',
@@ -107,4 +103,10 @@ globalStyle('footer', {
 
 globalStyle('fieldset', {
 	margin: `0 0 ${vars.lg} 0`
+});
+
+globalStyle('table, th, td', {
+	border: '1px solid black',
+	borderCollapse: 'collapse',
+	padding: vars.sm
 });
