@@ -8,5 +8,14 @@
   "create": "Vytvoriť",
   "create_research": "Vytvoriť výskum",
   "creation_info": "Výskum bude vytvorený ako koncept. Budete ho môcť kedykoľvek publikovať.",
-  "error": "Nastala neznáma chyba"
+  "error": "Nastala neznáma chyba",
+  "appointments": "Termíny",
+  "appointment_type": "Typ termínu",
+  "online": "Online",
+  "in_person": "Osobný",
+  "when": "Dátum a čas konania",
+  "capacity": "Kapacita",
+  "comment": "Popis",
+  "appointment_url": "Link na pripojenie pre účastníka",
+  "location": "Miesto konania"
 }
