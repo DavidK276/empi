@@ -11,6 +11,10 @@ class ResearchUserSerializer(serializers.ModelSerializer):
         model = models.Research
         exclude = ["chosen_attribute_values"]
 
+    def create(self, validated_data):
+        research = super().create(validated_data)
+        research.new_key()
+
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
     protected = serializers.BooleanField(read_only=True)
@@ -21,6 +25,10 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             "url": {"view_name": "research-admin-detail", "lookup_field": "uuid"},
         }
+
+    def create(self, validated_data):
+        research = super().create(validated_data)
+        research.new_key()
 
 
 class AppointmentSerializer(serializers.ModelSerializer):

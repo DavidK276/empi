@@ -50,12 +50,11 @@ class Research(models.Model):
             self.protected = True
             self.save()
 
-    @staticmethod
-    def new_key(name):
+    def new_key(self):
         key = RSA.generate(2048)
         encrypted_key = export_privkey(key, "unprotected")
 
-        key_dir = get_keydir(name)
+        key_dir = get_keydir(self.name)
         key_dir.mkdir(mode=0o700, parents=True)
         with open(key_dir / "privatekey.der", "wb") as keyfile:
             keyfile.write(encrypted_key)
@@ -128,7 +127,7 @@ class Appointment(models.Model):
 
 class EncryptedToken(models.Model):
     __AES_KEY_LENGTH = 16
-    session_keys = SeparatedBinaryField(length=__AES_KEY_LENGTH)
+    session_keys = SeparatedBinaryField()
     nonce = models.BinaryField()
     tag = models.BinaryField()
     ciphertext = models.BinaryField()

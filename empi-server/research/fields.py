@@ -2,35 +2,52 @@ from django.db import models
 
 
 class SeparatedBinaryField(models.BinaryField):
+    __BORDER_BYTE = 0x7E
+    __STUFF_BYTE = 0x7D
+    __PROHIBITED_BYTES = (__BORDER_BYTE, __STUFF_BYTE)
 
-    def __init__(self, *args, length=16, **kwargs):
-        self.length = length
-        super().__init__(*args, **kwargs)
+    def stuff_byte(self, byte: int) -> bytes:
+        if byte in self.__PROHIBITED_BYTES:
+            return bytes((self.__STUFF_BYTE, byte ^ 0x20))
+        return bytes((byte,))
 
-    def deconstruct(self):
-        name, path, args, kwargs = super().deconstruct()
-        if self.length != 16:
-            kwargs["length"] = self.length
-        return name, path, args, kwargs
+    def stuff_bytes(self, value: bytes) -> bytes:
+        result = b""
+        for byte in value:
+            result += self.stuff_byte(byte)
+        return result
 
-    @property
-    def non_db_attrs(self):
-        return super().non_db_attrs + ("length",)
+    def unstuff_bytes(self, value: bytes):
+        result = []
+        i = 0
+        curr_value = b""
+        while i < len(value):
+            if value[i] == self.__STUFF_BYTE:
+                curr_value += bytes((value[i + 1] ^ 0x20,))
+                i += 1
+            elif value[i] == self.__BORDER_BYTE:
+                result.append(curr_value)
+                curr_value = b""
+            else:
+                curr_value += bytes((value[i],))
+            i += 1
+        result.append(curr_value)
+        return result
 
     def to_python(self, value):
         if isinstance(value, tuple) or isinstance(value, list):
             return value
         if value is None:
             return None
-        return [value[i : i + self.length] for i in range(0, len(value), self.length)]
+        return self.unstuff_bytes(value)
 
     def from_db_value(self, value, expression, connection):
         if value is None:
             return None
-        return [value[i : i + self.length] for i in range(0, len(value), self.length)]
+        return self.unstuff_bytes(value)
 
     def get_prep_value(self, value):
-        return b"".join(value)
+        return bytes((self.__BORDER_BYTE,)).join(self.stuff_bytes(v) for v in value)
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
