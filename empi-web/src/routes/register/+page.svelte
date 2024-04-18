@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
 	import { addFormError, removeFormError } from '$lib/functions';
-	import { browser } from '$app/environment';
 	import type { ActionData } from './$types';
+	import { onMount } from 'svelte';
 
 	export let form: ActionData;
 
@@ -43,22 +43,20 @@
 		}
 	};
 
-	if (browser) {
-		window.onload = () => {
-			const formElement = document.getElementById('register_form') as HTMLFormElement;
-			if (form?.failure) {
-				Object.keys(form?.body).forEach(key => {
-					const element = formElement.elements.namedItem(key) as HTMLElement | null;
-					if (element != null) {
-						let errors = form?.body[key] as string[];
-						errors.forEach(error => {
-							addFormError(element, error);
-						});
-					}
-				});
-			}
-		};
-	}
+	onMount(() => {
+		const formElement = document.getElementById('register_form') as HTMLFormElement;
+		if (form?.failure) {
+			Object.keys(form?.body).forEach(key => {
+				const element = formElement.elements.namedItem(key) as HTMLElement | null;
+				if (element != null) {
+					let errors = form?.body[key] as string[];
+					errors.forEach(error => {
+						addFormError(element, error);
+					});
+				}
+			});
+		}
+	});
 </script>
 
 <h1>{$t('common.registration')}</h1>
