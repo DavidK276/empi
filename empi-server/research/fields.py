@@ -2,20 +2,24 @@ from django.db import models
 
 
 class SeparatedBinaryField(models.BinaryField):
+    """
+    Stores a list of binary blobs in a single field using byte stuffing.
+    """
     __BORDER_BYTE = 0x7E
     __STUFF_BYTE = 0x7D
     __PROHIBITED_BYTES = (__BORDER_BYTE, __STUFF_BYTE)
 
     def stuff_byte(self, byte: int) -> bytes:
+        """
+        :param byte: the byte that will be stuffed
+        :return: the same byte if it's not a prohibited byte, otherwise a sequence of: 0x7d, byte XOR 0x20
+        """
         if byte in self.__PROHIBITED_BYTES:
             return bytes((self.__STUFF_BYTE, byte ^ 0x20))
         return bytes((byte,))
 
     def stuff_bytes(self, value: bytes) -> bytes:
-        result = b""
-        for byte in value:
-            result += self.stuff_byte(byte)
-        return result
+        return b''.join(self.stuff_byte(byte) for byte in value)
 
     def unstuff_bytes(self, value: bytes):
         result = []
