@@ -5,6 +5,7 @@ class SeparatedBinaryField(models.BinaryField):
     """
     Stores a list of binary blobs in a single field using byte stuffing.
     """
+
     __BORDER_BYTE = 0x7E
     __STUFF_BYTE = 0x7D
     __PROHIBITED_BYTES = (__BORDER_BYTE, __STUFF_BYTE)
@@ -19,7 +20,7 @@ class SeparatedBinaryField(models.BinaryField):
         return bytes((byte,))
 
     def stuff_bytes(self, value: bytes) -> bytes:
-        return b''.join(self.stuff_byte(byte) for byte in value)
+        return b"".join(self.stuff_byte(byte) for byte in value)
 
     def unstuff_bytes(self, value: bytes):
         result = []
