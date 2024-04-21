@@ -9,11 +9,7 @@ class ResearchUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Research
-        exclude = ["chosen_attribute_values"]
-
-    def create(self, validated_data):
-        research = super().create(validated_data)
-        research.new_key()
+        exclude = ["chosen_attribute_values", "uuid"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,10 +21,6 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             "url": {"view_name": "research-admin-detail", "lookup_field": "uuid"},
         }
-
-    def create(self, validated_data):
-        research = super().create(validated_data)
-        research.new_key()
 
 
 class AppointmentSerializer(serializers.ModelSerializer):

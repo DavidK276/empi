@@ -10,8 +10,8 @@ from Crypto.PublicKey.RSA import RsaKey
 from Crypto.Random import get_random_bytes
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Q
-from django.db.models.signals import post_delete, post_save
+from django.db.models import Q, Manager
+from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from users import models as user_models
 
@@ -22,7 +22,17 @@ from .utils.keys import export_privkey, get_keydir
 from rest_framework import exceptions
 
 
+class ResearchManager(Manager):
+
+    def create(self, **kwargs):
+        research: Research = super().create(**kwargs)
+        research.new_key()
+        return research
+
+
 class Research(models.Model):
+    objects = ResearchManager()
+
     uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
@@ -78,7 +88,7 @@ class Research(models.Model):
 
 
 @receiver(post_delete, sender=Research)
-def keys_delete(sender, instance, created, **kwargs):
+def keys_delete(sender, instance, **kwargs):
     key_dir = get_keydir(instance.name)
     os.unlink(key_dir / "receiver.pem")
     os.unlink(key_dir / "privatekey.der")

@@ -15,7 +15,7 @@ from .serializers import (
     ParticipantSerializer,
     AttributeSerializer,
 )
-from .utils.consts import UUID_REGEX
+from empi_server.constants import UUID_REGEX
 
 
 class UserViewSet(viewsets.ModelViewSet):

@@ -2,7 +2,6 @@ from collections.abc import Iterable
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
-from django.contrib.auth.models import AnonymousUser
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -22,6 +21,7 @@ from .serializers import (
     ResearchAdminSerializer,
     ParticipationSerializer,
 )
+from empi_server.constants import UUID_REGEX
 
 
 class ResearchUserViewSet(
@@ -44,6 +44,9 @@ class ResearchUserViewSet(
         appointments = Appointment.objects.filter(research=research)
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
 
 class ResearchAdminViewSet(viewsets.ModelViewSet):
@@ -79,11 +82,12 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
 
         if request.method == HTTPMethod.PUT:
             to_keep = []
-            for data in request.data:
-                if data["research"] != str(research.uuid):
-                    raise exceptions.PermissionDenied()
+            if not isinstance(request.data, list):
+                data_list: list[dict[str]] = [request.data]
+            else:
+                data_list = request.data
+            for data in data_list:
                 data["research"] = research.id
-
                 if "utc-offset" in data:
                     data["when"] = data["when"] + data.pop("utc-offset")
 
@@ -128,17 +132,24 @@ class ParticipationViewSet(
 
         return Response(status=status.HTTP_200_OK)
 
-    def get_participations_for_key(self, private_key: RsaKey, participations: Iterable[Participation], request):
+    @staticmethod
+    def get_participations_for_key(private_key: RsaKey, participations: Iterable[Participation], request):
         result = []
         for p in participations:
             if token := p.encrypted_token.decrypt(private_key):
-                data = self.get_serializer(p, context={"request": request}).data | {"token": token}
+                data = ParticipationSerializer(p, context={"request": request}).data | {"token": token}
                 result.append(data)
         return result
 
+    @action(
+        detail=False,
+        name="Get decrypted for user",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        url_path="user"
+    )
     def get_user_participations(self, request: Request) -> Response:
-        serializer = PasswordSerializer(data=request.data)
-        # serializer = PasswordSerializer(data={"current_password": "asdf"})  # for testing
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         password = serializer.validated_data["current_password"]
@@ -151,25 +162,24 @@ class ParticipationViewSet(
 
         return Response(self.get_participations_for_key(private_key, participations, request))
 
-    def get_research_participations(self, request: Request, research_id: int) -> Response:
-        research: Research = get_object_or_404(Research, pk=research_id)
+    @action(
+        detail=False,
+        name="Get decrypted for research",
+        methods=[HTTPMethod.POST],
+        permission_classes=[AllowAny],
+        serializer_class=PasswordSerializer,
+        url_path=f"research/(?P<uuid>{UUID_REGEX}/?)",
+    )
+    def get_research_participations(self, request: Request, uuid: str) -> Response:
+        research: Research = get_object_or_404(Research, uuid=uuid)
+        if research.protected:
+            serializer = self.get_serializer(datetime=request.data)
+            serializer.is_valid(raise_exception=True)
+            password = serializer.validated_data["current_password"]
+        else:
+            password = "unprotected"
         _, encrypted_key = research.get_keypair()
-        private_key = RSA.import_key(encrypted_key, "unprotected")
+        private_key = RSA.import_key(encrypted_key, password)
 
         participations = Participation.objects.filter(appointment__research=research)
         return Response(self.get_participations_for_key(private_key, participations, request))
-
-    @action(
-        detail=False,
-        name="Get decrypted",
-        methods=[HTTPMethod.POST],
-        serializer_class=PasswordSerializer,
-        permission_classes=[AllowAny],
-    )
-    def get_decrypted_participations(self, request: Request):
-        research_id = request.GET.get("research", default=None)
-        if research_id:
-            return self.get_research_participations(request, research_id)
-        if not isinstance(request.user, AnonymousUser):
-            return self.get_user_participations(request)
-        raise exceptions.ParseError("missing research query parameter")
