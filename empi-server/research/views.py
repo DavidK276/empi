@@ -19,7 +19,8 @@ from .serializers import (
     AppointmentSerializer,
     ResearchUserSerializer,
     ResearchAdminSerializer,
-    ParticipationSerializer, ParticipationUpdateSerializer,
+    ParticipationSerializer,
+    ParticipationUpdateSerializer,
 )
 from empi_server.constants import UUID_REGEX
 
@@ -59,7 +60,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         detail=True,
         name="Change password",
         methods=[HTTPMethod.PUT],
-        serializer_class=PasswordSerializer,
+        serializer_class=PasswordSerializer
     )
     def change_password(self, request, uuid=None):
         research: Research = self.get_object()
@@ -122,6 +123,9 @@ class ParticipationViewSet(
         token = get_object_or_404(Participant, pk=request.user.pk).token
 
         appointment: Appointment = serializer.validated_data["appointment"]
+        free_capacity = appointment.capacity - Participation.objects.filter(appointment=appointment).count()
+        if free_capacity < 0:
+            raise exceptions.ParseError('no free capacity left for this appointment')
         pubkeys = appointment.get_pubkeys(request.user)
 
         encrypted_token = EncryptedToken.new(token, pubkeys)
@@ -137,16 +141,13 @@ class ParticipationViewSet(
         result = []
         for p in participations:
             if token := p.encrypted_token.decrypt(private_key):
-                data = ParticipationSerializer(p, context={"request": request}).data | {"token": token}
+                data = ParticipationSerializer(p, context={"request": request}).data
+                data |= {"token": token}
+                data |= {"research": p.appointment.research.pk}
                 result.append(data)
         return result
 
-    @action(
-        detail=False,
-        methods=[HTTPMethod.POST],
-        serializer_class=PasswordSerializer,
-        url_path="user"
-    )
+    @action(detail=False, methods=[HTTPMethod.POST], serializer_class=PasswordSerializer, url_path="user")
     def user_participations(self, request: Request) -> Response:
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -170,7 +171,7 @@ class ParticipationViewSet(
     def research_participations(self, request: Request, uuid: str, action: str) -> Response:
         research: Research = get_object_or_404(Research, uuid=uuid)
 
-        if action == 'get':
+        if action == "get":
             if research.protected:
                 serializer = PasswordSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)

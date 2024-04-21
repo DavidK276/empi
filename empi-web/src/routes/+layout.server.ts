@@ -4,7 +4,7 @@ import { User } from '$lib/objects/user';
 import { getUserIdFromUrl } from '$lib/functions';
 
 async function tryGetParticipant(userId: number) {
-	const response = await fetch(consts.API_ENDPOINT + `participant/${userId}`, {
+	const response = await fetch(consts.API_ENDPOINT + `participant/${userId}/`, {
 		method: 'GET'
 	});
 	if (response.ok) {

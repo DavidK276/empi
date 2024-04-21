@@ -21,7 +21,11 @@
 			<td>{research.name}</td>
 			<td>{research.info_url}</td>
 			{#if $page.data.user != null}
-				<th><button><a href="research/{research.id}/" style="color: {vars.textSecondary}">{$t('common.details')}</a></button></th>
+				<th>
+					<button>
+						<a href="research/{research.id}/" style="color: {vars.textSecondary}">{$t('common.details')}</a>
+					</button>
+				</th>
 			{/if}
 		</tr>
 	{/each}

@@ -29,8 +29,8 @@
 <div class="{themeClass}">
 	<header class="{row} hor-center ver-center m-col">
 		<nav>
-			<a href="/">{$t('common.home')}</a>
-			<a href="/about">{$t('common.about')}</a>
+			<a href="/" style="margin: 0 {vars.sm}">{$t('common.home')}</a>
+			<a href="/about" style="margin: 0 {vars.sm}">{$t('common.about')}</a>
 		</nav>
 		{#if data.user != null}
 			<div class="{dropdown}">

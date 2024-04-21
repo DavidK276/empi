@@ -15,7 +15,8 @@ export const [themeClass, vars] = createTheme({
 	backgroundSecondary: 'rgb(17 24 39)',
 	link: 'rgb(37 99 235)',
 	buttonPrimary: 'rgb(37 99 235)',
-	buttonDisabled: 'rgb(128 128 128)'
+	buttonDisabled: 'rgb(128 128 128)',
+	success: 'rgb(56, 142, 60)'
 });
 
 globalStyle('body', {
@@ -25,7 +26,6 @@ globalStyle('body', {
 globalStyle('a', {
 	textDecoration: 'none',
 	fontWeight: 700,
-	margin: `0 ${vars.sm}`,
 	color: vars.link,
 	display: 'inline-flex',
 	alignItems: 'center'
@@ -45,7 +45,8 @@ globalStyle('button', {
 	color: vars.textSecondary,
 	border: 'none',
 	whiteSpace: 'nowrap',
-	height: 'fit-content'
+	height: 'fit-content',
+	fontWeight: 700
 });
 
 globalStyle('button[disabled]', {

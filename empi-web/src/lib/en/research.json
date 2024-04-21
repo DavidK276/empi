@@ -17,5 +17,13 @@
   "comment": "Description",
   "appointment_url": "URL for joining",
   "location": "Location",
-  "occupancy": "Signed up"
+  "occupancy": "Signed up",
+  "info_url_introduction": "More info can be found",
+  "info_url_appointment": "Join link",
+  "here": "here",
+  "appointment_number": "Appointment #",
+  "participated": "You have participated in this research",
+  "appointment_participated": "You have participated at this appointment",
+  "appointment_signedup": "Signed up",
+  "cancel": "Cancel"
 }

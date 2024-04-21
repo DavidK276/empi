@@ -18,5 +18,13 @@
   "comment": "Popis",
   "appointment_url": "Link na pripojenie pre účastníka",
   "location": "Miesto konania",
-  "occupancy": "Počet prihlásených"
+  "occupancy": "Počet prihlásených",
+  "info_url_introduction": "Viac informácii nájdete",
+  "info_url_appointment": "Link na pripojenie",
+  "here": "tu",
+  "appointment_number": "Termín č.",
+  "participated": "Na tomto výskume ste sa zúčastili",
+  "appointment_participated": "Na tomto termíne ste sa zúčastnili",
+  "appointment_signedup": "Prihlásený",
+  "cancel": "Zrušiť"
 }

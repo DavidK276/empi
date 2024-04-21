@@ -44,7 +44,13 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response(status=status.HTTP_200_OK)
 
-    @action(detail=False, name="Check password", methods=[HTTPMethod.POST], serializer_class=PasswordSerializer)
+    @action(
+        detail=False,
+        name="Check password",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        permission_classes=[AllowAny],
+    )
     def check_password(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -22,7 +22,7 @@
 				const password = formData.get('current_password');
 				if (password != null) {
 					$store.password = password.toString();
-					modal.dismiss()
+					modal.dismiss();
 				}
 			}
 		};
