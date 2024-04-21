@@ -38,4 +38,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class ParticipationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Participation
-        fields = ["appointment", "has_participated"]
+        fields = ["id", "appointment", "has_participated"]
+
+
+class ParticipationUpdateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    has_participated = serializers.BooleanField()

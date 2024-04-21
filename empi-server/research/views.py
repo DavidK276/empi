@@ -19,7 +19,7 @@ from .serializers import (
     AppointmentSerializer,
     ResearchUserSerializer,
     ResearchAdminSerializer,
-    ParticipationSerializer,
+    ParticipationSerializer, ParticipationUpdateSerializer,
 )
 from empi_server.constants import UUID_REGEX
 
@@ -143,12 +143,11 @@ class ParticipationViewSet(
 
     @action(
         detail=False,
-        name="Get decrypted for user",
         methods=[HTTPMethod.POST],
         serializer_class=PasswordSerializer,
         url_path="user"
     )
-    def get_user_participations(self, request: Request) -> Response:
+    def user_participations(self, request: Request) -> Response:
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -164,22 +163,33 @@ class ParticipationViewSet(
 
     @action(
         detail=False,
-        name="Get decrypted for research",
         methods=[HTTPMethod.POST],
         permission_classes=[AllowAny],
-        serializer_class=PasswordSerializer,
-        url_path=f"research/(?P<uuid>{UUID_REGEX}/?)",
+        url_path=f"research/(?P<uuid>{UUID_REGEX})/(?P<action>get|set/?)",
     )
-    def get_research_participations(self, request: Request, uuid: str) -> Response:
+    def research_participations(self, request: Request, uuid: str, action: str) -> Response:
         research: Research = get_object_or_404(Research, uuid=uuid)
-        if research.protected:
-            serializer = self.get_serializer(datetime=request.data)
-            serializer.is_valid(raise_exception=True)
-            password = serializer.validated_data["current_password"]
-        else:
-            password = "unprotected"
-        _, encrypted_key = research.get_keypair()
-        private_key = RSA.import_key(encrypted_key, password)
 
-        participations = Participation.objects.filter(appointment__research=research)
-        return Response(self.get_participations_for_key(private_key, participations, request))
+        if action == 'get':
+            if research.protected:
+                serializer = PasswordSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                password = serializer.validated_data["current_password"]
+            else:
+                password = "unprotected"
+            _, encrypted_key = research.get_keypair()
+            try:
+                private_key = RSA.import_key(encrypted_key, password)
+            except (ValueError, IndexError, TypeError):
+                raise exceptions.AuthenticationFailed("invalid password")
+            participations = Participation.objects.filter(appointment__research=research)
+            return Response(self.get_participations_for_key(private_key, participations, request))
+
+        serializer = ParticipationUpdateSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        data = {data["id"]: data["has_participated"] for data in serializer.data}
+        participations = Participation.objects.filter(appointment__research=research).filter(pk__in=data.keys())
+        for participation in participations:
+            participation.has_participated = data[participation.pk]
+            participation.save()
+        return Response(status.HTTP_200_OK)
