@@ -5,7 +5,7 @@ from collections.abc import Mapping, Sequence, Iterable
 from typing import Self
 
 from Crypto.PublicKey import RSA
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -14,13 +14,7 @@ from rest_framework import exceptions
 from .utils.keys import export_privkey, get_keydir
 
 
-class EmpiUser(AbstractUser):
-
-    def set_password(self, raw_password):
-        super().set_password(raw_password)
-        if key_dir := get_keydir(self.username):
-            if not key_dir.is_dir():
-                EmpiUser.new_key(self.username, raw_password)
+class EmpiUserManager(UserManager):
 
     @staticmethod
     def new_key(username, passphrase: str):
@@ -35,6 +29,30 @@ class EmpiUser(AbstractUser):
         public_key = key.publickey().export_key(format="PEM")
         with open(key_dir / "receiver.pem", "wb") as keyfile:
             keyfile.write(public_key)
+
+    @staticmethod
+    def check_key_exists(username):
+        if key_dir := get_keydir(username):
+            return key_dir.is_dir()
+
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        user = super().create_superuser(username, email, password, **extra_fields)
+        if password is not None:
+            self.new_key(username, password)
+        return user
+
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        user = super().create_user(username, email, password, **extra_fields)
+        if password is not None:
+            self.new_key(username, password)
+        return user
+
+
+class EmpiUser(AbstractUser):
+    users = EmpiUserManager()
+
+    class Meta:
+        default_manager_name = "users"
 
     def get_keypair(self) -> (bytes, bytes):
         """

@@ -1,9 +1,6 @@
-from Crypto.PublicKey import RSA
-from rest_framework import serializers, validators
+from rest_framework import serializers, validators, exceptions
 
 from . import models
-from .models import Attribute
-from .utils.keys import export_privkey, get_keydir
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,11 +22,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     def create(self, validated_data):
-        user = super().create(validated_data)
-        password = self.validated_data["password"]
-        user.set_password(password)
-        user.save()
-        return user
+        if request := self.context.get("request"):
+            if not bool(request.user and request.user.is_staff):
+                raise exceptions.PermissionDenied("Creating admin users from the API is forbidden.")
+        return self.Meta.model.users.create_user(**validated_data)
 
 
 class PasswordSerializer(serializers.Serializer):
@@ -86,7 +82,7 @@ class AttributeSerializer(serializers.HyperlinkedModelSerializer):
 
 class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.HyperlinkedRelatedField(
-        queryset=models.EmpiUser.objects.get_queryset(),
+        queryset=models.EmpiUser.users.get_queryset(),
         view_name="empiuser-detail",
         validators=[
             validators.UniqueValidator(

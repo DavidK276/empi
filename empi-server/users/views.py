@@ -19,7 +19,7 @@ from .utils.consts import UUID_REGEX
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = EmpiUser.objects.get_queryset().order_by("date_joined")
+    queryset = EmpiUser.users.get_queryset().order_by("date_joined")
     serializer_class = UserSerializer
     permission_classes = [(IsAuthenticatedOrReadOnly & IsSelf) | IsAdminUser]
 
@@ -82,7 +82,7 @@ class ParticipantViewSet(
         serializer_class=UserSerializer,
     )
     def register(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer: UserSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user: EmpiUser = serializer.save()
         participant = Participant(user=user)
