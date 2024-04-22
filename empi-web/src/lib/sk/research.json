@@ -26,5 +26,10 @@
   "participated": "Na tomto výskume ste sa zúčastili",
   "appointment_participated": "Na tomto termíne ste sa zúčastnili",
   "appointment_signedup": "Prihlásený",
-  "cancel": "Zrušiť"
+  "cancel": "Zrušiť",
+  "participation": "Účasť",
+  "yes": "Áno",
+  "notyet": "Zatiaľ nie",
+  "signup": "Prihlásiť sa",
+  "protocol": "Zápisnica účasti študentov"
 }

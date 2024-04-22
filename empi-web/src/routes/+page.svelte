@@ -8,7 +8,8 @@
 </script>
 
 <h1>EMPI</h1>
-<table style="width: 100%">
+<div style="overflow-x: auto">
+	<table style="width: 100%">
 	<tr>
 		<th>{$t('research.name')}</th>
 		<th>{$t('research.info_url')}</th>
@@ -30,3 +31,4 @@
 		</tr>
 	{/each}
 </table>
+</div>

@@ -25,5 +25,10 @@
   "participated": "You have participated in this research",
   "appointment_participated": "You have participated at this appointment",
   "appointment_signedup": "Signed up",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "participation": "Participation",
+  "yes": "Yes",
+  "notyet": "Not yet",
+  "signup": "Sign up",
+  "protocol": "Participation of students"
 }

@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
 import type { Appointment } from '$lib/objects/appointment';
 
-export const load: PageLoad = async ({ params, fetch }) => {
+export const load: PageLoad = async ({ params, fetch, data }) => {
 	let research = null;
 	let response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/`);
 	if (response.ok) {
@@ -55,6 +55,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		research,
 		attrs,
 		research_attrs,
-		appointments
+		appointments,
+		participations: data.participations
 	};
 };

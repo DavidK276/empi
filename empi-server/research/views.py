@@ -111,6 +111,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
 
 class ParticipationViewSet(
     mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Participation.objects.get_queryset().order_by("pk")
@@ -135,6 +136,21 @@ class ParticipationViewSet(
         participation.save()
 
         return Response(status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        serializer = PasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        request_user_token = get_object_or_404(Participant, pk=request.user.pk).token
+        participation: Participation = self.get_object()
+
+        _, encrypted_key = request.user.get_keypair()
+        private_key = RSA.import_key(encrypted_key, serializer.validated_data["current_password"])
+        if participation_token := participation.encrypted_token.decrypt(private_key):
+            if participation_token == request_user_token:
+                return super().destroy(request, *args, **kwargs)
+
+        raise exceptions.PermissionDenied()
 
     @staticmethod
     def get_participations_for_key(private_key: RsaKey, participations: Iterable[Participation], request):

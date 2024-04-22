@@ -1,7 +1,7 @@
 import * as consts from '$lib/constants';
 import { convertFormData } from '$lib/functions';
-import { type Actions, fail } from '@sveltejs/kit';
-import { API_ENDPOINT } from '$lib/constants';
+import { type Actions, error, fail } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const actions = {
 	attrs: async ({ request, fetch, params }) => {
@@ -22,9 +22,26 @@ export const actions = {
 			success: false
 		});
 	},
-	appointments: async ({fetch, params, request}) => {
-		const response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/appointments/`, {
+	appointments: async ({ fetch, params, request }) => {
+		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/appointments/`, {
 			method: 'PUT',
+			body: await request.text(),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (response.ok) {
+			return {
+				success: true
+			};
+		}
+		return fail(response.status, {
+			success: false
+		});
+	},
+	participations: async ({ fetch, params, request }) => {
+		const response = await fetch(consts.API_ENDPOINT + `participation/research/${params.uuid}/set/`, {
+			method: 'POST',
 			body: await request.text(),
 			headers: {
 				'Content-Type': 'application/json'
@@ -58,3 +75,16 @@ export const actions = {
 		});
 	}
 } satisfies Actions;
+
+export const load: PageServerLoad = async ({ fetch, params }) => {
+	const response = await fetch(consts.API_ENDPOINT + `participation/research/${params.uuid}/get/`, {
+		method: 'POST'
+	});
+	if (response.ok) {
+		const responseJSON = await response.json();
+		return {
+			participations: responseJSON
+		};
+	}
+	throw error(response.status);
+};

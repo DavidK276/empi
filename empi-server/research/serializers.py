@@ -43,4 +43,4 @@ class ParticipationSerializer(serializers.ModelSerializer):
 
 class ParticipationUpdateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    has_participated = serializers.BooleanField()
+    has_participated = serializers.BooleanField(default=False)

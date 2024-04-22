@@ -1,4 +1,4 @@
-import { error as e } from '$lib/style.css';
+import { col, error as e } from '$lib/style.css';
 
 export function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: boolean) {
 	if (deleteFirst !== undefined && deleteFirst) {
@@ -97,7 +97,7 @@ export const getUserIdFromUrl = (url: string) => {
 	return null;
 };
 
-export const convertFormData = (args: { formData: FormData, stringify?: boolean}) => {
+export const convertFormData = (args: { formData: FormData, stringify?: boolean }) => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const object: any = {};
 	args.formData.forEach((value, key) => {
@@ -126,3 +126,19 @@ export const convertFormData = (args: { formData: FormData, stringify?: boolean}
 	}
 	return JSON.stringify(object);
 };
+
+export function columnify<Type>(items: Array<Type>, columnSize: number) {
+	const result: Array<Array<Type>> = [];
+	let column: Array<Type> = [];
+	for (let i = 0; i < items.length; i++) {
+		if (column.length == columnSize) {
+			result.push(column);
+			column = [];
+		}
+		column.push(items[i]);
+	}
+	if (column.length > 0) {
+		result.push(column);
+	}
+	return result;
+}
