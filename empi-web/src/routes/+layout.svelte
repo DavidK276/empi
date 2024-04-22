@@ -45,6 +45,9 @@
 					{/if}
 					<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 					</div>
+					<div><a href="/account/points">{$t('common.my_points')}<span
+						class="material-symbols-outlined">navigate_next</span></a>
+					</div>
 					<form method="POST" action="/?/logout" on:submit={unsetPasswordSession}
 								use:enhance={() => {
 									logging_out = true;
@@ -97,6 +100,12 @@
 					</form>
 				</div>
 			</div>
+			<button>
+				<a href="/research" style="color: {vars.textSecondary}">
+					{$t('common.create_research')}
+					<span class="material-symbols-outlined" style="pointer-events: none">navigate_next</span>
+				</a>
+			</button>
 		{/if}
 		{#if data.user?.is_staff}
 			<div class="{dropdown}">

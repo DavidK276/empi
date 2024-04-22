@@ -29,5 +29,7 @@
   "token_hint": "This is your anonymous identifier that you will submit when you participate in a research.",
   "research": "Research",
   "points": "Points",
-  "details": "Detaily"
+  "details": "Detaily",
+  "my_points": "My points",
+  "create_research": "Create research"
 }
