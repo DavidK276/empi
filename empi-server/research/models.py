@@ -1,6 +1,5 @@
 import os
 import uuid
-
 from collections.abc import Sequence
 from typing import Self, Optional
 
@@ -13,13 +12,12 @@ from django.db import models
 from django.db.models import Q, Manager
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from rest_framework import exceptions
 from users import models as user_models
 
 from .fields import SeparatedBinaryField
 from .utils.constants import *
 from .utils.keys import export_privkey, get_keydir
-
-from rest_framework import exceptions
 
 
 class ResearchManager(Manager):
@@ -39,7 +37,7 @@ class Research(models.Model):
     points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
-    protected = models.BooleanField(default=False, null=False)
+    is_protected = models.BooleanField(default=False, null=False)
     is_published = models.BooleanField(default=False, null=False)
 
     def __str__(self):
@@ -48,7 +46,7 @@ class Research(models.Model):
     def change_password(self, old_raw_password, new_raw_password):
         _, encrypted_key = self.get_keypair()
         try:
-            private_key = RSA.import_key(encrypted_key, old_raw_password if self.protected else "unprotected")
+            private_key = RSA.import_key(encrypted_key, old_raw_password if self.is_protected else "unprotected")
         except ValueError:
             raise exceptions.PermissionDenied("invalid current password")
         encrypted_key = export_privkey(private_key, new_raw_password)
@@ -56,8 +54,8 @@ class Research(models.Model):
         key_dir = get_keydir(self.name)
         with open(key_dir / "privatekey.der", "wb") as keyfile:
             keyfile.write(encrypted_key)
-        if not self.protected:
-            self.protected = True
+        if not self.is_protected:
+            self.is_protected = True
             self.save()
 
     def new_key(self):
@@ -134,6 +132,10 @@ class Appointment(models.Model):
             pubkeys.append(RSA.import_key(public_key_bytes))
         return pubkeys
 
+    @property
+    def free_capacity(self) -> int:
+        return self.capacity - Participation.objects.filter(appointment=self).count()
+
 
 class EncryptedToken(models.Model):
     __AES_KEY_LENGTH = 16
@@ -183,6 +185,7 @@ class EncryptedToken(models.Model):
 
 
 class Participation(models.Model):
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     has_participated = models.BooleanField(default=False, blank=True, null=False)
-    encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=False)
+    encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=True)

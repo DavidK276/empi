@@ -30,10 +30,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = models.Appointment
         fields = "__all__"
 
-    def to_representation(self, instance):
-        instance.free_capacity = instance.capacity - Participation.objects.filter(appointment=instance).count()
-        return super().to_representation(instance)
-
 
 class ParticipationSerializer(serializers.ModelSerializer):
     class Meta:
