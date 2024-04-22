@@ -5,6 +5,7 @@ from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from empi_server.constants import UUID_REGEX
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import *
@@ -22,7 +23,6 @@ from .serializers import (
     ParticipationSerializer,
     ParticipationUpdateSerializer,
 )
-from empi_server.constants import UUID_REGEX
 
 
 class ResearchUserViewSet(
@@ -56,12 +56,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "uuid"
 
-    @action(
-        detail=True,
-        name="Change password",
-        methods=[HTTPMethod.PUT],
-        serializer_class=PasswordSerializer
-    )
+    @action(detail=True, name="Change password", methods=[HTTPMethod.PUT], serializer_class=PasswordSerializer)
     def change_password(self, request, uuid=None):
         research: Research = self.get_object()
         serializer = self.get_serializer(data=request.data)
@@ -114,7 +109,7 @@ class ParticipationViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Participation.objects.get_queryset().order_by("pk")
+    queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=False)
     serializer_class = ParticipationSerializer
     permission_classes = [IsAuthenticated]
 
@@ -124,9 +119,8 @@ class ParticipationViewSet(
         token = get_object_or_404(Participant, pk=request.user.pk).token
 
         appointment: Appointment = serializer.validated_data["appointment"]
-        free_capacity = appointment.capacity - Participation.objects.filter(appointment=appointment).count()
-        if free_capacity < 0:
-            raise exceptions.ParseError('no free capacity left for this appointment')
+        if appointment.free_capacity < 0:
+            raise exceptions.ParseError("no free capacity left for this appointment")
         pubkeys = appointment.get_pubkeys(request.user)
 
         encrypted_token = EncryptedToken.new(token, pubkeys)
@@ -172,7 +166,7 @@ class ParticipationViewSet(
         if not request.user.check_password(password):
             raise exceptions.AuthenticationFailed("invalid password")
 
-        participations = Participation.objects.all()
+        participations = self.get_queryset()
         _, encrypted_key = request.user.get_keypair()
         private_key = RSA.import_key(encrypted_key, password)
 
@@ -188,7 +182,7 @@ class ParticipationViewSet(
         research: Research = get_object_or_404(Research, uuid=uuid)
 
         if action == "get":
-            if research.protected:
+            if research.is_protected:
                 serializer = PasswordSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 password = serializer.validated_data["current_password"]
@@ -199,7 +193,7 @@ class ParticipationViewSet(
                 private_key = RSA.import_key(encrypted_key, password)
             except (ValueError, IndexError, TypeError):
                 raise exceptions.AuthenticationFailed("invalid password")
-            participations = Participation.objects.filter(appointment__research=research)
+            participations = self.get_queryset()
             return Response(self.get_participations_for_key(private_key, participations, request))
 
         serializer = ParticipationUpdateSerializer(data=request.data, many=True)
@@ -210,3 +204,10 @@ class ParticipationViewSet(
             participation.has_participated = data[participation.pk]
             participation.save()
         return Response(status.HTTP_200_OK)
+
+
+class AnonymousParticipationViewSet(viewsets.ModelViewSet):
+    queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=True)
+    serializer_class = ParticipationSerializer
+    permission_classes = [AllowAllExceptList | IsAdminUser]
+    lookup_field = "uuid"
