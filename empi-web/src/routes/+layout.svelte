@@ -1,29 +1,14 @@
 <script lang="ts">
 	import '@fontsource/source-sans-pro';
-	import { enhance } from '$app/forms';
-	import { content, error, row } from '$lib/style.css';
+	import { content, row } from '$lib/style.css';
 	import { themeClass, vars } from '$lib/theme.css';
 
 	import { t } from '$lib/translations';
 	import type { LayoutServerData } from './$types';
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import { store } from '$lib/stores';
 	import Dropdown from '$lib/components/Dropdown.svelte';
+	import Login from '$lib/components/Login.svelte';
 
 	export let data: LayoutServerData;
-	let logging_in = false;
-	let logging_out = false;
-
-	function setPasswordSession(event: Event) {
-		const form = event.target as HTMLFormElement;
-		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
-		$store.password = passwordInput?.value;
-	}
-
-	function unsetPasswordSession() {
-		$store.password = '';
-	}
 </script>
 
 <div class="{themeClass}">
@@ -43,57 +28,12 @@
 				{/if}
 				<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 				</div>
-				<form method="POST" action="/?/logout" on:submit={unsetPasswordSession}
-							use:enhance={() => {
-									logging_out = true;
-
-									return async ({ update }) => {
-										await update();
-										await goto("/");
-										logging_out = false;
-									};
-								}}>
-					{#if logging_out}
-						<button type="submit" disabled>{$t('common.logging_out')}</button>
-					{:else}
-						<button type="submit" name="submit">{$t('common.logout')}</button>
-					{/if}
-				</form>
+				<Login is_logged_in="{true}"></Login>
 			</Dropdown>
 		{:else}
 			<Dropdown title="{$t('common.account')}">
-				<form method="POST" action="/?/login" style="width: 100%" on:submit={setPasswordSession}
-							use:enhance={() => {
-									logging_in = true;
-
-									return async ({ update }) => {
-										await update();
-										logging_in = false;
-									};
-								}}>
-					<label for="username">{$t('common.username')}: </label>
-					<input type="text" id="username" name="username" required>
-					<label for="password">{$t('common.password')}: </label>
-					<input type="password" id="password" name="password" required minlength="4">
-					{#if $page.form?.login === false}
-						<p class="{error}" style="white-space: nowrap">{$t('common.wrong_login')}</p>
-					{/if}
-					<div style="display: flex; flex-wrap: nowrap">
-						{#if logging_in}
-							<button type="submit" disabled>{$t('common.logging_in')}</button>
-						{:else}
-							<button type="submit" name="submit">{$t('common.login')}</button>
-						{/if}
-						<a href="/register" style="margin: 0 {vars.sm}">{$t('common.registration')}</a>
-					</div>
-				</form>
+				<Login is_logged_in="{false}"></Login>
 			</Dropdown>
-			<button>
-				<a href="/research" style="color: {vars.textSecondary}">
-					{$t('common.create_research')}
-					<span class="material-symbols-outlined" style="pointer-events: none">navigate_next</span>
-				</a>
-			</button>
 		{/if}
 		{#if data.user?.is_staff}
 			<Dropdown title="{$t('common.administration')}">
@@ -101,6 +41,14 @@
 				<div><a href="/admin/research-points">{$t('common.research_points')}</a></div>
 				<div><a href="/admin/student-points">{$t('common.student_points')}</a></div>
 			</Dropdown>
+		{/if}
+		{#if data.user == null}
+			<button>
+				<a href="/research" style="color: {vars.textSecondary}">
+					{$t('common.create_research')}
+					<span class="material-symbols-outlined" style="pointer-events: none">navigate_next</span>
+				</a>
+			</button>
 		{/if}
 	</header>
 	<div class="{row} ver-top hor-center">
