@@ -24,7 +24,7 @@ export const load: PageLoad = async ({ fetch }) => {
 			}
 		}
 		return {
-			researches: researches
+			researches
 		};
 	}
 	throw error(response.status);

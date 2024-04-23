@@ -66,11 +66,6 @@ export function parseCookie(cookieString: string): {
 	return result;
 }
 
-export const toggleDropdown = (event: MouseEvent) => {
-	const target = event.target as HTMLElement;
-	target.parentElement?.classList.toggle('show');
-};
-
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {

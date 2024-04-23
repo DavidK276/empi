@@ -37,11 +37,11 @@
 				{#if !data.user.is_staff}
 					<div><a href="/attributes">{$t('common.attributes')}<span
 						class="material-symbols-outlined">navigate_next</span></a></div>
+					<div><a href="/account/points">{$t('common.my_points')}<span
+						class="material-symbols-outlined">navigate_next</span></a>
+					</div>
 				{/if}
 				<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
-				</div>
-				<div><a href="/account/points">{$t('common.my_points')}<span
-					class="material-symbols-outlined">navigate_next</span></a>
 				</div>
 				<form method="POST" action="/?/logout" on:submit={unsetPasswordSession}
 							use:enhance={() => {
@@ -98,7 +98,8 @@
 		{#if data.user?.is_staff}
 			<Dropdown title="{$t('common.administration')}">
 				<div><a href="/attributes">{$t('common.attributes')}</a></div>
-				<div><a href="/admin/points">{$t('common.points')}</a></div>
+				<div><a href="/admin/research-points">{$t('common.research_points')}</a></div>
+				<div><a href="/admin/student-points">{$t('common.student_points')}</a></div>
 			</Dropdown>
 		{/if}
 	</header>
