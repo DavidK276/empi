@@ -29,7 +29,7 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'research',
-			routes: ['/', /\/research.*/, '/account/points'], // you can use regexes as well!
+			routes: [/\/?/, /\/research.*/, '/account/points'], // you can use regexes as well!
 			loader: async () => (
 				await import('./en/research.json')
 			).default
@@ -60,7 +60,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'research',
-			routes: ['/', /\/research.*/, '/account/points'], // you can use regexes as well!
+			routes: [/\/?/, /\/research.*/, '/account/points'], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/research.json')
 			).default

@@ -26,9 +26,10 @@
 				use:enhance={() => {
 									logging_in = true;
 
-									return async ({ update }) => {
+									return async ({ update, result }) => {
 										await update();
 										logging_in = false;
+										is_logged_in = true;
 									};
 								}}>
 		<label for="username">{$t('common.username')}: </label>
@@ -42,7 +43,7 @@
 			{#if logging_in}
 				<button type="submit" disabled>{$t('common.logging_in')}</button>
 			{:else}
-				<button type="submit" name="submit">{$t('common.login')}</button>
+				<button type="submit" id="submit">{$t('common.login')}</button>
 			{/if}
 			<a href="/register" style="margin: 0 {vars.sm}">{$t('common.registration')}</a>
 		</div>
@@ -56,6 +57,7 @@
 										await update();
 										await goto("/");
 										logging_out = false;
+										is_logged_in = false;
 									};
 								}}>
 		{#if logging_out}

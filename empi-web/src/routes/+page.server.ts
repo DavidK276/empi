@@ -3,7 +3,7 @@ import * as consts from '$lib/constants';
 import { error } from '@sveltejs/kit';
 
 export const actions = {
-	login: async ({ cookies, request, locals }) => {
+	login: async ({ cookies, request, locals, fetch }) => {
 		const formData = await request.formData();
 		const response = await fetch(consts.API_ENDPOINT + 'auth/login/', {
 			body: formData,
@@ -22,7 +22,7 @@ export const actions = {
 			login: response.ok
 		};
 	},
-	logout: async ({ cookies, locals }) => {
+	logout: async ({ cookies, locals, fetch }) => {
 		if (cookies.get(consts.TOKEN_COOKIE)) {
 			await fetch(consts.API_ENDPOINT + 'auth/logout/', {
 				method: 'POST'
