@@ -1,17 +1,22 @@
 import type { Actions, PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
-import { error, fail } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import type { Research } from '$lib/objects/research';
 
 export const actions = {
-	default: async ({ fetch, request }) => {
+	default: async ({ fetch, request, cookies }) => {
 		const formData = await request.formData();
 		const url = formData.get('url');
-		if (typeof url == 'string') {
+		const authToken = cookies.get(consts.TOKEN_COOKIE);
+
+		if (typeof url == 'string' && authToken) {
 			formData.delete('url');
 			const response = await fetch(url, {
 				method: 'PATCH',
-				body: formData
+				body: formData,
+				headers: {
+					'Authorization': `Token ${authToken}`
+				}
 			});
 			if (response.ok) {
 				return {
