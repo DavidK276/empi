@@ -7,17 +7,13 @@ import { convertFormData } from '$lib/functions';
 export const actions = {
 	admin: async ({ cookies, request, fetch }) => {
 		const formData = await request.formData();
-		const authToken = cookies.get(consts.TOKEN_COOKIE);
-		if (authToken) {
+		if (cookies.get(consts.TOKEN_COOKIE)) {
 			const url = formData.get('url') as string | null;
 			const creating = formData.has('create');
 			const deleting = formData.has('delete');
 			if (deleting && url != null) {
 				const response = await fetch(url, {
-					method: 'DELETE',
-					headers: {
-						'Authorization': `Token ${authToken}`
-					}
+					method: 'DELETE'
 				});
 				if (!response.ok) {
 					return fail(response.status);
@@ -30,7 +26,6 @@ export const actions = {
 					method: 'POST',
 					body: convertFormData({ formData }), // this is needed to support multiple form values with same name
 					headers: {
-						'Authorization': `Token ${authToken}`,
 						'Content-Type': 'application/json'
 					}
 				});
@@ -44,7 +39,6 @@ export const actions = {
 					method: 'PUT',
 					body: convertFormData({ formData }), // this is needed to support multiple form values with same name
 					headers: {
-						'Authorization': `Token ${authToken}`,
 						'Content-Type': 'application/json'
 					}
 				});
@@ -57,13 +51,11 @@ export const actions = {
 	},
 	user: async ({ cookies, request, fetch }) => {
 		const formData = await request.formData();
-		const authToken = cookies.get(consts.TOKEN_COOKIE);
-		if (authToken) {
+		if (cookies.get(consts.TOKEN_COOKIE)) {
 			const response = await fetch(consts.API_ENDPOINT + 'attr/participant/', {
 				method: 'POST',
 				body: convertFormData({ formData }),
 				headers: {
-					'Authorization': `Token ${authToken}`,
 					'Content-Type': 'application/json'
 				}
 			});
@@ -83,14 +75,8 @@ export const actions = {
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ cookies, fetch }) => {
-	const authToken = cookies.get(consts.TOKEN_COOKIE);
-	if (authToken) {
-		const response = await fetch(consts.API_ENDPOINT + 'attr/participant/', {
-			method: 'GET',
-			headers: {
-				'Authorization': `Token ${authToken}`
-			}
-		});
+	if (cookies.get(consts.TOKEN_COOKIE)) {
+		const response = await fetch(consts.API_ENDPOINT + 'attr/participant/');
 		if (response.ok) {
 			const responseJSON = await response.json();
 			return {

@@ -3,14 +3,15 @@ import * as consts from '$lib/constants';
 import { error } from '@sveltejs/kit';
 
 export const actions = {
-	login: async ({ cookies, request }) => {
+	login: async ({ cookies, request, locals }) => {
 		const formData = await request.formData();
 		const response = await fetch(consts.API_ENDPOINT + 'auth/login/', {
 			body: formData,
 			method: 'POST'
 		});
 		cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
-		cookies.delete(consts.SELF_URL_COOKIE, { path: '/' });
+		delete locals.user;
+		delete locals.participant;
 
 		if (response.ok) {
 			const responseJSON = await response.json();
@@ -21,29 +22,23 @@ export const actions = {
 			login: response.ok
 		};
 	},
-	logout: async ({ cookies }) => {
-		const authToken = cookies.get(consts.TOKEN_COOKIE);
-		if (authToken !== undefined) {
+	logout: async ({ cookies, locals }) => {
+		if (cookies.get(consts.TOKEN_COOKIE)) {
 			await fetch(consts.API_ENDPOINT + 'auth/logout/', {
-				method: 'POST',
-				headers: {
-					'Authorization': `Token ${authToken}`
-				}
+				method: 'POST'
 			});
 			cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
+			delete locals.user;
+			delete locals.participant;
 		}
 	},
 	checkPassword: async ({ request, fetch, cookies }) => {
-		const authToken = cookies.get(consts.TOKEN_COOKIE);
 		let status = 401;
-		if (authToken != null) {
+		if (cookies.get(consts.TOKEN_COOKIE)) {
 			const formData = await request.formData();
 			const response = await fetch(consts.API_ENDPOINT + 'user/check_password/', {
 				body: formData,
-				method: 'POST',
-				headers: {
-					'Authorization': `Token ${authToken}`
-				}
+				method: 'POST'
 			});
 			if (response.ok) {
 				return {};

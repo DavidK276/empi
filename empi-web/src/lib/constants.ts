@@ -1,4 +1,4 @@
-export const DJANGO_SERVER_URL = 'http://localhost:8000/';
+export const DJANGO_SERVER_URL = 'http://127.0.0.1:8000/';
 export const API_ENDPOINT = DJANGO_SERVER_URL + 'api/';
 export const TOKEN_COOKIE = 'sessiontoken';
 export const SELF_URL_COOKIE = 'userurl';

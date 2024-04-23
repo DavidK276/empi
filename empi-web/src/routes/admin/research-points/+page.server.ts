@@ -13,10 +13,7 @@ export const actions = {
 			formData.delete('url');
 			const response = await fetch(url, {
 				method: 'PATCH',
-				body: formData,
-				headers: {
-					'Authorization': `Token ${authToken}`
-				}
+				body: formData
 			});
 			if (response.ok) {
 				return {
@@ -30,26 +27,15 @@ export const actions = {
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ cookies, fetch }) => {
-	const authToken = cookies.get(consts.TOKEN_COOKIE);
-	if (authToken) {
-		let response = await fetch(consts.API_ENDPOINT + 'research-admin/', {
-			method: 'GET',
-			headers: {
-				'Authorization': `Token ${authToken}`
-			}
-		});
+	if (cookies.get(consts.TOKEN_COOKIE)) {
+		let response = await fetch(consts.API_ENDPOINT + 'research-admin/');
 		if (response.ok) {
 			const researches: Research[] = [];
 			let responseJSON = await response.json();
 
 			researches.push(...responseJSON.results);
 			while (responseJSON.next != null) {
-				response = await fetch(responseJSON.next, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Token ${authToken}`
-					}
-				});
+				response = await fetch(responseJSON.next);
 
 				if (response.ok) {
 					responseJSON = await response.json();
@@ -61,7 +47,7 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 			}
 
 			return {
-				researches: researches
+				researches
 			};
 		}
 	}

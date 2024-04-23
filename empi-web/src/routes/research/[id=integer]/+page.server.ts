@@ -4,14 +4,10 @@ import { type Actions, error, fail } from '@sveltejs/kit';
 export const actions = {
 	signup: async ({ request, fetch, cookies }) => {
 		const formData = await request.formData();
-		const authToken = cookies.get(consts.TOKEN_COOKIE);
-		if (authToken != null) {
+		if (cookies.get(consts.TOKEN_COOKIE)) {
 			const response = await fetch(consts.API_ENDPOINT + `participation/`, {
 				method: 'POST',
-				body: formData,
-				headers: {
-					'Authorization': `Token ${authToken}`
-				}
+				body: formData
 			});
 			if (response.ok) {
 				return {

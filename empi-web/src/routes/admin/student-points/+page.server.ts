@@ -5,13 +5,8 @@ import type { User } from '$lib/objects/user';
 
 
 export const load: PageServerLoad = async ({ fetch, cookies }) => {
-	const authToken = cookies.get(consts.TOKEN_COOKIE);
-	if (authToken != null) {
-		let response = await fetch(consts.API_ENDPOINT + 'user/', {
-			headers: {
-				'Authorization': `Token ${authToken}`
-			}
-		});
+	if (cookies.get(consts.TOKEN_COOKIE)) {
+		let response = await fetch(consts.API_ENDPOINT + 'user/');
 
 		const users: Map<string, User> = new Map();
 		if (response.ok) {
