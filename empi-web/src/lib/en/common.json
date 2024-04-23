@@ -19,6 +19,7 @@
   "register": "Register",
   "first_name": "First name",
   "last_name": "Last name",
+  "name": "Name",
   "repeat_password": "Password (again)",
   "username_hint": "A nickname that you'll use to log in",
   "username_wrong": "Username con only contain letters and numbers",
@@ -29,6 +30,8 @@
   "token_hint": "This is your anonymous identifier that you will submit when you participate in a research.",
   "research": "Research",
   "points": "Points",
+  "student_points": "Student points",
+  "research_points": "Research points",
   "details": "Detaily",
   "my_points": "My points",
   "create_research": "Create research"
