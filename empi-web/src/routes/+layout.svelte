@@ -31,6 +31,9 @@
 				<Login is_logged_in="{true}"></Login>
 			</Dropdown>
 		{:else}
+			<a href="/research">
+				{$t('common.create_research')}
+			</a>
 			<Dropdown title="{$t('common.account')}">
 				<Login is_logged_in="{false}"></Login>
 			</Dropdown>
@@ -41,14 +44,6 @@
 				<div><a href="/admin/research-points">{$t('common.research_points')}</a></div>
 				<div><a href="/admin/student-points">{$t('common.student_points')}</a></div>
 			</Dropdown>
-		{/if}
-		{#if data.user == null}
-			<button>
-				<a href="/research" style="color: {vars.textSecondary}">
-					{$t('common.create_research')}
-					<span class="material-symbols-outlined" style="pointer-events: none">navigate_next</span>
-				</a>
-			</button>
 		{/if}
 	</header>
 	<div class="{row} ver-top hor-center">
