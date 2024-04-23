@@ -1,4 +1,4 @@
-import { col, error as e } from '$lib/style.css';
+import { error as errorClass } from '$lib/style.css';
 
 export function setCookie(cname: string, cvalue: string, exdays: number, deleteFirst?: boolean) {
 	if (deleteFirst !== undefined && deleteFirst) {
@@ -69,7 +69,7 @@ export function parseCookie(cookieString: string): {
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {
-		const error = `<span class="${e}" id="${element.id}_error">${text}</span>`;
+		const error = `<span class="${errorClass}" id="${element.id}_error">${text}</span>`;
 		element.insertAdjacentHTML('afterend', error);
 		element.classList.add('error');
 	}
@@ -82,14 +82,6 @@ export const removeFormError = (element: HTMLElement) => {
 	element.classList.remove('error');
 	const errorElement = document.getElementById(`${element.id}_error`);
 	errorElement?.remove();
-};
-
-export const getUserIdFromUrl = (url: string) => {
-	const match = url.match(/\/user\/([0-9]+)\/?/);
-	if (match != null) {
-		return parseInt(match[1]);
-	}
-	return null;
 };
 
 export const convertFormData = (args: { formData: FormData, stringify?: boolean }) => {
