@@ -5,6 +5,7 @@
 	import { type Writable, writable } from 'svelte/store';
 	import { Participation } from '$lib/objects/participation';
 	import type { PageData } from './$types';
+	import { plainToInstance } from 'class-transformer';
 
 	export let data: PageData;
 
@@ -22,11 +23,10 @@
 			has_participated: boolean,
 			research: number
 		}>;
-		const pointMap: Map<string, number> = new Map();
-		for (const participationData of responseJSON) {
-			const participation = new Participation();
-			Object.assign(participation, participationData);
 
+		const pointMap: Map<string, number> = new Map();
+		const participations = plainToInstance(Participation, responseJSON);
+		for (const participation of participations) {
 			const research = data.researches.get(participation.research);
 			const participant = data.participants.get(participation.token!);
 			if (research != null && participant != null) {

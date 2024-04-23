@@ -8,11 +8,11 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	if (cookies.get(consts.TOKEN_COOKIE)) {
 		let response = await fetch(consts.API_ENDPOINT + 'user/');
 
-		const users: Map<string, User> = new Map();
+		const users: Map<number, User> = new Map();
 		if (response.ok) {
 			let responseJSON = await response.json();
 			responseJSON.results.forEach((user: User) => {
-				users.set(user.url, user);
+				users.set(user.id, user);
 			});
 
 			while (responseJSON.next != null) {
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 				if (response.ok) {
 					responseJSON = await response.json();
 					responseJSON.results.forEach((user: User) => {
-						users.set(user.url, user);
+						users.set(user.id, user);
 					});
 				}
 				else {

@@ -1,11 +1,13 @@
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from research.models import Research
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.response import Response
+from rest_framework.routers import reverse
 
 from .models import EmpiUser, Participant, Attribute, AttributeValue
 from .permissions import *
@@ -19,7 +21,7 @@ from empi_server.constants import UUID_REGEX
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = EmpiUser.users.get_queryset().order_by("date_joined")
+    queryset = EmpiUser.users.get_queryset().filter(is_active=True).order_by("date_joined")
     serializer_class = UserSerializer
     permission_classes = [(IsAuthenticatedOrReadOnly & IsSelf) | IsAdminUser]
 
@@ -66,7 +68,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_self(self, request):
         user: EmpiUser = request.user
         serializer = self.get_serializer(instance=user, context={"request": request})
-        return HttpResponseRedirect(serializer.data["url"])
+        return HttpResponseRedirect(reverse("empiuser-detail", [serializer.data["id"]], request=request))
 
 
 class ParticipantViewSet(
@@ -76,7 +78,7 @@ class ParticipantViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Participant.objects.get_queryset().order_by("pk")
+    queryset = Participant.objects.get_queryset().filter(user__is_active=True).order_by("pk")
     serializer_class = ParticipantSerializer
     permission_classes = [ReadOnly | IsAdminUser]
 
@@ -109,10 +111,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
         url_path="participant/(?P<pk>[0-9]+/?)",
     )
     def participant(self, request, pk=None):
-        try:
-            participant: Participant = Participant.objects.get(pk=pk)
-        except Participant.DoesNotExist:
-            raise exceptions.NotFound("participant does not exist")
+        participant = get_object_or_404(Participant, pk=pk)
         if request.method == HTTPMethod.POST:
             for name, values in request.data.items():
                 new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)
@@ -123,27 +122,13 @@ class AttributeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=False,
-        name="Attributes for current user",
-        methods=[HTTPMethod.GET, HTTPMethod.POST],
-        url_path="participant",
-        permission_classes=[IsAuthenticated],
-    )
-    def get_self(self, request):
-        pk = request.user.pk
-        return self.participant(request, pk)
-
-    @action(
-        detail=False,
         name="Attributes for research",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
         url_path=f"research/(?P<uuid>{UUID_REGEX}/?)",
         permission_classes=[AllowAny],
     )
     def research(self, request, uuid=None):
-        try:
-            research: Research = Research.objects.get(uuid=uuid)
-        except Research.DoesNotExist:
-            raise exceptions.NotFound("research does not exist")
+        research = get_object_or_404(Research, uuid=uuid)
         if request.method == HTTPMethod.POST:
             for name, values in request.data.items():
                 new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)

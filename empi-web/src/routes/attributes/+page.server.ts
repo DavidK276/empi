@@ -49,10 +49,10 @@ export const actions = {
 			}
 		}
 	},
-	user: async ({ cookies, request, fetch }) => {
+	user: async ({ cookies, request, fetch, locals }) => {
 		const formData = await request.formData();
-		if (cookies.get(consts.TOKEN_COOKIE)) {
-			const response = await fetch(consts.API_ENDPOINT + 'attr/participant/', {
+		if (cookies.get(consts.TOKEN_COOKIE) && locals.user?.is_staff === false) {
+			const response = await fetch(consts.API_ENDPOINT + `attr/participant/${locals.user.id}/`, {
 				method: 'POST',
 				body: convertFormData({ formData }),
 				headers: {
@@ -74,9 +74,9 @@ export const actions = {
 	}
 } satisfies Actions;
 
-export const load: PageServerLoad = async ({ cookies, fetch }) => {
-	if (cookies.get(consts.TOKEN_COOKIE)) {
-		const response = await fetch(consts.API_ENDPOINT + 'attr/participant/');
+export const load: PageServerLoad = async ({ cookies, fetch, locals }) => {
+	if (cookies.get(consts.TOKEN_COOKIE) && locals.user?.is_staff === false) {
+		const response = await fetch(consts.API_ENDPOINT + `attr/participant/${locals.user.id}/`);
 		if (response.ok) {
 			const responseJSON = await response.json();
 			return {

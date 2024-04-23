@@ -3,21 +3,20 @@ from rest_framework import serializers, validators, exceptions
 from . import models
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=128, write_only=True)
     date_joined = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = models.EmpiUser
         fields = [
-            "url",
+            "id",
             "username",
             "first_name",
             "last_name",
             "email",
             "password",
             "is_staff",
-            "is_active",
             "date_joined",
         ]
 
@@ -80,10 +79,9 @@ class AttributeSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.HyperlinkedRelatedField(
-        queryset=models.EmpiUser.users.get_queryset(),
-        view_name="empiuser-detail",
+class ParticipantSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=models.EmpiUser.users.get_queryset().filter(is_staff=False),
         validators=[
             validators.UniqueValidator(
                 queryset=models.Participant.objects.get_queryset(),

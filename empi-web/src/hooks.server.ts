@@ -1,6 +1,5 @@
 import * as consts from '$lib/constants';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
-import { getUserIdFromUrl } from '$lib/functions';
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	if (request.url.startsWith(consts.DJANGO_SERVER_URL)) {
@@ -24,11 +23,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return resolve(event);
 		}
 		event.locals.user = await userResponse.json();
-
-		if (event.locals.user != null) {
-			const userId = getUserIdFromUrl(event.locals.user.url);
-			if (userId != null && !event.locals.user.is_staff) {
-				const participantResponse = await event.fetch(consts.API_ENDPOINT + `participant/${userId}/`);
+		const user = event.locals.user;
+		if (user != null) {
+			if (!user.is_staff) {
+				const participantResponse = await event.fetch(consts.API_ENDPOINT + `participant/${user.id}/`);
 				if (participantResponse.ok) {
 					event.locals.participant = await participantResponse.json();
 				}
