@@ -11,14 +11,29 @@ export const actions = {
 			});
 			if (response.ok) {
 				return {
-					success: true
+					success: true,
+					participation: null
 				};
 			}
 			return fail(response.status, {
 				success: false
 			});
 		}
-		throw error(401, 'unuthorized');
+		else {
+			const response = await fetch(consts.API_ENDPOINT + `anon-participation/`, {
+				method: 'POST',
+				body: formData
+			});
+			if (response.ok) {
+				return {
+					success: true,
+					participation: await response.json()
+				};
+			}
+			return fail(response.status, {
+				success: false
+			});
+		}
 	},
 	cancel: async ({ request, fetch, cookies }) => {
 		const formData = await request.formData();

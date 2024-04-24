@@ -1,14 +1,18 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { PageData, ActionData } from './$types';
 	import PasswordRequiredModal from '$lib/components/PasswordRequiredModal.svelte';
 	import { box, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
 	import { store } from '$lib/stores';
+	import { page } from '$app/stores';
 	import { type Writable, writable } from 'svelte/store';
 	import { vars } from '$lib/theme.css';
 	import type { Participation } from '$lib/objects/participation';
+	import { onMount } from 'svelte';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	export let data: PageData;
+	export let form: ActionData;
 
 	store.subscribe(() => getSignups());
 
@@ -40,21 +44,32 @@
 		const form = event.target as HTMLFormElement;
 		const formData = new FormData(form);
 		formData.set('current_password', $store.password);
+		const participationId = formData.get('participation')!;
+		formData.delete('participation');
 
 		const href = new URL(document.location.href);
-		const url = href.origin + href.pathname;
+		const url = href.origin + `/participation/${participationId}/`;
 		await fetch(url, { method: 'POST', body: formData });
 
+		await invalidateAll();
+		await getSignups();
 		can_signup = true;
 		has_participated = false;
-		await getSignups();
 	}
+
+	onMount(() => {
+		if (form?.success && form.participation != null) {
+			goto(`/participation/${form.participation.uuid}/`);
+		}
+	});
 
 	let participations: Writable<Map<number, Participation>> = writable();
 	let can_signup = true;
 	let has_participated = false;
 </script>
-<PasswordRequiredModal></PasswordRequiredModal>
+{#if $page.data.user != null}
+	<PasswordRequiredModal></PasswordRequiredModal>
+{/if}
 <div class="{row} m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
 	{#if has_participated}

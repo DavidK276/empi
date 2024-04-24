@@ -31,6 +31,10 @@ globalStyle('a', {
 	alignItems: 'center'
 });
 
+globalStyle('button a', {
+	color: vars.textSecondary
+});
+
 globalStyle('button', {
 	display: 'inline-flex',
 	alignItems: 'center',

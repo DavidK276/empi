@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
-	import { vars } from '$lib/theme.css';
 
 	export let data: PageData;
 </script>
@@ -13,7 +12,7 @@
 	<tr>
 		<th>{$t('research.name')}</th>
 		<th>{$t('research.info_url')}</th>
-		{#if $page.data.user != null}
+		{#if $page.data.user != null || true}
 			<th>{$t('common.details')}</th>
 		{/if}
 	</tr>
@@ -21,10 +20,10 @@
 		<tr>
 			<td>{research.name}</td>
 			<td>{research.info_url}</td>
-			{#if $page.data.user != null}
+			{#if $page.data.user != null || true}
 				<th>
 					<button>
-						<a href="research/{research.id}/" style="color: {vars.textSecondary}">{$t('common.details')}</a>
+						<a href="research/{research.id}/">{$t('common.details')}</a>
 					</button>
 				</th>
 			{/if}

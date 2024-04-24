@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from . import models
-from .models import Participation
 
 
 class ResearchUserSerializer(serializers.ModelSerializer):
@@ -40,3 +39,20 @@ class ParticipationSerializer(serializers.ModelSerializer):
 class ParticipationUpdateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     has_participated = serializers.BooleanField(default=False)
+
+
+class AnonymousParticipationSerializer(serializers.Serializer):
+    uuid = serializers.UUIDField(read_only=True)
+    appointment = serializers.PrimaryKeyRelatedField(
+        queryset=models.Appointment.objects.get_queryset()
+    )
+    appointment_detail = AppointmentSerializer(read_only=True)
+
+    def create(self, validated_data):
+        participation = models.Participation(appointment=validated_data["appointment"])
+        participation.save()
+        return participation
+
+    def to_representation(self, instance):
+        appointment = self.fields['appointment_detail'].to_representation(instance.appointment)
+        return super().to_representation(instance) | {'appointment_detail': appointment}

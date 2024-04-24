@@ -1,6 +1,6 @@
 export class Appointment {
 	id!: number;
-	research!: string;
+	research!: number;
 	when!: string;
 	capacity!: number;
 	free_capacity!: number;

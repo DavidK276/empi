@@ -22,6 +22,7 @@ from .serializers import (
     ResearchAdminSerializer,
     ParticipationSerializer,
     ParticipationUpdateSerializer,
+    AnonymousParticipationSerializer,
 )
 
 
@@ -119,7 +120,7 @@ class ParticipationViewSet(
         token = get_object_or_404(Participant, pk=request.user.pk).token
 
         appointment: Appointment = serializer.validated_data["appointment"]
-        if appointment.free_capacity < 0:
+        if appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
         pubkeys = appointment.get_pubkeys(request.user)
 
@@ -208,6 +209,15 @@ class ParticipationViewSet(
 
 class AnonymousParticipationViewSet(viewsets.ModelViewSet):
     queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=True)
-    serializer_class = ParticipationSerializer
+    serializer_class = AnonymousParticipationSerializer
     permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "uuid"
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        appointment: Appointment = serializer.validated_data["appointment"]
+        if appointment.free_capacity <= 0:
+            raise exceptions.ParseError("no free capacity left for this appointment")
+        return super().create(request, *args, **kwargs)
