@@ -32,5 +32,6 @@
   "yes": "Yes",
   "notyet": "Not yet",
   "signup": "Sign up",
-  "protocol": "Participation of students"
+  "protocol": "Participation of students",
+  "anonymous_signup": "You will be signed up without an account"
 }

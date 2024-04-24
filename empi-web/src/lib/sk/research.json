@@ -33,5 +33,6 @@
   "yes": "Áno",
   "notyet": "Zatiaľ nie",
   "signup": "Prihlásiť sa",
-  "protocol": "Zápisnica účasti študentov"
+  "protocol": "Zápisnica účasti študentov",
+  "anonymous_signup": "Na termín budete prihlásení bez účtu"
 }

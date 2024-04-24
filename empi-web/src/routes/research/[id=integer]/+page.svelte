@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData, ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 	import PasswordRequiredModal from '$lib/components/PasswordRequiredModal.svelte';
 	import { box, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
@@ -124,7 +124,13 @@
 		{#if can_signup && appointment.free_capacity}
 			<form method="POST" action="?/signup">
 				<input type="hidden" name="appointment" value="{appointment.id}">
-				<button type="submit">{$t('research.signup')}</button>
+				<div class="{row}">
+					<button type="submit">{$t('research.signup')}</button>
+					{#if $page.data.user == null}
+						<p style="display: inline-flex; margin: 0; align-items: center"><span
+							class="material-symbols-outlined">info</span>&nbsp;{$t('research.anonymous_signup')}</p>
+					{/if}
+				</div>
 			</form>
 		{/if}
 		{#if is_signedup}
