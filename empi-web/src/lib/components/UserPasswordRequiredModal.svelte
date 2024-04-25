@@ -9,7 +9,7 @@
 	let modal: Modal;
 </script>
 
-<svelte:component this={Modal} bind:this={modal} show="{$store.password === ''}" dismissible={false}>
+<svelte:component this={Modal} bind:this={modal} show="{$store.user_password === ''}" dismissible={false}>
 	<div slot="header">
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
@@ -21,7 +21,7 @@
 			if (password_ok) {
 				const password = formData.get('current_password');
 				if (password != null) {
-					$store.password = password.toString();
+					$store.user_password = password.toString();
 					modal.dismiss();
 				}
 			}

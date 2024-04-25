@@ -17,7 +17,7 @@
 	store.subscribe(() => getSignups());
 
 	async function getSignups() {
-		if (!$store.user_password) {
+		if (!$store.user_password || $page.data.user.is_staff) {
 			return;
 		}
 		const formData = new FormData();
@@ -64,7 +64,7 @@
 	});
 
 	let participations: Writable<Map<number, Participation>> = writable();
-	let can_signup = true;
+	let can_signup = $page.data.user?.is_staff === false;
 	let has_participated = false;
 </script>
 {#if $page.data.user != null}
