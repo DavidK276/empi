@@ -1,7 +1,6 @@
 import * as consts from '$lib/constants';
 import { convertFormData } from '$lib/functions';
 import { type Actions, error, fail } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 
 export const actions = {
 	update: async ({ request, fetch, params }) => {
@@ -88,18 +87,31 @@ export const actions = {
 				'Content-Type': 'application/json'
 			}
 		});
+	},
+	setPassword: async ({fetch, params, request}) => {
+		const formData = await request.formData();
+		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/password/set/`, {
+			method: 'POST',
+			body: formData
+		});
+		if (response.ok) {
+			return {
+				success: true
+			};
+		}
+		return fail(response.status, {
+			success: false
+		});
+	},
+	checkPassword: async ({fetch, params, request}) => {
+		const formData = await request.formData();
+		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/password/check/`, {
+			body: formData,
+			method: 'POST'
+		});
+		if (response.ok) {
+			return {};
+		}
+		throw error(response.status);
 	}
 } satisfies Actions;
-
-export const load: PageServerLoad = async ({ fetch, params }) => {
-	const response = await fetch(consts.API_ENDPOINT + `participation/research/${params.uuid}/get/`, {
-		method: 'POST'
-	});
-	if (response.ok) {
-		const responseJSON = await response.json();
-		return {
-			participations: responseJSON
-		};
-	}
-	throw error(response.status);
-};

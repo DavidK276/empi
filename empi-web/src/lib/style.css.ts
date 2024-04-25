@@ -136,5 +136,5 @@ export const accordionTabInput = style({
 
 globalStyle(`${accordionTab} input:checked ~ ${accordionTabContent}`, {
 	maxHeight: 'initial',
-	margin: vars.sm
+	padding: vars.sm
 });

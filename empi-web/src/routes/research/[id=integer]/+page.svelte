@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ActionData, PageData } from './$types';
-	import PasswordRequiredModal from '$lib/components/PasswordRequiredModal.svelte';
+	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { box, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
 	import { store } from '$lib/stores';
@@ -17,11 +17,11 @@
 	store.subscribe(() => getSignups());
 
 	async function getSignups() {
-		if (!$store.password) {
+		if (!$store.user_password) {
 			return;
 		}
 		const formData = new FormData();
-		formData.set('current_password', $store.password);
+		formData.set('current_password', $store.user_password);
 		const href = new URL(document.location.href);
 		const response = await fetch(href.origin, { method: 'POST', body: formData });
 		const responseJSON = await response.json() as Array<{
@@ -43,7 +43,7 @@
 	async function cancelSignup(event: Event) {
 		const form = event.target as HTMLFormElement;
 		const formData = new FormData(form);
-		formData.set('current_password', $store.password);
+		formData.set('current_password', $store.user_password);
 		const participationId = formData.get('participation')!;
 		formData.delete('participation');
 
@@ -68,7 +68,7 @@
 	let has_participated = false;
 </script>
 {#if $page.data.user != null}
-	<PasswordRequiredModal></PasswordRequiredModal>
+	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
 <div class="{row} m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>

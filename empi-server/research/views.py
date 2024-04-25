@@ -5,15 +5,15 @@ from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from empi_server.constants import UUID_REGEX
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
+
+from empi_server.constants import UUID_REGEX
 from users.models import Participant
 from users.serializers import PasswordSerializer
-
 from .models import Appointment, Research, Participation, EncryptedToken
 from .permissions import *
 from .serializers import (
@@ -54,7 +54,13 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "uuid"
 
-    @action(detail=True, name="Change password", methods=[HTTPMethod.PUT], serializer_class=PasswordSerializer)
+    @action(
+        detail=True,
+        name="Change password",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        url_path="password/set",
+    )
     def change_password(self, request, uuid=None):
         research: Research = self.get_object()
         serializer = self.get_serializer(data=request.data)
@@ -63,6 +69,26 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         current_password = serializer.validated_data["current_password"]
         new_password = serializer.validated_data["new_password"]
         research.change_password(current_password, new_password)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
+        name="Check password",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        url_path="password/check",
+    )
+    def check_password(self, request, uuid=None):
+        research: Research = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        _, encrypted_key = research.get_keypair()
+        current_password = serializer.validated_data["current_password"]
+        try:
+            _ = RSA.import_key(encrypted_key, current_password)
+        except ValueError:
+            raise exceptions.PermissionDenied("invalid current password")
         return Response(status=status.HTTP_200_OK)
 
     @action(

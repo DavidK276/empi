@@ -10,11 +10,11 @@
 	function setPasswordSession(event: Event) {
 		const form = event.target as HTMLFormElement;
 		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
-		$store.password = passwordInput?.value;
+		$store.user_password = passwordInput?.value;
 	}
 
 	function unsetPasswordSession() {
-		$store.password = '';
+		$store.user_password = '';
 	}
 
 	export let is_logged_in: boolean;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import PasswordRequiredModal from '$lib/components/PasswordRequiredModal.svelte';
+  import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
   import { t } from '$lib/translations';
   import { store } from '$lib/stores';
   import { type Writable, writable } from 'svelte/store';
@@ -8,13 +8,13 @@
 
   export let data: PageData;
 
-  store.subscribe(async ({ password }) => {
-    if (!password) {
+  store.subscribe(async ({ user_password }) => {
+    if (!user_password) {
       return;
     }
 
     const formData = new FormData();
-    formData.set('current_password', password);
+    formData.set('current_password', user_password);
     const href = new URL(document.location.href);
     const response = await fetch(href.origin, { method: 'POST', body: formData });
     const responseJSON = await response.json() as Array<{
@@ -33,7 +33,7 @@
 
   let participations: Writable<Participation[]> = writable();
 </script>
-<PasswordRequiredModal></PasswordRequiredModal>
+<UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
 {#if $participations != null && $participations.length > 0}
 	<div style="overflow-x: auto">

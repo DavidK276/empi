@@ -19,10 +19,11 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    free_capacity = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = models.Appointment
         fields = "__all__"
-        extra_kwargs = {"free_capacity": {"read_only": True}}
 
 
 class ParticipationSerializer(serializers.ModelSerializer):

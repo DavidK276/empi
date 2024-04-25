@@ -19,8 +19,14 @@
 		const sign = offset > 0 ? '-' : '+';
 		return `${sign}${hours}:${minutes}`;
 	}
+
+	function formData(event: FormDataEvent) {
+		const when = event.formData.get('when') as string;
+		const utcOffset = getUtcOffset();
+		event.formData.set('when', when + utcOffset);
+	}
 </script>
-<form bind:this={nodeRef} on:submit|preventDefault class="appointment-form">
+<form bind:this={nodeRef} on:submit|preventDefault on:formdata={formData} class="appointment-form">
 	<div class={box}>
 		{#if appointment != null}
 			<label for="type">{$t('research.appointment_type')}</label>
@@ -51,7 +57,6 @@
 				<input type="text" name="location" id="location" value={appointment.location}>
 			{/if}
 			<input type="hidden" name="id" value={appointment.id}>
-			<input type="hidden" name="utc-offset" value={getUtcOffset()}>
 		{:else}
 			<label for="type">{$t('research.appointment_type')}</label>
 			<select id="type" bind:value={type}>
