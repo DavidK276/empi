@@ -40,5 +40,7 @@
   "creating": "Pridávam výskum…",
   "no_points": "Zatiaľ ste sa nezúčastnili na žiadnom výskume",
   "protection": "Ochrana heslom",
-  "unprotected_warning": "Žiadne heslo nie je nastavené. Každý s linkom môže vykonávať úpravy."
+  "unprotected_warning": "Žiadne heslo nie je nastavené. Každý s linkom môže vykonávať úpravy.",
+  "join_appointment_url": "Link na pripojenie",
+  "join_appointment": "Pripojiť"
 }

@@ -9,8 +9,9 @@
   "create_research": "Create research",
   "creation_info": "The research will be created as a draft. You'll be able to publish it anytime.",
   "error": "Unknown error occured",
-  "appointment_type": "Appointment type",
   "appointment": "Appointment",
+  "appointments": "Appointments",
+  "appointment_type": "Appointment type",
   "online": "Online",
   "in_person": "In person",
   "when": "Date and time",
@@ -37,5 +38,9 @@
   "anonymous_signup": "You will be signed up without an account",
   "email_recipients": "Email addresses to send updates to",
   "creating": "Creating research…",
-  "no_points": "You haven't participated in any researches yet"
+  "no_points": "You haven't participated in any researches yet",
+  "protection": "Ochrana heslom",
+  "unprotected_warning": "No password is set. Everyone with the link will be able to make edits.",
+  "join_appointment_url": "Join link",
+  "join_appointment": "Join"
 }
