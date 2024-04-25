@@ -108,7 +108,7 @@
 				{#if appointment.location}
 					<th>{$t('research.location')}</th>
 				{:else if is_signedup}
-					<th>{$t('research.info_url')}</th>
+					<th>{$t('research.join_appointment_url')}</th>
 				{/if}
 			</tr>
 			<tr>
@@ -117,7 +117,8 @@
 				{#if appointment.location}
 					<td>{appointment.location}</td>
 				{:else if is_signedup}
-					<td>{appointment.info_url}</td>
+					<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}<span
+						class="material-symbols-outlined">open_in_new</span></a></td>
 				{/if}
 			</tr>
 		</table>
