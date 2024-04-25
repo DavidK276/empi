@@ -37,5 +37,6 @@
   "protocol": "Zápisnica účasti študentov",
   "anonymous_signup": "Na termín budete prihlásení bez účtu",
   "email_recipients": "Emailové adresy na posielanie informácií",
-  "creating": "Pridávam výskum…"
+  "creating": "Pridávam výskum…",
+  "no_points": "Zatiaľ ste sa nezúčastnili na žiadnom výskume"
 }

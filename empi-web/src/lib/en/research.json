@@ -36,5 +36,6 @@
   "protocol": "Participation of students",
   "anonymous_signup": "You will be signed up without an account",
   "email_recipients": "Email addresses to send updates to",
-  "creating": "Creating research…"
+  "creating": "Creating research…",
+  "no_points": "You haven't participated in any researches yet"
 }
