@@ -93,7 +93,7 @@ export const hidden = style({
 });
 
 export const error = style({
-	color: 'red',
+	color: vars.danger,
 	display: 'block',
 	margin: '4px 0'
 });

@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
-	import { addFormError, removeFormError } from '$lib/functions';
+	import { addFormError, addFormErrors, removeFormError } from '$lib/functions';
 	import type { ActionData } from './$types';
 	import { onMount } from 'svelte';
+	import { vars } from '$lib/theme.css';
 
 	export let form: ActionData;
 
@@ -45,16 +46,8 @@
 
 	onMount(() => {
 		const formElement = document.getElementById('register_form') as HTMLFormElement;
-		if (form?.failure) {
-			Object.keys(form?.body).forEach(key => {
-				const element = formElement.elements.namedItem(key) as HTMLElement | null;
-				if (element != null) {
-					let errors = form?.body[key] as string[];
-					errors.forEach(error => {
-						addFormError(element, error);
-					});
-				}
-			});
+		if (form?.success === false) {
+			addFormErrors(form.errors, formElement);
 		}
 	});
 </script>
@@ -81,6 +74,6 @@
 	<input type="password" id="repeat_password" required minlength="8">
 	<button type="submit" name="submit" disabled>{$t('common.register')}</button>
 	{#if form?.success}
-		<span style="color: green">{$t('common.registration_ok')}</span>
+		<span style="color: {vars.success}">{$t('common.registration_ok')}</span>
 	{/if}
 </form>

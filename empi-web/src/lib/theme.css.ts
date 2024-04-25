@@ -95,7 +95,7 @@ globalStyle('select', {
 });
 
 globalStyle('input.error', {
-	boxShadow: `0 0 2px red`
+	boxShadow: `0 0 2px ${vars.danger}`
 });
 
 globalStyle('header', {

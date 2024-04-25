@@ -3,14 +3,16 @@
 	import type { ActionData } from './$types';
 	import { goto } from '$app/navigation';
 	import { applyAction, enhance } from '$app/forms';
-	import { vars } from '$lib/theme.css';
 	import { row } from '$lib/style.css';
 	import EmailInput from '$lib/components/EmailInput.svelte';
+	import { addFormErrors } from '$lib/functions';
 
 	export let form: ActionData;
 
 	let submitting = false;
 	let emails: EmailInput;
+
+
 </script>
 
 <h1>{$t('research.create_research')}</h1>
@@ -18,12 +20,15 @@
 			on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}
 			use:enhance={() => {
 				submitting = true;
-				return async ({result}) => {
+				return async ({result, formElement}) => {
 					if (result.type === 'redirect') {
 						await goto(result.location);
 					}
 					else {
 						await applyAction(result);
+						if (form != null && !form.success) {
+							addFormErrors(form.errors, formElement);
+						}
 					}
 					submitting = false;
 				}
@@ -44,11 +49,5 @@
 			<span class="material-symbols-outlined">info</span>&nbsp;
 			{$t('research.creation_info')}
 		</div>
-		{#if form?.success === false}
-			<div style="display: inline-flex; align-items: center; color: {vars.danger}">
-				<span class="material-symbols-outlined">error</span>
-				{$t('research.error')}
-			</div>
-		{/if}
 	</div>
 </form>

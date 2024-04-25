@@ -1,4 +1,4 @@
-import { type Actions, fail } from '@sveltejs/kit';
+import { type Actions, fail, redirect } from '@sveltejs/kit';
 import * as consts from '$lib/constants';
 
 export const actions = {
@@ -7,9 +7,7 @@ export const actions = {
 			method: 'DELETE'
 		});
 		if (response.ok) {
-			return {
-				success: true
-			}
+			throw redirect(302, 'cancel-ok');
 		}
 		return fail(response.status, {success: false});
 	}

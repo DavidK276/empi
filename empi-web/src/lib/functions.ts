@@ -78,6 +78,18 @@ export const addFormError = (element: HTMLElement, text: string) => {
 	}
 };
 
+export const addFormErrors = (formErrors: { [x: string]: string[]; }, formElement: HTMLFormElement) => {
+	Object.keys(formErrors).forEach(key => {
+		const element = formElement.elements.namedItem(key) as HTMLElement | null;
+		if (element != null) {
+			const errors = formErrors[key] as string[];
+			errors.forEach(error => {
+				addFormError(element, error);
+			});
+		}
+	});
+};
+
 export const removeFormError = (element: HTMLElement) => {
 	element.classList.remove('error');
 	const errorElement = document.getElementById(`${element.id}_error`);

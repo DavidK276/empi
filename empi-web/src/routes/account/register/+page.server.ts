@@ -9,12 +9,11 @@ export const actions = {
 			body: await request.formData()
 		});
 		const responseJSON = await response.json();
-		if (!response.ok) {
-			return fail(response.status, { failure: true, body: responseJSON });
+		if (response.ok) {
+			return {
+				success: true
+			};
 		}
-		return {
-			success: true,
-			body: responseJSON
-		};
+		return fail(response.status, { success: false, errors: responseJSON });
 	}
 } satisfies Actions;
