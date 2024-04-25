@@ -72,7 +72,7 @@
 		submit_success_participations = response.ok;
 	}
 
-	const participations = columnify(data.participations, 3);
+	const participations = columnify(data.participations, 3) as Participation[][];
 </script>
 <div class="{row} ver-center m-col" style="margin-bottom: {vars.sm}">
 	<h1 style="margin: {vars.sm} 0">{data.research.name}</h1>
@@ -82,7 +82,7 @@
 			<button type="submit">{$t('research.publish')}<span class="material-symbols-outlined">visibility</span></button>
 		</form>
 	{:else if data.research?.is_published === true}
-		<button>{$t('research.published')}</button>
+		<button style="background: {vars.success}">{$t('research.published')}</button>
 		<form method="POST" action="?/unpublish" use:enhance>
 			<button type="submit" style="background-color: {vars.danger}">{$t('research.unpublish')}<span
 				class="material-symbols-outlined">visibility_off</span></button>
@@ -97,7 +97,7 @@
 	<button type="submit" style="margin-bottom: {vars.lg}">{$t('common.submit')}</button>
 </form>
 <Accordion>
-	<AccordionTab id="cb1" checked="{true}" title="{$t('common.attributes')}">
+	<AccordionTab id="cb1" checked="{false}" title="{$t('common.attributes')}">
 		<form method="POST"
 					action="?/attrs"
 					use:enhance={() => {
@@ -132,7 +132,7 @@
 			{/if}
 		</form>
 	</AccordionTab>
-	<AccordionTab id="cb2" checked="{true}" title="{$t('research.appointments')}">
+	<AccordionTab id="cb2" checked="{false}" title="{$t('research.appointments')}">
 		{#each appointments as appointment}
 			<Appointment {appointment} uuid="{$page.params.uuid}"></Appointment>
 		{/each}
