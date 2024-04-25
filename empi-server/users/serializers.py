@@ -4,9 +4,6 @@ from . import models
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=128, write_only=True)
-    date_joined = serializers.DateTimeField(read_only=True)
-
     class Meta:
         model = models.EmpiUser
         fields = [
@@ -19,6 +16,10 @@ class UserSerializer(serializers.ModelSerializer):
             "is_staff",
             "date_joined",
         ]
+        extra_kwargs = {
+            "password": {"style": {"input_type": "password"}, "write_only": True, "max_length": 128},
+            "date_joined": {"read_only": True},
+        }
 
     def create(self, validated_data):
         if request := self.context.get("request"):
@@ -28,8 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PasswordSerializer(serializers.Serializer):
-    current_password = serializers.CharField(max_length=100, write_only=True)
-    new_password = serializers.CharField(max_length=100, write_only=True, default=None)
+    current_password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
+    new_password = serializers.CharField(
+        max_length=100, write_only=True, default=None, style={"input_type": "password"}
+    )
 
 
 class AttributeValueSimpleSerializer(serializers.BaseSerializer):
