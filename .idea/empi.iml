@@ -15,16 +15,17 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/empi_server/keys" />
+      <sourceFolder url="file://$MODULE_DIR$/empi-server" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/empi-server/keys" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Poetry (empi-server)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/empi_server/emails/templates" />
+        <option value="$MODULE_DIR$/empi-server/emails/templates" />
       </list>
     </option>
   </component>

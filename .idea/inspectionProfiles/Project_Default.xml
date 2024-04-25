@@ -52,7 +52,7 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="7">
+          <list size="9">
             <item index="0" class="java.lang.String" itemvalue="pyproject_hooks" />
             <item index="1" class="java.lang.String" itemvalue="typing_extensions" />
             <item index="2" class="java.lang.String" itemvalue="tomli_w" />
@@ -60,6 +60,8 @@
             <item index="4" class="java.lang.String" itemvalue="django" />
             <item index="5" class="java.lang.String" itemvalue="gnupg" />
             <item index="6" class="java.lang.String" itemvalue="Crypto" />
+            <item index="7" class="java.lang.String" itemvalue="knox" />
+            <item index="8" class="java.lang.String" itemvalue="research" />
           </list>
         </value>
       </option>
@@ -83,7 +85,7 @@
     <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredIdentifiers">
         <list>
-          <option value="orienter.databasor.models.Section.*" />
+          <option value="empi_server.users.views.research" />
         </list>
       </option>
     </inspection_tool>
