@@ -2,8 +2,8 @@
 	import { t } from '$lib/translations';
 	import { addFormError, addFormErrors, removeFormError } from '$lib/functions';
 	import type { ActionData } from './$types';
-	import { onMount } from 'svelte';
 	import { vars } from '$lib/theme.css';
+	import { applyAction, enhance } from '$app/forms';
 
 	export let form: ActionData;
 
@@ -36,7 +36,7 @@
 		const target = event.target as HTMLElement;
 		const formElement = target.parentElement as HTMLFormElement;
 		const submitButton = formElement.children.namedItem('submit');
-		if (formElement.checkValidity() && verifyForm(formElement)) {
+		if (verifyForm(formElement)) {
 			submitButton?.removeAttribute('disabled');
 		}
 		else {
@@ -44,16 +44,22 @@
 		}
 	};
 
-	onMount(() => {
-		const formElement = document.getElementById('register_form') as HTMLFormElement;
-		if (form?.success === false) {
-			addFormErrors(form.errors, formElement);
-		}
-	});
+	let submitting = false;
 </script>
 
 <h1>{$t('common.registration')}</h1>
-<form method="POST" id="register_form" on:input={formCheck}>
+<form method="POST" id="register_form"
+			on:input={formCheck}
+			use:enhance={() => {
+				submitting = true;
+				return async ({result, formElement}) => {
+					await applyAction(result);
+					if (form != null && !form.success) {
+							addFormErrors(form.errors, formElement);
+					}
+					submitting = false;
+				}
+			}}>
 	<label for="username" title={$t('common.username_hint')}>
 		{$t('common.username')}
 		<span class="material-symbols-outlined">help</span>
@@ -72,7 +78,11 @@
 	<input type="password" name="password" id="password" required minlength="8">
 	<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
 	<input type="password" id="repeat_password" required minlength="8">
-	<button type="submit" name="submit" disabled>{$t('common.register')}</button>
+	{#if !submitting}
+		<button type="submit" name="submit" disabled>{$t('common.register')}</button>
+	{:else}
+		<button type="submit" disabled>{$t('common.registering')}</button>
+	{/if}
 	{#if form?.success}
 		<span style="color: {vars.success}">{$t('common.registration_ok')}</span>
 	{/if}

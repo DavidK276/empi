@@ -11,8 +11,6 @@
 
 	let submitting = false;
 	let emails: EmailInput;
-
-
 </script>
 
 <h1>{$t('research.create_research')}</h1>

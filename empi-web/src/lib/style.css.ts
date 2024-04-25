@@ -95,7 +95,7 @@ export const hidden = style({
 export const error = style({
 	color: vars.danger,
 	display: 'block',
-	margin: '4px 0'
+	margin: `${vars.sm} 0`
 });
 
 export const box = style({

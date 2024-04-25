@@ -95,7 +95,8 @@ globalStyle('select', {
 });
 
 globalStyle('input.error', {
-	boxShadow: `0 0 2px ${vars.danger}`
+	boxShadow: `0 0 2px ${vars.danger}`,
+	marginBottom: 0
 });
 
 globalStyle('header', {
