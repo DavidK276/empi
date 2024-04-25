@@ -98,7 +98,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
                 appointment: Appointment = serializer.save()
                 to_keep.append(appointment.pk)
 
-            Appointment.objects.filter(~Q(pk__in=to_keep)).delete()
+            Appointment.objects.filter(~Q(pk__in=to_keep) & Q(research=research)).delete()
 
         appointments = Appointment.objects.filter(research=research)
         serializer = self.get_serializer(appointments, many=True)
