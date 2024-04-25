@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models import Q, Manager
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from empi_server.fields import SeparatedValuesField
 from rest_framework import exceptions
 from users import models as user_models
 
@@ -35,10 +36,11 @@ class Research(models.Model):
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
     chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
-    is_protected = models.BooleanField(default=False, null=False)
-    is_published = models.BooleanField(default=False, null=False)
+    is_protected = models.BooleanField(default=False, editable=False)
+    is_published = models.BooleanField(default=False, editable=False)
+    email_recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
 
     def __str__(self):
         return self.name

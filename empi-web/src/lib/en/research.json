@@ -29,9 +29,12 @@
   "cancel": "Cancel",
   "cancel_success": "Your visit was successfully cancelled",
   "participation": "Participation",
+  "no_participations": "No student has signed up yet",
   "yes": "Yes",
   "notyet": "Not yet",
   "signup": "Sign up",
   "protocol": "Participation of students",
-  "anonymous_signup": "You will be signed up without an account"
+  "anonymous_signup": "You will be signed up without an account",
+  "email_recipients": "Email addresses to send updates to",
+  "creating": "Creating research…"
 }

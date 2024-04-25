@@ -30,9 +30,12 @@
   "cancel": "Zrušiť",
   "cancel_success": "Vaša účasť bola zrušená",
   "participation": "Účasť",
+  "no_participations": "Zatiaľ sa neprihlásil žiadny študent",
   "yes": "Áno",
   "notyet": "Zatiaľ nie",
   "signup": "Prihlásiť sa",
   "protocol": "Zápisnica účasti študentov",
-  "anonymous_signup": "Na termín budete prihlásení bez účtu"
+  "anonymous_signup": "Na termín budete prihlásení bez účtu",
+  "email_recipients": "Emailové adresy na posielanie informácií",
+  "creating": "Pridávam výskum…"
 }

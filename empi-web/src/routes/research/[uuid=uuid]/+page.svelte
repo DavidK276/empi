@@ -86,6 +86,8 @@
 </div>
 <label for="url">{$t('research.info_url')}</label>
 <input type="text" id="url" readonly value="{data.research.info_url}">
+<label for="emails">{$t('research.email_recipients')}</label>
+<input type="text" id="emails" readonly value="{data.research.email_recipients}">
 <Accordion>
 	<AccordionTab id="cb1" checked="{true}" title="{$t('common.attributes')}">
 		<form method="POST"
@@ -161,15 +163,17 @@
 				<p>{$t('research.no_participations')}</p>
 			{/each}
 		</div>
-		{#if submitting_appointments}
-			<button type="submit" disabled>{$t('common.submitting')}</button>
-		{:else}
-			<button type="button" on:click={submitParticipations}>{$t('common.submit')}</button>
-		{/if}
-		{#if submit_success_participations === true}
-			<span style="margin: 0 {vars.sm}; color: green">{$t('attrs.success')}</span>
-		{:else if submit_success_participations === false}
-			<span style="margin: 0 {vars.sm}; color: {vars.danger}">{$t('common.unknown_error')}</span>
+		{#if participations.length > 0}
+			{#if submitting_participations}
+				<button type="submit" disabled>{$t('common.submitting')}</button>
+			{:else}
+				<button type="button" on:click={submitParticipations}>{$t('common.submit')}</button>
+			{/if}
+			{#if submit_success_participations === true}
+				<span style="margin: 0 {vars.sm}; color: green">{$t('attrs.success')}</span>
+			{:else if submit_success_participations === false}
+				<span style="margin: 0 {vars.sm}; color: {vars.danger}">{$t('common.unknown_error')}</span>
+			{/if}
 		{/if}
 	</AccordionTab>
 </Accordion>

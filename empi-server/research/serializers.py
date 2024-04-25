@@ -4,16 +4,12 @@ from . import models
 
 
 class ResearchUserSerializer(serializers.ModelSerializer):
-    protected = serializers.BooleanField(read_only=True)
-
     class Meta:
         model = models.Research
-        exclude = ["chosen_attribute_values", "uuid"]
+        exclude = ["chosen_attribute_values", "uuid", "email_recipients"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
-    protected = serializers.BooleanField(read_only=True)
-
     class Meta:
         model = models.Research
         exclude = ["chosen_attribute_values"]

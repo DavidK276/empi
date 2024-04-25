@@ -1,21 +1,18 @@
 import os
-import magic
-
 from datetime import datetime
-
-from django.db.models import Q
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from django.db import models
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
-
-from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
-from .fields import SeparatedValuesField
+from email.mime.text import MIMEText
 
+import magic
+from django.core.mail import EmailMultiAlternatives
+from django.db import models
+from django.db.models import Q
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from empi_server.fields import SeparatedValuesField
 from research import models as research_models
 
 
@@ -26,10 +23,12 @@ class Email(models.Model):
     body = models.TextField(verbose_name="telo")
     send_when = models.DateTimeField(verbose_name="dátum a čas odoslania", blank=True, null=True)
     is_finalized = models.BooleanField(verbose_name="je publikovaný", null=False, default=False)
+    is_sent = models.BooleanField(verbose_name="odoslaný", default=False, editable=False)
 
     @classmethod
     def get_emails_to_send(cls):
-        return cls.objects.filter(Q(send_when__isnull=True) | Q(send_when__lte=datetime.now()) & Q(is_finalized=True))
+        return cls.objects.filter(is_sent=False).filter(
+            (Q(send_when__isnull=True) | Q(send_when__lte=datetime.now())) & Q(is_finalized=True))
 
     def send(self):
         html = render_to_string("email.html", context={"subject": self.subject, "body": self.body})
@@ -49,6 +48,9 @@ class Email(models.Model):
         )
         message.attach_alternative(html, "text/html")
         message.send()
+
+        self.is_sent = True
+        self.save()
 
 
 class Attachment(models.Model):
