@@ -47,9 +47,6 @@ class ResearchUserViewSet(
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
 
 class ResearchAdminViewSet(viewsets.ModelViewSet):
     queryset = Research.objects.get_queryset().order_by("-created")
@@ -103,9 +100,6 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         appointments = Appointment.objects.filter(research=research)
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
-
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
 
 
 class ParticipationViewSet(
