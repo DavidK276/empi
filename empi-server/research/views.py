@@ -104,6 +104,9 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
 
 class ParticipationViewSet(
     mixins.CreateModelMixin,

@@ -13,8 +13,11 @@
 	import Accordion from '$lib/components/Accordion.svelte';
 	import AccordionTab from '$lib/components/AccordionTab.svelte';
 	import type { Participation } from '$lib/objects/participation';
+	import EmailInput from '$lib/components/EmailInput.svelte';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
+	let emails: EmailInput;
 	let appointments = plainToInstance(Appt, data.appointments);
 	let submitting_attrs = false;
 	let submit_success_attrs: boolean | null = null;
@@ -22,6 +25,8 @@
 	let submit_success_appointments: boolean | null = null;
 	let submitting_participations = false;
 	let submit_success_participations: boolean | null = null;
+
+	onMount(() => emails.setEmails(data.research.email_recipients));
 
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
@@ -84,10 +89,13 @@
 		</form>
 	{/if}
 </div>
-<label for="url">{$t('research.info_url')}</label>
-<input type="text" id="url" readonly value="{data.research.info_url}">
-<label for="emails">{$t('research.email_recipients')}</label>
-<input type="text" id="emails" readonly value="{data.research.email_recipients}">
+<form method="POST" action="?/update"
+			on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+	<label for="url">{$t('research.info_url')}</label>
+	<input type="text" id="url" name="info_url" value="{data.research.info_url}">
+	<EmailInput bind:this={emails}></EmailInput>
+	<button type="submit" style="margin-bottom: {vars.lg}">{$t('common.submit')}</button>
+</form>
 <Accordion>
 	<AccordionTab id="cb1" checked="{true}" title="{$t('common.attributes')}">
 		<form method="POST"

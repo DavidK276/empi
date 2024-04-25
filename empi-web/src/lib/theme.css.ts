@@ -107,7 +107,7 @@ globalStyle('footer', {
 });
 
 globalStyle('fieldset', {
-	margin: `0 0 ${vars.lg} 0`
+	margin: `0 0 ${vars.sm} 0`
 });
 
 globalStyle('table, th, td', {

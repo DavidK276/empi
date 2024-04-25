@@ -34,7 +34,7 @@
 			<div style="display: flex; width: 100%; gap: {vars.sm}">
 				<div style="display: inline-flex; flex-direction: column; width: 50%">
 					<label for="capacity">{$t('research.capacity')}</label>
-					<input type="number" step="1" name="capacity" id="capacity" value="{appointment.capacity}">
+					<input type="number" step="1" min="1" name="capacity" id="capacity" value="{appointment.capacity}">
 				</div>
 				<div style="display: inline-flex; flex-direction: column; width: 50%">
 					<label for="capacity">{$t('research.occupancy')}</label>

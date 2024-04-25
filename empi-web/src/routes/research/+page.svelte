@@ -11,15 +11,11 @@
 
 	let submitting = false;
 	let emails: EmailInput;
-
-	function onFormData(event: FormDataEvent) {
-		event.formData.set('email_recipients', emails.getEmails());
-	}
 </script>
 
 <h1>{$t('research.create_research')}</h1>
 <form method="POST" action="?/new"
-			on:formdata={onFormData}
+			on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}
 			use:enhance={() => {
 				submitting = true;
 				return async ({result}) => {

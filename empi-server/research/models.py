@@ -39,7 +39,7 @@ class Research(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
     is_protected = models.BooleanField(default=False, editable=False)
-    is_published = models.BooleanField(default=False, editable=False)
+    is_published = models.BooleanField(default=False, null=False)
     email_recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
 
     def __str__(self):

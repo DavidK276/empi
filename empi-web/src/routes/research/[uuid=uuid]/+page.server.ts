@@ -4,6 +4,21 @@ import { type Actions, error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const actions = {
+	update: async ({ request, fetch, params }) => {
+		const formData = await request.formData();
+		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/`, {
+			method: 'PATCH',
+			body: formData
+		});
+		if (response.ok) {
+			return {
+				success: true
+			};
+		}
+		return fail(response.status, {
+			success: false
+		});
+	},
 	attrs: async ({ request, fetch, params }) => {
 		const formData = await request.formData();
 		const response = await fetch(consts.API_ENDPOINT + `attr/research/${params.uuid}/`, {
