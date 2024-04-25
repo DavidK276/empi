@@ -13,8 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="email",
             name="is_sent",
-            field=models.BooleanField(
-                default=False, editable=False, verbose_name="odoslaný"
-            ),
+            field=models.BooleanField(default=False, editable=False, verbose_name="odoslaný"),
         ),
     ]

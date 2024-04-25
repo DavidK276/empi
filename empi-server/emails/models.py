@@ -28,7 +28,8 @@ class Email(models.Model):
     @classmethod
     def get_emails_to_send(cls):
         return cls.objects.filter(is_sent=False).filter(
-            (Q(send_when__isnull=True) | Q(send_when__lte=datetime.now())) & Q(is_finalized=True))
+            (Q(send_when__isnull=True) | Q(send_when__lte=datetime.now())) & Q(is_finalized=True)
+        )
 
     def send(self):
         html = render_to_string("email.html", context={"subject": self.subject, "body": self.body})

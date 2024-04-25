@@ -39,9 +39,7 @@ class ParticipationUpdateSerializer(serializers.Serializer):
 
 class AnonymousParticipationSerializer(serializers.Serializer):
     uuid = serializers.UUIDField(read_only=True)
-    appointment = serializers.PrimaryKeyRelatedField(
-        queryset=models.Appointment.objects.get_queryset()
-    )
+    appointment = serializers.PrimaryKeyRelatedField(queryset=models.Appointment.objects.get_queryset())
     appointment_detail = AppointmentSerializer(read_only=True)
 
     def create(self, validated_data):
@@ -50,5 +48,5 @@ class AnonymousParticipationSerializer(serializers.Serializer):
         return participation
 
     def to_representation(self, instance):
-        appointment = self.fields['appointment_detail'].to_representation(instance.appointment)
-        return super().to_representation(instance) | {'appointment_detail': appointment}
+        appointment = self.fields["appointment_detail"].to_representation(instance.appointment)
+        return super().to_representation(instance) | {"appointment_detail": appointment}

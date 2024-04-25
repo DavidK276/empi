@@ -14,9 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="research",
             name="email_recipients",
-            field=empi_server.fields.SeparatedValuesField(
-                default="", verbose_name="príjemcovia"
-            ),
+            field=empi_server.fields.SeparatedValuesField(default="", verbose_name="príjemcovia"),
             preserve_default=False,
         ),
     ]
