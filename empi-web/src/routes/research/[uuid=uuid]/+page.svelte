@@ -92,12 +92,12 @@
 <form method="POST" action="?/update"
 			on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 	<label for="url">{$t('research.info_url')}</label>
-	<input type="text" id="url" name="info_url" value="{data.research.info_url}">
+	<input type="text" id="url" name="info_url" value={data.research.info_url}>
 	<EmailInput bind:this={emails}></EmailInput>
 	<button type="submit" style="margin-bottom: {vars.lg}">{$t('common.submit')}</button>
 </form>
 <Accordion>
-	<AccordionTab id="cb1" checked="{false}" title="{$t('common.attributes')}">
+	<AccordionTab id="cb1" checked={false} title={$t('common.attributes')}>
 		<form method="POST"
 					action="?/attrs"
 					use:enhance={() => {
@@ -113,7 +113,7 @@
 						}}>
 			{#each data.attrs as attr}
 				{#if Reflect.has(data.research_attrs, attr.name)}
-					<Setting {attr} values="{data.research_attrs[attr.name]}"></Setting>
+					<Setting {attr} values={data.research_attrs[attr.name]}></Setting>
 				{:else}
 					<Setting {attr}></Setting>
 				{/if}
@@ -132,9 +132,9 @@
 			{/if}
 		</form>
 	</AccordionTab>
-	<AccordionTab id="cb2" checked="{false}" title="{$t('research.appointments')}">
+	<AccordionTab id="cb2" checked={false} title={$t('research.appointments')}>
 		{#each appointments as appointment}
-			<Appointment {appointment} uuid="{$page.params.uuid}"></Appointment>
+			<Appointment {appointment} uuid={$page.params.uuid}></Appointment>
 		{/each}
 		<button type="button" on:click={addAppointment}>+</button>
 		{#if submitting_appointments}
@@ -148,16 +148,16 @@
 			<span style="margin: 0 {vars.sm}; color: {vars.danger}">{$t('common.unknown_error')}</span>
 		{/if}
 	</AccordionTab>
-	<AccordionTab id="cb3" checked="{true}" title="{$t('research.protocol')}">
-		<div class="{col}">
+	<AccordionTab id="cb3" checked={true} title={$t('research.protocol')}>
+		<div class={col}>
 			{#each participations as p_row}
 				{@const width = 100 / p_row.length}
 				<div class="{row} m-col">
 					{#each p_row as participation}
-						<div class="{box}" style="min-width: {width}%">
+						<div class={box} style="min-width: {width}%">
 							<form style="display: flex; justify-content: center;" class="participation-form">
 								<button style="font-weight: 700; text-align: center">{participation.token}</button>
-								<input type="hidden" name="id" value="{participation.id}">
+								<input type="hidden" name="id" value={participation.id}>
 								{#if participation.has_participated}
 									<input type="checkbox" name="has_participated" checked style="margin: 0 {vars.sm}" value="true">
 								{:else}

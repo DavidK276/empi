@@ -19,7 +19,7 @@
 	export let title: string;
 </script>
 
-<div class="{dropdown}">
+<div class={dropdown}>
 	<button on:click={toggleDropdown}>
 		{title}
 		<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>

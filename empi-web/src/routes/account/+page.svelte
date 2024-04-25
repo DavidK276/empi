@@ -16,33 +16,33 @@
 	{/if}
 </div>
 <h2>{$t('account.personal_info')}</h2>
-<div class="{col}">
+<div class={col}>
 	{#if participant != null}
-		<div class="{col}">
-		<label for="token" title="{$t('common.token_hint')}">Token&nbsp;
+		<div class={col}>
+		<label for="token" title={$t('common.token_hint')}>Token&nbsp;
 			<span class="material-symbols-outlined">help</span>
 		</label>
 		<button id="token" style="font-size: 18px">{participant.token}</button>
 	</div>
 	{/if}
-	<div class="{row}">
+	<div class={row}>
 		<div style="width: 50%">
 			<label for="first_name">{$t('common.first_name')}</label>
-			<input type="text" id="first_name" readonly value="{user?.first_name}">
+			<input type="text" id="first_name" readonly value={user?.first_name}>
 		</div>
 		<div style="width: 50%">
 			<label for="last_name">{$t('common.last_name')}</label>
-			<input type="text" id="last_name" readonly value="{user?.last_name}">
+			<input type="text" id="last_name" readonly value={user?.last_name}>
 		</div>
 	</div>
-	<div class="{row}">
+	<div class={row}>
 		<div style="width: 50%">
 			<label for="username">{$t('common.username')}</label>
-			<input type="text" id="username" readonly value="{user?.username}">
+			<input type="text" id="username" readonly value={user?.username}>
 		</div>
 		<div style="width: 50%">
 			<label for="email">Email</label>
-			<input type="email" id="email" readonly value="{user?.email}">
+			<input type="email" id="email" readonly value={user?.email}>
 		</div>
 	</div>
 </div>

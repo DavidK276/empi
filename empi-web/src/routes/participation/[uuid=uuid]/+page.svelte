@@ -19,7 +19,7 @@
 	<p style="display: flex"><span class="material-symbols-outlined">info</span>&nbsp;{$t('research.cancel_success')}</p>
 	<button><a href="/">{$t('common.goto_home')}</a></button>
 {:else}
-	<div class="{box}">
+	<div class={box}>
 		<div class="{row} ver-center">
 			<h2>{$t('research.appointment')}</h2>
 			{#if appointment.location}

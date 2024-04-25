@@ -77,7 +77,7 @@
 			class="material-symbols-outlined">info</span>&nbsp{$t('research.participated')}</span>
 	{/if}
 </div>
-<p>{$t('research.info_url_introduction')} <a href="{data.research?.info_url}" target="_blank">{$t('research.here')}
+<p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}
 	&nbsp;<span
 		class="material-symbols-outlined">open_in_new</span></a></p>
 {#each data.appointments as appointment, i}
@@ -88,7 +88,7 @@
 		})}
 	{@const participation = $participations?.get(appointment.id)}
 	{@const is_signedup = participation?.has_participated === false}
-	<div class="{box}">
+	<div class={box}>
 		<div class="{row} ver-center">
 			<h2>{$t('research.appointment_number')} {i + 1}</h2>
 			{#if appointment.location}
@@ -123,8 +123,8 @@
 		</table>
 		{#if can_signup && appointment.free_capacity}
 			<form method="POST" action="?/signup">
-				<input type="hidden" name="appointment" value="{appointment.id}">
-				<div class="{row}">
+				<input type="hidden" name="appointment" value={appointment.id}>
+				<div class={row}>
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
 						<p style="display: inline-flex; margin: 0; align-items: center"><span
@@ -135,7 +135,7 @@
 		{/if}
 		{#if is_signedup}
 			<form method="POST" on:submit|preventDefault={cancelSignup}>
-				<input type="hidden" name="participation" value="{participation?.id}">
+				<input type="hidden" name="participation" value={participation?.id}>
 				<button type="submit" style="background: {vars.danger};">{$t('research.cancel')}</button>
 			</form>
 		{/if}

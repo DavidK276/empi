@@ -31,7 +31,7 @@
 <h1>{$t('common.points')}</h1>
 {#if values != null}
 	{#each values as research}
-		<div class="{box}">
+		<div class={box}>
 			<form method="POST" use:enhance={({submitter}) => {
 			return async ({result, update}) => {
 				if (result.type === 'success' && submitter != null) {
@@ -43,8 +43,8 @@
 		}}>
 				<label for="points">{research.name}</label>
 				<div class="{content} {row} ver-center">
-					<input type="hidden" name="url" value="{research.url}">
-					<input type="number" step="1" name="points" value="{research.points}" required style="margin: 0"
+					<input type="hidden" name="url" value={research.url}>
+					<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
 								 on:input={resetTheButton}>
 					<button type="submit" id="submit">{$t('common.submit')}</button>
 				</div>
@@ -52,4 +52,4 @@
 		</div>
 	{/each}
 {/if}
-<Pagination allRows={data.researches} bind:currentPageRows={values} />
+<Pagination allRows={data.researches} bind:currentPageRows={values}></Pagination>

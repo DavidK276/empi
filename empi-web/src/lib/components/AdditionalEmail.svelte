@@ -10,7 +10,7 @@
 	{#if email == null}
 		<input type="email" class="email-input" style="margin: 0">
 	{:else}
-		<input type="email" class="email-input" style="margin: 0" value="{email}">
+		<input type="email" class="email-input" style="margin: 0" value={email}>
 	{/if}
 	<button type="button" style="background-color: {vars.danger}"
 					on:click={() => nodeRef.parentNode?.removeChild(nodeRef)}>-

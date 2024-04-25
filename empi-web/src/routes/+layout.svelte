@@ -11,7 +11,7 @@
 	export let data: LayoutServerData;
 </script>
 
-<div class="{themeClass}">
+<div class={themeClass}>
 	<header class="{row} hor-center ver-center m-col">
 		<nav>
 			<a href="/" style="margin: 0 {vars.sm}">{$t('common.home')}</a>
@@ -28,18 +28,18 @@
 				{/if}
 				<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
 				</div>
-				<Login is_logged_in="{true}"></Login>
+				<Login is_logged_in={true}></Login>
 			</Dropdown>
 		{:else}
 			<a href="/research">
 				{$t('common.create_research')}
 			</a>
-			<Dropdown title="{$t('common.account')}">
-				<Login is_logged_in="{false}"></Login>
+			<Dropdown title={$t('common.account')}>
+				<Login is_logged_in={false}></Login>
 			</Dropdown>
 		{/if}
 		{#if data.user?.is_staff}
-			<Dropdown title="{$t('common.administration')}">
+			<Dropdown title={$t('common.administration')}>
 				<div><a href="/attributes">{$t('common.attributes')}</a></div>
 				<div><a href="/admin/research-points">{$t('common.research_points')}</a></div>
 				<div><a href="/admin/student-points">{$t('common.student_points')}</a></div>
@@ -47,7 +47,7 @@
 		{/if}
 	</header>
 	<div class="{row} ver-top hor-center">
-		<div class="{content}">
+		<div class={content}>
 			<slot></slot>
 		</div>
 	</div>

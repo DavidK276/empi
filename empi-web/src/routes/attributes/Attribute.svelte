@@ -18,10 +18,10 @@
 	let chosen_type: string;
 </script>
 {#if attr != null}
-	<div class="{box}">
+	<div class={box}>
 		<form method="POST" action="?/admin">
 			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
-			<input type="text" name="name" id="name" value="{attr.name}" required>
+			<input type="text" name="name" id="name" value={attr.name} required>
 			<label for="type">{$t('attrs.type')}</label>
 			<select name="type" id="type" disabled>
 				<option value="SC" selected="{attr.type === 'SC'}">{$t('attrs.single_choice')}</option>
@@ -39,13 +39,13 @@
 					<button type="button" on:click={addOption}>+</button>
 				</fieldset>
 			{/if}
-			<input type="hidden" name="url" value="{attr.url}">
+			<input type="hidden" name="url" value={attr.url}>
 			<button type="submit">{$t('common.submit')}</button>
 			<button type="submit" name="delete" style="background-color: {vars.danger}">{$t('attrs.delete')}</button>
 		</form>
 	</div>
 {:else}
-	<div class="{box}">
+	<div class={box}>
 		<form method="POST" action="?/admin">
 			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" required>

@@ -51,7 +51,7 @@
 				}}>
 		{#each data.attrs as attr}
 			{#if Reflect.has(data.user_attrs, attr.name)}
-				<Setting {attr} values="{data.user_attrs[attr.name]}"></Setting>
+				<Setting {attr} values={data.user_attrs[attr.name]}></Setting>
 			{:else}
 				<Setting {attr}></Setting>
 			{/if}

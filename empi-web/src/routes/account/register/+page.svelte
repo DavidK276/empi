@@ -61,7 +61,7 @@
 
 <h1>{$t('common.registration')}</h1>
 <form method="POST" id="register_form" on:input={formCheck}>
-	<label for="username" title="{$t('common.username_hint')}">
+	<label for="username" title={$t('common.username_hint')}>
 		{$t('common.username')}
 		<span class="material-symbols-outlined">help</span>
 	</label>
@@ -72,12 +72,12 @@
 	<input type="text" name="last_name" id="last_name" required>
 	<label for="email">Email</label>
 	<input type="email" name="email" id="email" required>
-	<label for="password" title="{$t('common.password_hint')}">
+	<label for="password" title={$t('common.password_hint')}>
 		{$t('common.password')}
 		<span class="material-symbols-outlined">warning</span>
 	</label>
 	<input type="password" name="password" id="password" required minlength="8">
-	<label for="repeat_password" title="{$t('common.password_hint')}">{$t('common.repeat_password')}</label>
+	<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
 	<input type="password" id="repeat_password" required minlength="8">
 	<button type="submit" name="submit" disabled>{$t('common.register')}</button>
 	{#if form?.success}

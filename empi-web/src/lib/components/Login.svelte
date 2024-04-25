@@ -37,7 +37,7 @@
 		<label for="password">{$t('common.password')}: </label>
 		<input type="password" id="password" name="password" required minlength="4">
 		{#if $page.form?.login === false}
-			<p class="{error}" style="white-space: nowrap">{$t('common.wrong_login')}</p>
+			<p class={error} style="white-space: nowrap">{$t('common.wrong_login')}</p>
 		{/if}
 		<div style="display: flex; flex-wrap: nowrap">
 			{#if logging_in}

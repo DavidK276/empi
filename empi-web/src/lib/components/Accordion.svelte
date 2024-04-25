@@ -2,6 +2,6 @@
 
 import { accordion } from '$lib/style.css';
 </script>
-<div class="{accordion}">
+<div class={accordion}>
 	<slot></slot>
 </div>
