@@ -14,6 +14,10 @@ def export_privkey(key: RsaKey, passphrase: str) -> bytes:
     )
 
 
+def export_privkey_plaintext(key: RsaKey) -> bytes:
+    return key.export_key(passphrase=None, pkcs=1, format="DER")
+
+
 def get_keydir(username: str) -> Optional[Path]:
     if not username:
         return None

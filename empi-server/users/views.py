@@ -2,13 +2,14 @@ from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from research.models import Research
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.response import Response
 from rest_framework.routers import reverse
 
+from empi_server.constants import UUID_REGEX
+from research.models import Research
 from .models import EmpiUser, Participant, Attribute, AttributeValue
 from .permissions import *
 from .serializers import (
@@ -17,7 +18,6 @@ from .serializers import (
     ParticipantSerializer,
     AttributeSerializer,
 )
-from empi_server.constants import UUID_REGEX
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -45,6 +45,25 @@ class UserViewSet(viewsets.ModelViewSet):
         user.change_password(current_password, new_password)
         user.save()
         return Response(status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
+        name="Reset password",
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        permission_classes=[IsAdminUser],
+    )
+    def reset_password(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user: EmpiUser = self.get_object()
+        admin: EmpiUser = request.user
+
+        admin_password = serializer.validated_data["current_password"]
+        new_user_password = serializer.validated_data["new_passpword"]
+
+        user.reset_password(admin, admin_password, new_user_password)
 
     @action(
         detail=False,

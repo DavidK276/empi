@@ -2,33 +2,54 @@ import datetime
 import os
 import random
 from collections.abc import Mapping, Sequence, Iterable
-from typing import Self
+from typing import Self, Optional
 
+from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
+from Crypto.Random import get_random_bytes
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from rest_framework import exceptions
 
-from .utils.keys import export_privkey, get_keydir
+from .utils.keys import export_privkey, get_keydir, export_privkey_plaintext
 
 
 class EmpiUserManager(UserManager):
 
     @staticmethod
-    def new_key(username, passphrase: str):
-        key = RSA.generate(2048)
-        encrypted_key = export_privkey(key, passphrase)
+    def new_key(user, passphrase: str):
+        new_user_privkey = RSA.generate(2048)
+        new_user_exported_privkey = export_privkey(new_user_privkey, passphrase)
 
-        key_dir = get_keydir(username)
+        key_dir = get_keydir(user.username)
         key_dir.mkdir(mode=0o700, parents=True)
         with open(key_dir / "privatekey.der", "wb") as keyfile:
-            keyfile.write(encrypted_key)
+            keyfile.write(new_user_exported_privkey)
 
-        public_key = key.publickey().export_key(format="PEM")
+        new_user_exported_pubkey = new_user_privkey.publickey().export_key(format="PEM")
         with open(key_dir / "receiver.pem", "wb") as keyfile:
-            keyfile.write(public_key)
+            keyfile.write(new_user_exported_pubkey)
+
+        session_key = get_random_bytes(16)
+        cipher_aes = AES.new(session_key, AES.MODE_EAX)
+        ciphertext, tag = cipher_aes.encrypt_and_digest(export_privkey_plaintext(new_user_privkey))
+        with open(key_dir / "privatekey.aes", "wb") as keyfile:
+            keyfile.write(ciphertext)
+        with open(key_dir / "privatekey.tag.aes", "wb") as tagfile:
+            tagfile.write(tag)
+        with open(key_dir / "privatekey.nonce.aes", "wb") as noncefile:
+            noncefile.write(cipher_aes.nonce)
+
+        for admin in EmpiUser.users.filter(~Q(pk=user.pk) & Q(is_staff=True)):
+            admin_exported_pubkey, _ = admin.get_keypair()
+            admin_pubkey = RSA.import_key(admin_exported_pubkey)
+            cipher_rsa = PKCS1_OAEP.new(admin_pubkey)
+            enc_session_key = cipher_rsa.encrypt(session_key)
+            with open(key_dir / f"__admin__{admin.username}.sessionkey.rsa", "wb") as keyfile:
+                keyfile.write(enc_session_key)
 
     @staticmethod
     def check_key_exists(username):
@@ -38,13 +59,13 @@ class EmpiUserManager(UserManager):
     def create_superuser(self, username, email=None, password=None, **extra_fields):
         user = super().create_superuser(username, email, password, **extra_fields)
         if password is not None:
-            self.new_key(username, password)
+            self.new_key(user, password)
         return user
 
     def create_user(self, username, email=None, password=None, **extra_fields):
         user = super().create_user(username, email, password, **extra_fields)
         if password is not None:
-            self.new_key(username, password)
+            self.new_key(user, password)
         return user
 
 
@@ -53,6 +74,11 @@ class EmpiUser(AbstractUser):
 
     class Meta:
         default_manager_name = "users"
+
+    def write_privkey(self, privkey: bytes):
+        key_dir = get_keydir(self.username)
+        with open(key_dir / "privatekey.der", "wb") as keyfile:
+            keyfile.write(privkey)
 
     def get_keypair(self) -> (bytes, bytes):
         """
@@ -68,6 +94,27 @@ class EmpiUser(AbstractUser):
 
         return public_key, private_key
 
+    def get_admin_key(self, admin_username) -> Optional[bytes]:
+        key_dir = get_keydir(self.username)
+        admin_key_name = f"__admin__{admin_username}.sessionkey.rsa"
+
+        if (key_dir / admin_key_name).is_file():
+            with open(key_dir / admin_key_name, "rb") as keyfile:
+                return keyfile.read()
+        return None
+
+    def get_backup_keys(self) -> (bytes, bytes):
+        key_dir = get_keydir(self.username)
+
+        with open(key_dir / "privatekey.aes", "rb") as keyfile:
+            ciphertext = keyfile.read()
+        with open(key_dir / "privatekey.tag.aes", "rb") as tagfile:
+            tag = tagfile.read()
+        with open(key_dir / "privatekey.nonce.aes", "rb") as noncefile:
+            nonce = noncefile.read()
+
+        return ciphertext, tag, nonce
+
     def change_password(self, old_raw_password, new_raw_password):
         if self.has_usable_password():
             if not self.check_password(old_raw_password):
@@ -78,16 +125,30 @@ class EmpiUser(AbstractUser):
         private_key = RSA.import_key(encrypted_key, old_raw_password)
         encrypted_key = export_privkey(private_key, new_raw_password)
 
-        key_dir = get_keydir(self.username)
-        with open(key_dir / "privatekey.der", "wb") as keyfile:
-            keyfile.write(encrypted_key)
+        self.write_privkey(encrypted_key)
+
+    def reset_password(self, admin: Self, admin_password: str, new_password: str):
+        self.set_password(new_password)
+
+        admin_key = self.get_admin_key(admin.username)
+        if admin_key is None:
+            raise exceptions.PermissionDenied("This admin has not protected this user")
+
+        _, enc_privkey = admin.get_keypair()
+        admin_privkey = RSA.import_key(enc_privkey, admin_password)
+        cipher_rsa = PKCS1_OAEP.new(admin_privkey)
+
+        decrypted_admin_sessionkey = cipher_rsa.decrypt(admin_key)
+        enc_user_privkey, tag, nonce = self.get_backup_keys()
+
+        cipher_aes = AES.new(decrypted_admin_sessionkey, AES.MODE_EAX, nonce)
+        decrypted_user_privkey = cipher_aes.decrypt_and_verify(enc_user_privkey, tag)
+
+        exported_user_privkey = export_privkey(RSA.import_key(decrypted_user_privkey), new_password)
+        self.write_privkey(exported_user_privkey)
 
     def is_participant(self):
-        try:
-            _ = Participant.objects.get(user=self.pk)
-            return True
-        except Participant.DoesNotExist:
-            return False
+        return Participant.objects.filter(user=self.pk).exists()
 
 
 @receiver(post_delete, sender=EmpiUser)
