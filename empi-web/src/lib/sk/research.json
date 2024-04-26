@@ -12,6 +12,7 @@
   "appointment": "Termín",
   "appointments": "Termíny",
   "appointment_type": "Typ termínu",
+  "no_appointments": "Pre tento výskum nie sú vypísané žiadne ternímy",
   "online": "Online",
   "in_person": "Osobný",
   "when": "Dátum a čas konania",

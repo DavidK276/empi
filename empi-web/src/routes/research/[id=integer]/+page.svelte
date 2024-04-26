@@ -141,4 +141,6 @@
 			</form>
 		{/if}
 	</div>
+{:else}
+	<p style="display: inline-flex"><span class="material-symbols-outlined">info</span>&nbsp;{$t('research.no_appointments')}</p>
 {/each}
