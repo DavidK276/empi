@@ -16,8 +16,7 @@
 
 		const formData = new FormData();
 		formData.set('current_password', user_password);
-		const href = new URL(document.location.href);
-		const response = await fetch(href.origin, { method: 'POST', body: formData });
+		const response = await fetch('/server/participations/user', { method: 'POST', body: formData });
 		const responseJSON = await response.json() as Array<{
 			appointment: number,
 			has_participated: boolean,
