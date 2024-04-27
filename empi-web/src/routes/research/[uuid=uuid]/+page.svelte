@@ -84,7 +84,10 @@
 
 		const formData = new FormData();
 		formData.set('current_password', research_password);
-		const response = await fetch('/server/participations/research', { method: 'POST', body: formData });
+		const response = await fetch(`/server/participations/research/${$page.params.uuid}`, {
+			method: 'POST',
+			body: formData
+		});
 
 		const responseJSON = await response.json();
 		participations.set(columnify(responseJSON, 3));
