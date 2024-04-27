@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name="participation",
             name="uuid",
             field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True),

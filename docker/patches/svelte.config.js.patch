@@ -1,0 +1,8 @@
+--- empi-web/svelte.config.js	2024-04-25 14:16:35.098080191 +0200
++++ docker/empi-web/svelte.config.js	2024-04-27 19:32:51.958562215 +0200
+@@ -1,4 +1,4 @@
+-import adapter from '@sveltejs/adapter-auto';
++import adapter from '@sveltejs/adapter-node';
+ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+ 
+ /** @type {import('@sveltejs/kit').Config} */

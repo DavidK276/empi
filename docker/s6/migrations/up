@@ -1,0 +1,1 @@
+/command/with-contenv sh -c "cd /app/empi-server; poetry run python manage.py migrate"

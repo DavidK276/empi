@@ -1,0 +1,3 @@
+#!/command/with-contenv /command/execlineb
+cd /app/empi-web
+node .

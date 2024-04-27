@@ -1,0 +1,28 @@
+version: '3.4'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    build:
+      context: .
+      target: web
+      args:
+        ORIGIN: "http://localhost:3000"
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+    environment:
+      - ALLOWED_HOSTS=localhost,api,127.0.0.1
+      - DEBUG=1
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
