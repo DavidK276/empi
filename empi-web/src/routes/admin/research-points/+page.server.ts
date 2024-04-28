@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
 import { fail } from '@sveltejs/kit';
-import type { Research } from '$lib/objects/research';
+import { paginationParams } from '$lib/functions';
 
 export const actions = {
 	default: async ({ fetch, request, cookies }) => {
@@ -26,28 +26,16 @@ export const actions = {
 	}
 } satisfies Actions;
 
-export const load: PageServerLoad = async ({ cookies, fetch }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	if (cookies.get(consts.TOKEN_COOKIE)) {
-		let response = await fetch(consts.API_ENDPOINT + 'research-admin/');
+		const searchParams = paginationParams(url.searchParams);
+		const response = await fetch(consts.API_ENDPOINT + 'research-admin/?' + searchParams);
 		if (response.ok) {
-			const researches: Research[] = [];
-			let responseJSON = await response.json();
-
-			researches.push(...responseJSON.results);
-			while (responseJSON.next != null) {
-				response = await fetch(responseJSON.next);
-
-				if (response.ok) {
-					responseJSON = await response.json();
-					researches.push(...responseJSON.results);
-				}
-				else {
-					break;
-				}
-			}
+			const responseJSON = await response.json();
 
 			return {
-				researches
+				researches: responseJSON.results,
+				count: responseJSON.count
 			};
 		}
 	}

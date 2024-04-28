@@ -1,33 +1,34 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
-	import { page } from '$app/stores';
+	import Pagination from '$lib/components/Pagination.svelte';
+	import { row } from '$lib/style.css';
+	import { vars } from '$lib/theme.css';
 
 	export let data: PageData;
 </script>
 
 <h1>EMPI</h1>
 <div style="overflow-x: auto">
-	<table style="width: 100%">
-	<tr>
-		<th>{$t('research.name')}</th>
-		<th>{$t('research.info_url')}</th>
-		{#if $page.data.user != null || true}
-			<th>{$t('common.details')}</th>
-		{/if}
-	</tr>
-	{#each data.researches as research}
+	<table style="width: 100%; max-width: 100vw">
 		<tr>
-			<td>{research.name}</td>
-			<td>{research.info_url}</td>
-			{#if $page.data.user != null || true}
-				<th>
+			<th>{$t('research.name')}</th>
+			<th>{$t('common.more_info')}</th>
+			<th>{$t('common.details')}</th>
+		</tr>
+		{#each data.researches as research}
+			<tr>
+				<td>{research.name}</td>
+				<td><a href="{research.info_url}">{$t('common.learn_more')}</a></td>
+				<td>
 					<button>
 						<a href="research/{research.id}/">{$t('common.details')}</a>
 					</button>
-				</th>
-			{/if}
-		</tr>
-	{/each}
-</table>
+				</td>
+			</tr>
+		{/each}
+	</table>
+</div>
+<div class="{row}" style="margin-top: {vars.sm}">
+	<Pagination count={data.count}></Pagination>
 </div>

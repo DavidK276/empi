@@ -47,7 +47,7 @@
 <UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
 <div style="overflow-x: auto">
-	<table style="width: 100%">
+	<table style="width: 100%; max-width: 100vw">
 		<tr>
 			<th>{$t('common.name')}</th>
 			<th>{$t('common.points')}</th>

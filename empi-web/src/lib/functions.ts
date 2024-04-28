@@ -76,3 +76,22 @@ export function columnify<Type>(items: Type[], columnSize: number) {
 	}
 	return result;
 }
+
+export function paginationParams(urlSearchParams: URLSearchParams) {
+	const result = new URLSearchParams();
+	if (urlSearchParams.has('limit')) {
+		result.set('limit', urlSearchParams.get('limit')!);
+	}
+	if (urlSearchParams.has('offset')) {
+		result.set('offset', urlSearchParams.get('offset')!);
+	}
+	return result;
+}
+
+export function getCurrentAcadYear() {
+	const currentYear = new Date().getFullYear();
+	const currentMonth = new Date().getMonth();
+	const startYear = (currentMonth >= 8) ? currentYear : currentYear - 1;
+
+	return `${startYear}/${(startYear + 1) % 100}`;
+}

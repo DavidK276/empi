@@ -7,7 +7,6 @@
 	import { enhance } from '$app/forms';
 	import type { PageServerData } from './$types';
 	import { box, content, row } from '$lib/style.css';
-	import type { Research } from '$lib/objects/research';
 
 	onMount(() => {
 		if (!$page.data.user?.is_staff) {
@@ -26,13 +25,11 @@
 	}
 
 	export let data: PageServerData;
-	let values: Research[];
 </script>
 <h1>{$t('common.points')}</h1>
-{#if values != null}
-	{#each values as research}
-		<div class={box}>
-			<form method="POST" use:enhance={({submitter}) => {
+{#each data.researches as research}
+	<div class={box}>
+		<form method="POST" use:enhance={({submitter}) => {
 			return async ({result, update}) => {
 				if (result.type === 'success' && submitter != null) {
 					submitter.innerText = $t('common.saved');
@@ -41,15 +38,14 @@
 				await update({reset: false});
 			};
 		}}>
-				<label for="points">{research.name}</label>
-				<div class="{content} {row} ver-center">
-					<input type="hidden" name="url" value={research.url}>
-					<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
-								 on:input={resetTheButton}>
-					<button type="submit" id="submit">{$t('common.submit')}</button>
-				</div>
-			</form>
-		</div>
-	{/each}
-{/if}
-<Pagination allRows={data.researches} bind:currentPageRows={values}></Pagination>
+			<label for="points">{research.name}</label>
+			<div class="{content} {row} ver-center">
+				<input type="hidden" name="url" value={research.url}>
+				<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
+							 on:input={resetTheButton}>
+				<button type="submit" id="submit">{$t('common.submit')}</button>
+			</div>
+		</form>
+	</div>
+{/each}
+<Pagination count={data.count}></Pagination>
