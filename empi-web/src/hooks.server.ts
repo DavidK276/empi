@@ -1,10 +1,20 @@
 import * as consts from '$lib/constants';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
+import { handleSession } from 'svelte-kit-cookie-session';
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+	const urlPath = new URL(request.url).pathname;
 	if (request.url.startsWith(consts.DJANGO_SERVER_URL)) {
 		const authToken = event.cookies.get(consts.TOKEN_COOKIE);
-		if (authToken != null) {
+		const password: string | null = event.locals.session.data.research_password;
+		if (urlPath.includes('/research-admin') && password) {
+			const bytes = new TextEncoder().encode('x:' + password);
+			const binString = Array.from(bytes, (byte) =>
+				String.fromCodePoint(byte)
+			).join('');
+			request.headers.set('Authorization', `Basic ${btoa(binString)}`);
+		}
+		else if (authToken != null) {
 			request.headers.set('Authorization', `Token ${authToken}`);
 		}
 	}
@@ -12,7 +22,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	return fetch(request);
 };
 
-export const handle: Handle = async ({ event, resolve }) => {
+const myHandle: Handle = async ({ event, resolve }) => {
 	const authToken = event.cookies.get(consts.TOKEN_COOKIE);
 	if (authToken && event.locals.user == null) {
 		const userResponse = await event.fetch(consts.API_ENDPOINT + 'user/get_self/', {
@@ -35,3 +45,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 	return resolve(event);
 };
+
+export const handle: Handle = handleSession({
+		secret: [
+			{
+				id: 1,
+				secret: '5q~Rp!4QW8d^,K:zB:B1x~CHuyhBp!*M'
+			}
+		]
+	},
+	myHandle);

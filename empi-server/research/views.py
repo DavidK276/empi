@@ -2,10 +2,13 @@ from collections.abc import Iterable
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from knox.auth import TokenAuthentication
 from rest_framework import viewsets, mixins, status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.request import Request
@@ -14,6 +17,7 @@ from rest_framework.response import Response
 from empi_server.constants import UUID_REGEX
 from users.models import Participant
 from users.serializers import PasswordSerializer
+from .auth import ResearchAuthentication
 from .models import Appointment, Research, Participation, EncryptedToken
 from .permissions import *
 from .serializers import (
@@ -51,7 +55,9 @@ class ResearchUserViewSet(
 class ResearchAdminViewSet(viewsets.ModelViewSet):
     queryset = Research.objects.get_queryset().order_by("-created")
     serializer_class = ResearchAdminSerializer
-    permission_classes = [AllowAllExceptList | IsAdminUser]
+    authentication_classes = [ResearchAuthentication, TokenAuthentication, SessionAuthentication]
+    permission_classes = [ResearchPermission]
+    # permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "uuid"
 
     @action(
@@ -75,6 +81,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         detail=True,
         name="Check password",
         methods=[HTTPMethod.POST],
+        permission_classes=[AllowAny],
         serializer_class=PasswordSerializer,
         url_path="password/check",
     )

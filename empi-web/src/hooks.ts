@@ -1,2 +1,8 @@
-process.on('SIGINT', function () { process.exit(); }); // Ctrl+C
-process.on('SIGTERM', function () { process.exit(); }); // docker stop
+if (typeof process != 'undefined') {
+	process.on('SIGINT', function() {
+		process.exit();
+	}); // Ctrl+C
+	process.on('SIGTERM', function() {
+		process.exit();
+	}); // docker stop
+}

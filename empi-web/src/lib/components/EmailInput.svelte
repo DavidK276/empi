@@ -2,6 +2,7 @@
 	import { vars } from '$lib/theme.css';
 	import { row } from '$lib/style.css';
 	import AdditionalEmail from '$lib/components/AdditionalEmail.svelte';
+	import { onMount } from 'svelte';
 
 	function addNewEmail(event: Event) {
 		const target = event.target as HTMLButtonElement;
@@ -23,11 +24,10 @@
 
 	export function setEmails(emails: string) {
 		const separatedEmails = emails.split(',');
+
 		const firstEmail = separatedEmails.shift();
-		const firstEmailInput = document.getElementById('first-email-input') as HTMLInputElement;
 		firstEmailInput.value = firstEmail!;
 
-		const addEmailButton = document.getElementById('add-email-button');
 		if (addEmailButton == null) {
 			return;
 		}
@@ -35,12 +35,17 @@
 			new AdditionalEmail({ target: addEmailButton.parentElement!, anchor: addEmailButton, props: { email } });
 		}
 	}
+
+	export let emails: string = '';
+	let addEmailButton: HTMLButtonElement;
+	let firstEmailInput: HTMLInputElement;
+	onMount(() => setEmails(emails));
 </script>
 
 <fieldset>
 	<legend>Emails</legend>
 	<div class="{row} ver-center" style="margin: {vars.sm} 0">
-		<input type="email" class="email-input" id="first-email-input" style="margin: 0">
+		<input type="email" class="email-input" bind:this={firstEmailInput} style="margin: 0">
 	</div>
-	<button type="button" id="add-email-button" on:click={addNewEmail}>+</button>
+	<button type="button" bind:this={addEmailButton} on:click={addNewEmail}>+</button>
 </fieldset>
