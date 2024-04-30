@@ -16,9 +16,6 @@ class ResearchAuthUser:
 
 class ResearchAuthentication(authentication.BasicAuthentication):
 
-    def authenticate(self, request):
-        return super().authenticate(request)
-
     def authenticate_credentials(self, userid, password, request: Optional[HttpRequest] = None):
         if request is None:
             return None
@@ -30,7 +27,10 @@ class ResearchAuthentication(authentication.BasicAuthentication):
             return None
         uuid = match.group(1)
 
-        research = Research.objects.get(uuid=uuid)
+        try:
+            research = Research.objects.get(uuid=uuid)
+        except Research.DoesNotExist:
+            return None
         if research.is_protected:
             _, privkey = research.get_keypair()
             try:

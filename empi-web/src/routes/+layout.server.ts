@@ -5,6 +5,6 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 	return {
 		user: locals.user,
 		participant: locals.participant,
-		session: locals.session.data
+		research_auth: locals.session.data.research_password != null
 	};
 };

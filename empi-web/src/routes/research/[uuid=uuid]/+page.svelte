@@ -17,7 +17,6 @@
 	import { invalidateAll } from '$app/navigation';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 	import ResearchPasswordRequiredModal from '$lib/components/ResearchPasswordRequiredModal.svelte';
-	import { store } from '$lib/stores';
 
 	export let data: PageServerData;
 	let emails: EmailInput;
@@ -107,7 +106,6 @@
 						}
 
 						return async ({formElement, result, update}) => {
-							$store.research_password = '';
 							await invalidateAll();
 							await update();
 							if (submitter != null) {

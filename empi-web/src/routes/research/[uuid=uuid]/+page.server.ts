@@ -93,13 +93,14 @@ export const actions = {
 			}
 		});
 	},
-	setPassword: async ({ fetch, params, request }) => {
+	setPassword: async ({ fetch, params, request, locals }) => {
 		const formData = await request.formData();
 		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/password/set/`, {
 			method: 'POST',
 			body: formData
 		});
 		if (response.ok) {
+			await locals.session.set({ research_password: formData.get('new_password') });
 			return {
 				success: true
 			};
@@ -109,8 +110,13 @@ export const actions = {
 		});
 	},
 	checkPassword: async ({ fetch, params, request, locals }) => {
-		const formData = await request.formData();
-		const password = formData.get('current_password');
+		let formData = await request.formData();
+		let password = formData.get('current_password');
+		if (password == null) {
+			password = locals.session.data.research_password || 'unprotected';
+			formData = new FormData();
+			formData.set('current_password', password!);
+		}
 		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/password/check/`, {
 			body: formData,
 			method: 'POST'

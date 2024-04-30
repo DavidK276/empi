@@ -87,15 +87,16 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
     )
     def check_password(self, request, uuid=None):
         research: Research = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if research.is_protected:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
 
-        _, encrypted_key = research.get_keypair()
-        current_password = serializer.validated_data["current_password"]
-        try:
-            _ = RSA.import_key(encrypted_key, current_password)
-        except ValueError:
-            raise exceptions.PermissionDenied("invalid current password")
+            _, encrypted_key = research.get_keypair()
+            current_password = serializer.validated_data["current_password"]
+            try:
+                _ = RSA.import_key(encrypted_key, current_password)
+            except ValueError:
+                raise exceptions.PermissionDenied("invalid current password")
         return Response(status=status.HTTP_200_OK)
 
     @action(
