@@ -7,7 +7,9 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	if (request.url.startsWith(consts.DJANGO_SERVER_URL)) {
 		const authToken = event.cookies.get(consts.TOKEN_COOKIE);
 		const password: string | null = event.locals.session.data.research_password;
-		if (urlPath.includes('/research-admin') && password) {
+		const is_staff = event.locals.user?.is_staff || false;
+
+		if (urlPath.includes('/research-admin') && password && !is_staff) {
 			const bytes = new TextEncoder().encode('x:' + password);
 			const binString = Array.from(bytes, (byte) =>
 				String.fromCodePoint(byte)
