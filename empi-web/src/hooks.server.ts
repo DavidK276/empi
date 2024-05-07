@@ -4,7 +4,7 @@ import { handleSession } from 'svelte-kit-cookie-session';
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	const urlPath = new URL(request.url).pathname;
-	if (request.url.startsWith(consts.DJANGO_SERVER_URL)) {
+	if (request.url.startsWith(consts.INT_SERVER_URL)) {
 		const authToken = event.cookies.get(consts.TOKEN_COOKIE);
 		const password: string | null = event.locals.session.data.research_password;
 		const is_staff = event.locals.user?.is_staff || false;
@@ -27,7 +27,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 const myHandle: Handle = async ({ event, resolve }) => {
 	const authToken = event.cookies.get(consts.TOKEN_COOKIE);
 	if (authToken && event.locals.user == null) {
-		const userResponse = await event.fetch(consts.API_ENDPOINT + 'user/get_self/', {
+		const userResponse = await event.fetch(consts.INT_API_ENDPOINT + 'user/get_self/', {
 			redirect: 'follow'
 		});
 		if (!userResponse.ok) {
@@ -38,7 +38,7 @@ const myHandle: Handle = async ({ event, resolve }) => {
 		const user = event.locals.user;
 		if (user != null) {
 			if (!user.is_staff) {
-				const participantResponse = await event.fetch(consts.API_ENDPOINT + `participant/${user.id}/`);
+				const participantResponse = await event.fetch(consts.INT_API_ENDPOINT + `participant/${user.id}/`);
 				if (participantResponse.ok) {
 					event.locals.participant = await participantResponse.json();
 				}

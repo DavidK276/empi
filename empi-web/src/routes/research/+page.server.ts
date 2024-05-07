@@ -7,7 +7,7 @@ import { Research } from '$lib/objects/research';
 export const actions = {
 	new: async ({ request }) => {
 		const formData = await request.formData();
-		const response = await fetch(consts.API_ENDPOINT + 'research-admin/', {
+		const response = await fetch(consts.INT_API_ENDPOINT + 'research-admin/', {
 			body: formData,
 			method: 'POST'
 		});

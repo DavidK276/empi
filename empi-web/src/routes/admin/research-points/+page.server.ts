@@ -29,7 +29,7 @@ export const actions = {
 export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
 	if (cookies.get(consts.TOKEN_COOKIE)) {
 		const searchParams = paginationParams(url.searchParams);
-		const response = await fetch(consts.API_ENDPOINT + 'research-admin/?' + searchParams);
+		const response = await fetch(consts.INT_API_ENDPOINT + 'research-admin/?' + searchParams);
 		if (response.ok) {
 			const responseJSON = await response.json();
 

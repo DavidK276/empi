@@ -4,7 +4,7 @@ import * as consts from '$lib/constants';
 
 export const actions = {
 	default: async ({ request }) => {
-		const response = await fetch(consts.API_ENDPOINT + 'participant/register/', {
+		const response = await fetch(consts.INT_API_ENDPOINT + 'participant/register/', {
 			method: 'POST',
 			body: await request.formData()
 		});

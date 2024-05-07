@@ -6,7 +6,7 @@ import type { User } from '$lib/objects/user';
 
 export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	if (cookies.get(consts.TOKEN_COOKIE)) {
-		let response = await fetch(consts.API_ENDPOINT + 'user/');
+		let response = await fetch(consts.INT_API_ENDPOINT + 'user/');
 
 		const users: Map<number, User> = new Map();
 		if (response.ok) {

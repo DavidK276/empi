@@ -9,6 +9,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  api:
+    build:
+      context: .
+      target: api
+    ports:
+      - "8000:8000"
+    environment:
+      ALLOWED_HOSTS: "localhost,api,127.0.0.1"
+      DEBUG: "1"
+    depends_on:
+      - db
   web:
     build:
       context: .
@@ -16,13 +27,12 @@ services:
       args:
         ORIGIN: "http://localhost:3000"
     ports:
-      - "8000:8000"
       - "3000:3000"
     environment:
-      - ALLOWED_HOSTS=localhost,api,127.0.0.1
-      - DEBUG=1
+      INT_SERVER_UR: "http://api:8000/"
+      EXT_SERVER_URL: "http://127.0.0.1:8000/"
     depends_on:
-      - db
+      - api
 
 volumes:
   postgres_data:

@@ -5,7 +5,7 @@ export const actions = {
 	signup: async ({ request, fetch, cookies }) => {
 		const formData = await request.formData();
 		if (cookies.get(consts.TOKEN_COOKIE)) {
-			const response = await fetch(consts.API_ENDPOINT + `participation/`, {
+			const response = await fetch(consts.INT_API_ENDPOINT + `participation/`, {
 				method: 'POST',
 				body: formData
 			});
@@ -20,7 +20,7 @@ export const actions = {
 			});
 		}
 		else {
-			const response = await fetch(consts.API_ENDPOINT + `anon-participation/`, {
+			const response = await fetch(consts.INT_API_ENDPOINT + `anon-participation/`, {
 				method: 'POST',
 				body: formData
 			});
@@ -39,7 +39,7 @@ export const actions = {
 		const formData = await request.formData();
 		const authToken = cookies.get(consts.TOKEN_COOKIE);
 		if (authToken != null) {
-			const response = await fetch(consts.API_ENDPOINT + `participation/`, {
+			const response = await fetch(consts.INT_API_ENDPOINT + `participation/`, {
 				method: 'POST',
 				body: formData,
 				headers: {

@@ -3,9 +3,12 @@ import * as consts from '$lib/constants';
 import type { Research } from '$lib/objects/research';
 import { error } from '@sveltejs/kit';
 import type { Appointment } from '$lib/objects/appointment';
+import { browser } from '$app/environment';
+
+const API_ENDPOINT = (browser) ? consts.EXT_API_ENDPOINT : consts.INT_API_ENDPOINT;
 
 export const load: PageLoad = async ({ fetch, params }) => {
-	let response = await fetch(consts.API_ENDPOINT + `research-user/${params.id}/`);
+	let response = await fetch(API_ENDPOINT + `research-user/${params.id}/`);
 
 	let research: Research | null = null;
 	if (response.ok) {
@@ -15,7 +18,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
 		throw error(response.status);
 	}
 
-	response = await fetch(consts.API_ENDPOINT + `research-user/${params.id}/appointments/`);
+	response = await fetch(API_ENDPOINT + `research-user/${params.id}/appointments/`);
 	const appointments: Appointment[] = [];
 	if (response.ok) {
 		let responseJSON = await response.json();

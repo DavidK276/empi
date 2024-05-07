@@ -7,8 +7,7 @@
 	import { store } from '$lib/stores.js';
 	import { goto } from '$app/navigation';
 
-	function setPasswordSession(event: Event) {
-		const form = event.target as HTMLFormElement;
+	function setPasswordSession(form: HTMLFormElement) {
 		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
 		$store.user_password = passwordInput?.value;
 	}
@@ -22,14 +21,17 @@
 	let logging_out = false;
 </script>
 {#if !is_logged_in}
-	<form method="POST" action="/?/login" style="width: 100%" on:submit={setPasswordSession}
-				use:enhance={() => {
+	<form method="POST" action="/?/login" style="width: 100%"
+				use:enhance={({formElement}) => {
 									logging_in = true;
 
-									return async ({ update }) => {
-										await update();
+									return async ({ update, result }) => {
 										logging_in = false;
-										is_logged_in = true;
+										if (result.type === 'success') {
+											setPasswordSession(formElement);
+											is_logged_in = true;
+										}
+										await update();
 									};
 								}}>
 		<label for="username">{$t('common.username')}: </label>

@@ -22,7 +22,7 @@ export const actions = {
 			}
 			if (creating) {
 				formData.delete('create');
-				const response = await fetch(consts.API_ENDPOINT + 'attr/', {
+				const response = await fetch(consts.INT_API_ENDPOINT + 'attr/', {
 					method: 'POST',
 					body: convertFormData({ formData }), // this is needed to support multiple form values with same name
 					headers: {
@@ -52,7 +52,7 @@ export const actions = {
 	user: async ({ cookies, request, fetch, locals }) => {
 		const formData = await request.formData();
 		if (cookies.get(consts.TOKEN_COOKIE) && locals.user?.is_staff === false) {
-			const response = await fetch(consts.API_ENDPOINT + `attr/participant/${locals.user.id}/`, {
+			const response = await fetch(consts.INT_API_ENDPOINT + `attr/participant/${locals.user.id}/`, {
 				method: 'POST',
 				body: convertFormData({ formData }),
 				headers: {
@@ -76,7 +76,7 @@ export const actions = {
 
 export const load: PageServerLoad = async ({ cookies, fetch, locals }) => {
 	if (cookies.get(consts.TOKEN_COOKIE) && locals.user?.is_staff === false) {
-		const response = await fetch(consts.API_ENDPOINT + `attr/participant/${locals.user.id}/`);
+		const response = await fetch(consts.INT_API_ENDPOINT + `attr/participant/${locals.user.id}/`);
 		if (response.ok) {
 			const responseJSON = await response.json();
 			return {

@@ -1,5 +1,4 @@
 import * as consts from '$lib/constants';
-import { API_ENDPOINT } from '$lib/constants';
 import { columnify, convertFormData } from '$lib/functions';
 import { type Actions, error, fail } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
@@ -10,7 +9,7 @@ import type { Participation } from '$lib/objects/participation';
 export const actions = {
 	update: async ({ request, fetch, params }) => {
 		const formData = await request.formData();
-		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/`, {
 			method: 'PATCH',
 			body: formData
 		});
@@ -25,7 +24,7 @@ export const actions = {
 	},
 	attrs: async ({ request, fetch, params }) => {
 		const formData = await request.formData();
-		const response = await fetch(consts.API_ENDPOINT + `attr/research/${params.uuid}/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `attr/research/${params.uuid}/`, {
 			method: 'POST',
 			body: convertFormData({ formData }),
 			headers: {
@@ -42,7 +41,7 @@ export const actions = {
 		});
 	},
 	appointments: async ({ fetch, params, request }) => {
-		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/appointments/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/appointments/`, {
 			method: 'PUT',
 			body: await request.text(),
 			headers: {
@@ -59,7 +58,7 @@ export const actions = {
 		});
 	},
 	participations: async ({ fetch, params, request }) => {
-		const response = await fetch(consts.API_ENDPOINT + `participation/research/${params.uuid}/set/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `participation/research/${params.uuid}/set/`, {
 			method: 'POST',
 			body: await request.text(),
 			headers: {
@@ -76,7 +75,7 @@ export const actions = {
 		});
 	},
 	publish: async ({ fetch, params }) => {
-		await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/`, {
+		await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/`, {
 			method: 'PATCH',
 			body: JSON.stringify({ is_published: true }),
 			headers: {
@@ -85,7 +84,7 @@ export const actions = {
 		});
 	},
 	unpublish: async ({ fetch, params }) => {
-		await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/`, {
+		await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/`, {
 			method: 'PATCH',
 			body: JSON.stringify({ is_published: false }),
 			headers: {
@@ -95,7 +94,7 @@ export const actions = {
 	},
 	setPassword: async ({ fetch, params, request, locals }) => {
 		const formData = await request.formData();
-		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/password/set/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/password/set/`, {
 			method: 'POST',
 			body: formData
 		});
@@ -117,7 +116,7 @@ export const actions = {
 			formData = new FormData();
 			formData.set('current_password', password!);
 		}
-		const response = await fetch(consts.API_ENDPOINT + `research-admin/${params.uuid}/password/check/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/password/check/`, {
 			body: formData,
 			method: 'POST'
 		});
@@ -132,19 +131,19 @@ export const actions = {
 
 export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	let research = null;
-	let response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/`);
+	let response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/`);
 	if (response.ok) {
 		research = await response.json();
 	}
 
 	let research_attrs = null;
-	response = await fetch(API_ENDPOINT + `attr/research/${params.uuid}/`);
+	response = await fetch(consts.INT_API_ENDPOINT + `attr/research/${params.uuid}/`);
 	if (response.ok) {
 		research_attrs = await response.json();
 	}
 
 	const attrs: Attribute[] = [];
-	response = await fetch(API_ENDPOINT + 'attr/');
+	response = await fetch(consts.INT_API_ENDPOINT + 'attr/');
 	if (response.ok) {
 		let responseJSON = await response.json();
 		attrs.push(...responseJSON.results);
@@ -160,7 +159,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	}
 
 	let appointments: Appointment[] = [];
-	response = await fetch(API_ENDPOINT + `research-admin/${params.uuid}/appointments/`);
+	response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.uuid}/appointments/`);
 	if (response.ok) {
 		appointments = await response.json();
 	}
@@ -170,7 +169,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	if (password != null) {
 		const formData = new FormData();
 		formData.set('current_password', password);
-		response = await fetch(consts.API_ENDPOINT + `participation/research/${params.uuid}/get/`, {
+		response = await fetch(consts.INT_API_ENDPOINT + `participation/research/${params.uuid}/get/`, {
 			body: formData,
 			method: 'POST'
 		});

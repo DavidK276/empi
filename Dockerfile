@@ -12,16 +12,14 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 WORKDIR /build
 
 COPY --chown=appuser empi-web ./
-COPY --chown=appuser docker/patches/svelte.config.js.patch docker/patches/constants.ts.patch ./
+COPY --chown=appuser docker/patches/svelte.config.js.patch ./
 RUN patch svelte.config.js svelte.config.js.patch
 
 RUN npm ci
 RUN npm audit fix
 RUN npm run build
 
-################### MAIN WEB #########################
-
-FROM nikolaik/python-nodejs:python3.12-nodejs22 AS web
+FROM python:3.12-slim-bookworm AS api
 
 ARG POETRY_INSTALL_ARGS=""
 
@@ -47,12 +45,9 @@ RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
 COPY docker/s6 /etc/s6-overlay/s6-rc.d
 COPY docker/Caddyfile /app/Caddyfile
 
-RUN mkdir -p /app/empi-server
 RUN chown -R appuser:appuser /app
-
 USER appuser
-
-# --------------------- backend ------------------------
+RUN mkdir -p /app/empi-server
 
 RUN pip install --upgrade poetry
 COPY --chown=appuser pyproject.toml poetry.lock ./
@@ -68,9 +63,16 @@ RUN patch empi_server/settings.py settings.py.patch
 
 RUN poetry run python manage.py collectstatic --no-input
 
-# --------------------- frontend ------------------------
+CMD ["/init"]
 
-RUN mkdir -p /app/empi-web
+FROM node:22-bookworm-slim AS web
+
+RUN mkdir /app
+RUN useradd -ms /bin/bash appuser
+RUN chown -R appuser:appuser /app
+USER appuser
+RUN mkdir /app/empi-web
+
 WORKDIR /app/empi-web
 
 COPY --from=web-build --chown=appuser /build/package*.json ./
@@ -81,8 +83,4 @@ RUN npm audit fix
 COPY --from=web-build --chown=appuser /build/build ./
 ARG ORIGIN
 ENV ORIGIN ${ORIGIN}
-
-CMD ["/init"]
-
-# this has been used for testing and debugging, should not be used in production
-#CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["node", "-r", "dotenv/config", "."]

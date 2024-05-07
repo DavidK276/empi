@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "empi-server"
+name = "empi"
 version = "0.1.0"
 description = "Backend for the Empirical research CMS"
 authors = ["David Krchňavý <krchnavy11@uniba.sk>"]
