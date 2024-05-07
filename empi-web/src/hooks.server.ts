@@ -52,7 +52,7 @@ export const handle: Handle = handleSession({
 		secret: [
 			{
 				id: 1,
-				secret: '5q~Rp!4QW8d^,K:zB:B1x~CHuyhBp!*M'
+				secret: process.env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 			}
 		]
 	},
