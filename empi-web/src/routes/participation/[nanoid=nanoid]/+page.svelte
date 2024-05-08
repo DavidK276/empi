@@ -1,17 +1,17 @@
 <script lang="ts">
-  import type { PageData } from './$types';
-  import { box, row } from '$lib/style.css';
-  import { t } from '$lib/translations';
-  import { vars } from '$lib/theme.css';
+	import type { PageData } from './$types';
+	import { box, row } from '$lib/style.css';
+	import { t } from '$lib/translations';
+	import { vars } from '$lib/theme.css';
 
-  export let data: PageData;
+	export let data: PageData;
 
-  const appointment = data.appointment;
-  const when = new Date(appointment.when)
-    .toLocaleString(undefined, {
-      timeStyle: 'short',
-      dateStyle: 'long'
-    });
+	const appointment = data.appointment;
+	const when = new Date(appointment.when)
+		.toLocaleString(undefined, {
+			timeStyle: 'short',
+			dateStyle: 'long'
+		});
 </script>
 
 <div class={box}>
@@ -32,7 +32,7 @@
 			{#if appointment.location}
 				<th>{$t('research.location')}</th>
 			{:else}
-				<th>{$t('research.info_url')}</th>
+				<th>{$t('research.join_appointment_url')}</th>
 			{/if}
 		</tr>
 		<tr>
@@ -41,7 +41,8 @@
 			{#if appointment.location}
 				<td>{appointment.location}</td>
 			{:else}
-				<td>{appointment.info_url}</td>
+				<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}<span
+					class="material-symbols-outlined">open_in_new</span></a></td>
 			{/if}
 		</tr>
 	</table>

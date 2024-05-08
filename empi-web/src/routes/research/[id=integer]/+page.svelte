@@ -46,9 +46,7 @@
 		const participationId = formData.get('participation')!;
 		formData.delete('participation');
 
-		const href = new URL(document.location.href);
-		const url = href.origin + `/participation/${participationId}/`;
-		await fetch(url, { method: 'POST', body: formData });
+		await fetch(`/server/participations/${participationId}/`, { method: 'DELETE', body: formData });
 
 		await invalidateAll();
 		await getSignups();
@@ -58,12 +56,12 @@
 
 	onMount(() => {
 		if (form?.success && form.participation != null) {
-			goto(`/participation/${form.participation.uuid}/`);
+			goto(`/participation/${form.participation.nanoid}/`);
 		}
 	});
 
 	let participations: Writable<Map<number, Participation>> = writable();
-	let can_signup = $page.data.user?.is_staff === false;
+	let can_signup = !$page.data.user?.is_staff;
 	let has_participated = false;
 </script>
 {#if $page.data.user != null}
