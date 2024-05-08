@@ -6,7 +6,7 @@ from . import models
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Research
-        exclude = ["chosen_attribute_values", "uuid", "email_recipients"]
+        exclude = ["chosen_attribute_values", "nanoid", "email_recipients"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,7 +14,7 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Research
         exclude = ["chosen_attribute_values"]
         extra_kwargs = {
-            "url": {"view_name": "research-admin-detail", "lookup_field": "uuid"},
+            "url": {"view_name": "research-admin-detail", "lookup_field": "nanoid"},
         }
 
 

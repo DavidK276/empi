@@ -1,7 +1,7 @@
 export class Research {
 	url?: string;
 	id?: number;
-	uuid?: string;
+	nanoid?: string;
 	name!: string;
 	info_url!: string;
 	points!: number

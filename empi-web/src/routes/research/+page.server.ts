@@ -17,7 +17,7 @@ export const actions = {
 			const research = plainToInstance(Research, responseJSON);
 			// this would ideally be using response.status instead of 302
 			// but the method doesn't allow 201 redirects
-			throw redirect(302, `research/${research.uuid}/`);
+			throw redirect(302, `research/${research.nanoid}/`);
 		}
 		return fail(response.status, { success: false, errors: responseJSON });
 	}

@@ -8,7 +8,6 @@ from rest_framework.permissions import *
 from rest_framework.response import Response
 from rest_framework.routers import reverse
 
-from empi_server.constants import UUID_REGEX
 from research.models import Research
 from .models import EmpiUser, Participant, Attribute, AttributeValue
 from .permissions import *
@@ -143,11 +142,11 @@ class AttributeViewSet(viewsets.ModelViewSet):
         detail=False,
         name="Attributes for research",
         methods=[HTTPMethod.GET, HTTPMethod.POST],
-        url_path=f"research/(?P<uuid>{UUID_REGEX}/?)",
+        url_path="research/(?P<nanoid>[A-Z0-9-]{20}/?)",
         permission_classes=[AllowAny],
     )
-    def research(self, request, uuid=None):
-        research = get_object_or_404(Research, uuid=uuid)
+    def research(self, request, nanoid=None):
+        research = get_object_or_404(Research, nanoid=nanoid)
         if request.method == HTTPMethod.POST:
             for name, values in request.data.items():
                 new_chosen_values = AttributeValue.objects.filter(attribute__name=name).filter(value__in=values)

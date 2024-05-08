@@ -31,7 +31,7 @@
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		new Appointment({ target: parent!, anchor: target, props: { uuid: $page.params.uuid } });
+		new Appointment({ target: parent!, anchor: target, props: { nanoid: $page.params.nanoid } });
 	}
 
 	async function submitAppointments() {
@@ -100,24 +100,24 @@
 		<AccordionTab id="cb0" checked={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
 						use:enhance={({submitter}) => {
-						if (submitter != null) {
-							submitter.toggleAttribute('disabled');
-							submitter.innerHTML = $t('common.submitting');
-						}
-
-						return async ({formElement, result, update}) => {
-							await invalidateAll();
-							await update();
 							if (submitter != null) {
 								submitter.toggleAttribute('disabled');
-								submitter.innerHTML = $t('common.submit');
-
-								const submitDiv = formElement.children.namedItem('submit-div');
-								if (submitDiv != null) {
-									new FormResultMessage({target: submitDiv, props: {type: result.type}});
-								}
+								submitter.innerHTML = $t('common.submitting');
 							}
-						}
+
+							return async ({formElement, result, update}) => {
+								await invalidateAll();
+								await update();
+								if (submitter != null) {
+									submitter.toggleAttribute('disabled');
+									submitter.innerHTML = $t('common.submit');
+
+									const submitDiv = formElement.children.namedItem('submit-div');
+									if (submitDiv != null) {
+										new FormResultMessage({target: submitDiv, props: {type: result.type}});
+									}
+								}
+							};
 					}}>
 				{#if !data.research.is_protected}
 					<p class="{error}" style="display: flex"><span
@@ -171,7 +171,7 @@
 		</AccordionTab>
 		<AccordionTab id="cb2" checked={false} title={$t('research.appointments')}>
 			{#each appointments as appointment}
-				<Appointment {appointment} uuid={$page.params.uuid}></Appointment>
+				<Appointment {appointment} nanoid={$page.params.nanoid}></Appointment>
 			{/each}
 			<button type="button" on:click={addAppointment}>+</button>
 			{#if submitting_appointments}

@@ -5,7 +5,6 @@ from Crypto.PublicKey import RSA
 from django.http import HttpRequest
 from rest_framework import authentication, exceptions
 
-from empi_server.constants import UUID_REGEX
 from research.models import Research
 
 
@@ -21,14 +20,14 @@ class ResearchAuthentication(authentication.BasicAuthentication):
             return None
 
         path = request.get_full_path()
-        pattern = f"^.*({UUID_REGEX}).*$"
+        pattern = "^.*([A-Z0-9-]{20}).*$"
         match = re.search(pattern, path, re.IGNORECASE)
         if match is None:
             return None
-        uuid = match.group(1)
+        nanoid = match.group(1)
 
         try:
-            research = Research.objects.get(uuid=uuid)
+            research = Research.objects.get(nanoid=nanoid)
         except Research.DoesNotExist:
             return None
         if research.is_protected:

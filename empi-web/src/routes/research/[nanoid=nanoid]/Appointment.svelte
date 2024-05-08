@@ -5,7 +5,7 @@
 	import { box } from '$lib/style.css';
 
 	export let appointment: Appointment | null = null;
-	export let uuid: string;
+	export let nanoid: string;
 	let nodeRef: HTMLElement;
 	let type: string;
 
@@ -77,7 +77,7 @@
 				<input type="text" name="location" id="location">
 			{/if}
 		{/if}
-		<input type="hidden" name="research" value={uuid}>
+		<input type="hidden" name="research" value={nanoid}>
 		<button style="background-color: {vars.danger}" on:click={() => nodeRef.parentNode?.removeChild(nodeRef)}>-</button>
 	</div>
 </form>

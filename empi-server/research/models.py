@@ -1,5 +1,4 @@
 import os
-import uuid
 from collections.abc import Sequence
 from typing import Self, Optional
 
@@ -33,7 +32,7 @@ class ResearchManager(Manager):
 class Research(models.Model):
     objects = ResearchManager()
 
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)

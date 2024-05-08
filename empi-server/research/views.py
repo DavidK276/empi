@@ -2,7 +2,6 @@ from collections.abc import Iterable
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
-from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -14,7 +13,6 @@ from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from empi_server.constants import UUID_REGEX
 from users.models import Participant
 from users.serializers import PasswordSerializer
 from .auth import ResearchAuthentication
@@ -58,7 +56,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
     authentication_classes = [ResearchAuthentication, TokenAuthentication, SessionAuthentication]
     permission_classes = [ResearchPermission]
     # permission_classes = [AllowAllExceptList | IsAdminUser]
-    lookup_field = "uuid"
+    lookup_field = "nanoid"
 
     @action(
         detail=True,
@@ -67,7 +65,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer_class=PasswordSerializer,
         url_path="password/set",
     )
-    def change_password(self, request, uuid=None):
+    def change_password(self, request, nanoid=None):
         research: Research = self.get_object()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -85,7 +83,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer_class=PasswordSerializer,
         url_path="password/check",
     )
-    def check_password(self, request, uuid=None):
+    def check_password(self, request, nanoid=None):
         research: Research = self.get_object()
         if research.is_protected:
             serializer = self.get_serializer(data=request.data)
@@ -105,7 +103,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer_class=AppointmentSerializer,
     )
     @transaction.atomic
-    def appointments(self, request, uuid=None):
+    def appointments(self, request, nanoid=None):
         research: Research = self.get_object()
 
         if request.method == HTTPMethod.PUT:
@@ -208,10 +206,10 @@ class ParticipationViewSet(
         detail=False,
         methods=[HTTPMethod.POST],
         permission_classes=[AllowAny],
-        url_path=f"research/(?P<uuid>{UUID_REGEX})/(?P<action>get|set/?)",
+        url_path="research/(?P<nanoid>[A-Z0-9-]{20})/(?P<action>get|set/?)",
     )
-    def research_participations(self, request: Request, uuid: str, action: str) -> Response:
-        research: Research = get_object_or_404(Research, uuid=uuid)
+    def research_participations(self, request: Request, nanoid: str, action: str) -> Response:
+        research: Research = get_object_or_404(Research, nanoid=nanoid)
 
         if action == "get":
             if research.is_protected:
