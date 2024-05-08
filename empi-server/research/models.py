@@ -12,13 +12,14 @@ from django.db import models
 from django.db.models import Q, Manager
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from empi_server.fields import SeparatedValuesField
 from rest_framework import exceptions
-from users import models as user_models
 
+from empi_server.fields import SeparatedValuesField
+from users import models as user_models
 from .fields import SeparatedBinaryField
 from .utils.constants import *
 from .utils.keys import export_privkey, get_keydir
+from .utils.misc import generate_nanoid
 
 
 class ResearchManager(Manager):
@@ -187,7 +188,7 @@ class EncryptedToken(models.Model):
 
 
 class Participation(models.Model):
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     has_participated = models.BooleanField(default=False, blank=True, null=False)
     encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=True)

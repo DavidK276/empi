@@ -242,7 +242,7 @@ class AnonymousParticipationViewSet(viewsets.ModelViewSet):
     queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=True)
     serializer_class = AnonymousParticipationSerializer
     permission_classes = [AllowAllExceptList | IsAdminUser]
-    lookup_field = "uuid"
+    lookup_field = "nanoid"
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

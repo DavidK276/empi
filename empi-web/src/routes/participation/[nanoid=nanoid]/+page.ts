@@ -9,7 +9,7 @@ const API_ENDPOINT = (browser) ? consts.EXT_API_ENDPOINT : consts.INT_API_ENDPOI
 
 
 export const load: PageLoad = async ({fetch, params}) => {
-	let response = await fetch(API_ENDPOINT + `anon-participation/${params.uuid}/`);
+	let response = await fetch(API_ENDPOINT + `anon-participation/${params.nanoid}/`);
 	if (response.ok) {
 		let responseJSON = await response.json();
 		const appointment = plainToInstance(Appointment, responseJSON.appointment_detail);

@@ -38,7 +38,7 @@ class ParticipationUpdateSerializer(serializers.Serializer):
 
 
 class AnonymousParticipationSerializer(serializers.Serializer):
-    uuid = serializers.UUIDField(read_only=True)
+    nanoid = serializers.CharField(read_only=True)
     appointment = serializers.PrimaryKeyRelatedField(queryset=models.Appointment.objects.get_queryset())
     appointment_detail = AppointmentSerializer(read_only=True)
 
