@@ -10,6 +10,8 @@ services:
       - postgres_data:/var/lib/postgresql/data/
 
   api:
+    depends_on:
+      - db
     build:
       context: .
       target: api
@@ -18,9 +20,11 @@ services:
     environment:
       ALLOWED_HOSTS: "localhost,api,127.0.0.1"
       DEBUG: "1"
-    depends_on:
-      - db
+    volumes:
+      - keys:/app/empi-server/keys/
   web:
+    depends_on:
+      - api
     build:
       context: .
       target: web
@@ -32,8 +36,7 @@ services:
       INT_SERVER_UR: "http://api:8000/"
       EXT_SERVER_URL: "http://127.0.0.1:8000/"
       COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long
-    depends_on:
-      - api
 
 volumes:
   postgres_data:
+  keys:
