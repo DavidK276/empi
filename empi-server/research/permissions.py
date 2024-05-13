@@ -29,4 +29,6 @@ class ResearchPermission(BasePermission):
     def has_permission(self, request, view):
         if isinstance(request.user, EmpiUser) and request.user.is_staff:
             return True
+        if view.action == "create":
+            return True
         return view.action != "list" and isinstance(request.user, ResearchAuthUser)

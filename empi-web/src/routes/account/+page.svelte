@@ -3,6 +3,8 @@
 	import { col, row } from '$lib/style.css';
 	import { page } from '$app/stores';
 	import { vars } from '$lib/theme.css';
+	import { enhance } from '$app/forms';
+	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 
 	let user = $page.data.user;
 	let participant = $page.data.participant;
@@ -19,30 +21,43 @@
 <div class={col}>
 	{#if participant != null}
 		<div class={col}>
-		<label for="token" title={$t('common.token_hint')}>Token&nbsp;
-			<span class="material-symbols-outlined">help</span>
-		</label>
-		<button id="token" style="font-size: 18px">{participant.token}</button>
-	</div>
+			<label for="token" title={$t('common.token_hint')}>Token&nbsp;
+				<span class="material-symbols-outlined">help</span>
+			</label>
+			<button id="token" style="font-size: 18px">{participant.token}</button>
+		</div>
 	{/if}
-	<div class={row}>
-		<div style="width: 50%">
-			<label for="first_name">{$t('common.first_name')}</label>
-			<input type="text" id="first_name" readonly value={user?.first_name}>
+	<form method="POST" use:enhance={({formElement}) => {
+		return async ({update, result}) => {
+			const submitDiv = formElement.children.namedItem('submit-div');
+			if (submitDiv != null) {
+				new FormResultMessage({target: submitDiv, props: {type: result.type}});
+			}
+			await update({reset: false});
+		};
+	}}>
+		<div class={row}>
+			<div style="width: 50%">
+				<label for="first_name">{$t('common.first_name')}</label>
+				<input type="text" id="first_name" name="first_name" value={user?.first_name}>
+			</div>
+			<div style="width: 50%">
+				<label for="last_name">{$t('common.last_name')}</label>
+				<input type="text" id="last_name" name="last_name" value={user?.last_name}>
+			</div>
 		</div>
-		<div style="width: 50%">
-			<label for="last_name">{$t('common.last_name')}</label>
-			<input type="text" id="last_name" readonly value={user?.last_name}>
+		<div class={row}>
+			<div style="width: 50%">
+				<label for="username">{$t('common.username')}</label>
+				<input type="text" id="username" readonly value={user?.username}>
+			</div>
+			<div style="width: 50%">
+				<label for="email">Email</label>
+				<input type="email" id="email" name="email" value={user?.email}>
+			</div>
 		</div>
-	</div>
-	<div class={row}>
-		<div style="width: 50%">
-			<label for="username">{$t('common.username')}</label>
-			<input type="text" id="username" readonly value={user?.username}>
+		<div class="{row} ver-center" id="submit-div">
+			<button type="submit">{$t('common.submit')}</button>
 		</div>
-		<div style="width: 50%">
-			<label for="email">Email</label>
-			<input type="email" id="email" readonly value={user?.email}>
-		</div>
-	</div>
+	</form>
 </div>

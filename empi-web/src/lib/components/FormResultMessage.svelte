@@ -10,21 +10,30 @@
 			message = $t('common.unknown_error');
 		}
 		else if (type === 'success') {
-			message = $t('common.saved')
+			message = $t('common.saved');
 		}
 	}
+
+	// destroys all previous messages before adding new one
+	document.querySelectorAll('.form-result').forEach(element => element.remove());
 </script>
 
-{#if type === 'error' || type === 'failure'}
-	<p style="color: {vars.danger}"><span
-		class="material-symbols-outlined">error</span>&nbsp;{message}</p>
-{:else if type === 'success'}
-	<p style="color: {vars.success}">{message}</p>
-{/if}
+<div class="form-result">
+	{#if type === 'error' || type === 'failure'}
+		<p style="color: {vars.danger}"><span
+			class="material-symbols-outlined">error</span>&nbsp;{message}</p>
+	{:else if type === 'success'}
+		<p style="color: {vars.success}">{message}</p>
+	{/if}
+</div>
 
 <style>
-	p {
-			display: inline-flex;
-			margin: 0;
-	}
+    p {
+        display: inline-flex;
+        margin: 0;
+    }
+
+		div {
+				display: inline-flex;
+		}
 </style>

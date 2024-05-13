@@ -12,7 +12,7 @@ export const actions = {
 			method: 'POST'
 		});
 		const responseJSON = await response.json();
-		console.log(responseJSON);
+
 		if (response.ok) {
 			const research = plainToInstance(Research, responseJSON);
 			// this would ideally be using response.status instead of 302
