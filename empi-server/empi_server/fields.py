@@ -41,6 +41,8 @@ class SeparatedValuesField(models.Field):
         return values.split(self.token)
 
     def get_prep_value(self, values):
+        if isinstance(values, str):
+            return values
         return self.token.join(values)
 
     def value_to_string(self, obj):

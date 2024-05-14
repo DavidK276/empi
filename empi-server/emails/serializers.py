@@ -3,7 +3,7 @@ from rest_framework import serializers
 from . import models
 
 
-class EmailSerializer(serializers.HyperlinkedModelSerializer):
+class EmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Email
         fields = "__all__"

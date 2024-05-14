@@ -219,6 +219,16 @@ testing = ["coverage", "eventlet", "gevent", "pytest", "pytest-cov"]
 tornado = ["tornado (>=0.2)"]
 
 [[package]]
+name = "html2text"
+version = "2024.2.26"
+description = "Turn HTML into equivalent Markdown-structured text."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "html2text-2024.2.26.tar.gz", hash = "sha256:05f8e367d15aaabc96415376776cdd11afd5127a77fce6e36afc60c563ca2c32"},
+]
+
+[[package]]
 name = "nanoid"
 version = "2.0.0"
 description = "A tiny, secure, URL-friendly, unique string ID generator for Python"
@@ -441,4 +451,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6578a220b55d76e393bcc0fa9e59d1dffd20d70577e637c989a3658d43df401a"
+content-hash = "edddf4ea5dab323d9cd7f49d404fcb5a95871bb446e33b6cc26f34d9892c609a"

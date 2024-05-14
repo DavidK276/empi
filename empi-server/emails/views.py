@@ -1,4 +1,7 @@
+from http import HTTPMethod
+
 from rest_framework import viewsets, status, mixins, permissions
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from django.forms import modelform_factory
@@ -28,6 +31,12 @@ class EmailViewSet(viewsets.ModelViewSet):
         if form.is_valid():
             return super().update(request, *args, **kwargs)
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=[HTTPMethod.POST])
+    def send(self, request, pk=None):
+        email = self.get_object()
+        email.send()
+        return Response()
 
 
 class AttachmentViewSet(
