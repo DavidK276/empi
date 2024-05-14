@@ -19,8 +19,8 @@
 	import ResearchPasswordRequiredModal from '$lib/components/ResearchPasswordRequiredModal.svelte';
 
 	export let data: PageServerData;
+	$: appointments = plainToInstance(Appt, data.appointments);
 	let emails: EmailInput;
-	let appointments = plainToInstance(Appt, data.appointments);
 	let submitting_attrs = false;
 	let submit_success_attrs: boolean | null = null;
 	let submitting_appointments = false;
