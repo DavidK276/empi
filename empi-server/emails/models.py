@@ -14,13 +14,15 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from empi_server.fields import SeparatedValuesField
 from research import models as research_models
+from html2text import html2text
 
 
 class Email(models.Model):
-    research = models.ForeignKey(research_models.Research, on_delete=models.CASCADE)
+    research = models.ForeignKey(research_models.Research, on_delete=models.CASCADE, blank=True, null=True)
     recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
     subject = models.CharField(max_length=78, verbose_name="predmet")
-    body = models.TextField(verbose_name="telo")
+    template_name = models.CharField(max_length=255, verbose_name="šablóna")
+    context = models.JSONField(verbose_name="kontextové dáta")
     send_when = models.DateTimeField(verbose_name="dátum a čas odoslania", blank=True, null=True)
     is_finalized = models.BooleanField(verbose_name="je publikovaný", null=False, default=False)
     is_sent = models.BooleanField(verbose_name="odoslaný", default=False, editable=False)
@@ -31,13 +33,19 @@ class Email(models.Model):
             (Q(send_when__isnull=True) | Q(send_when__lte=datetime.now())) & Q(is_finalized=True)
         )
 
+    def _get_context(self):
+        if self.research is None:
+            return self.context
+        return self.context | {"research": self.research}
+
     def send(self):
-        html = render_to_string("email.html", context={"subject": self.subject, "body": self.body})
+        html = render_to_string(self.template_name, context=self._get_context())
+        text = html2text(html)
         attachments = [attachment.get_mimebase() for attachment in Attachment.objects.filter(email=self.pk)]
 
         message = EmailMultiAlternatives(
             subject=self.subject,
-            body=self.body,
+            body=text,
             from_email="noreply@example.com",
             to=[],
             bcc=self.recipients,
@@ -45,7 +53,7 @@ class Email(models.Model):
             attachments=attachments,
             headers={},
             cc=[],
-            reply_to="admin@example.com",
+            reply_to=["admin@example.com"],
         )
         message.attach_alternative(html, "text/html")
         message.send()

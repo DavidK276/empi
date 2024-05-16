@@ -116,3 +116,11 @@ globalStyle('table, th, td', {
 	borderCollapse: 'collapse',
 	padding: vars.sm
 });
+
+globalStyle('.m-w-full', {
+	'@media': {
+		'screen and (max-width: 768px)': {
+			width: '100% !important'
+		}
+	}
+});

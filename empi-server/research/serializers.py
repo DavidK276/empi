@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from . import models
+from .models import Participation
 
 
 class ResearchUserSerializer(serializers.ModelSerializer):
@@ -38,6 +39,7 @@ class ParticipationUpdateSerializer(serializers.Serializer):
 
 
 class AnonymousParticipationSerializer(serializers.Serializer):
+    recipient = serializers.CharField(write_only=True)
     nanoid = serializers.CharField(read_only=True)
     appointment = serializers.PrimaryKeyRelatedField(queryset=models.Appointment.objects.get_queryset())
     appointment_detail = AppointmentSerializer(read_only=True)

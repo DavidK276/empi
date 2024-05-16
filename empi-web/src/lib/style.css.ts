@@ -103,7 +103,7 @@ export const box = style({
 	borderRadius: vars.xs,
 	boxShadow: '0 0 4px gray',
 	margin: `${vars.sm} 0`,
-	padding: `${vars.sm}`,
+	padding: `${vars.sm} ${vars.lg}`,
 	boxSizing: 'border-box'
 });
 

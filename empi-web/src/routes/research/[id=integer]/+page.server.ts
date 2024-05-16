@@ -19,21 +19,19 @@ export const actions = {
 				success: false
 			});
 		}
-		else {
-			const response = await fetch(consts.INT_API_ENDPOINT + `anon-participation/`, {
-				method: 'POST',
-				body: formData
-			});
-			if (response.ok) {
-				return {
-					success: true,
-					participation: await response.json()
-				};
-			}
-			return fail(response.status, {
-				success: false
-			});
+		const response = await fetch(consts.INT_API_ENDPOINT + `anon-participation/`, {
+			method: 'POST',
+			body: formData
+		});
+		if (response.ok) {
+			return {
+				success: true,
+				participation: await response.json()
+			};
 		}
+		return fail(response.status, {
+			success: false
+		});
 	},
 	cancel: async ({ request, fetch, cookies }) => {
 		const formData = await request.formData();

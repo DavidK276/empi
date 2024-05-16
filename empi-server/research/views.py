@@ -2,6 +2,7 @@ from collections.abc import Iterable
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -13,6 +14,7 @@ from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from emails.types import PublicSignupEmail
 from users.models import Participant
 from users.serializers import PasswordSerializer
 from .auth import ResearchAuthentication
@@ -243,10 +245,17 @@ class AnonymousParticipationViewSet(viewsets.ModelViewSet):
     lookup_field = "nanoid"
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer: AnonymousParticipationSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         appointment: Appointment = serializer.validated_data["appointment"]
         if appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
-        return super().create(request, *args, **kwargs)
+
+        response = super().create(request, *args, **kwargs)
+
+        signup_link = settings.PUBLIC_URL + f"/participation/{response.data["nanoid"]}"
+        email = PublicSignupEmail(signup_link, [serializer.validated_data["recipient"]])
+        email.send()
+
+        return response

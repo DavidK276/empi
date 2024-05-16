@@ -98,31 +98,39 @@
 			{/if}
 		</div>
 		<p>{appointment.comment}</p>
-		<table style="margin-bottom: {vars.sm}">
-			<tr>
-				<th>{$t('research.when')}</th>
-				<th>{$t('research.capacity')}</th>
-				{#if appointment.location}
-					<th>{$t('research.location')}</th>
-				{:else if is_signedup}
-					<th>{$t('research.join_appointment_url')}</th>
-				{/if}
-			</tr>
-			<tr>
-				<td>{when}</td>
-				<td><span style="color: {appointment.free_capacity ? 'initial' : 'red'}">{appointment.free_capacity}</span></td>
-				{#if appointment.location}
-					<td>{appointment.location}</td>
-				{:else if is_signedup}
-					<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}<span
-						class="material-symbols-outlined">open_in_new</span></a></td>
-				{/if}
-			</tr>
-		</table>
+		<div style="width: 100%">
+			<table style="width: 50%; margin-bottom: {vars.sm}" class="m-w-full">
+				<tr>
+					<th>{$t('research.when')}</th>
+					<th>{$t('research.capacity')}</th>
+					{#if appointment.location}
+						<th>{$t('research.location')}</th>
+					{:else if is_signedup}
+						<th>{$t('research.join_appointment_url')}</th>
+					{/if}
+				</tr>
+				<tr>
+					<td>{when}</td>
+					<td style="text-align: center">
+						<span style="color: {appointment.free_capacity ? 'initial' : 'red'}">{appointment.free_capacity}</span>
+					</td>
+					{#if appointment.location}
+						<td>{appointment.location}</td>
+					{:else if is_signedup}
+						<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}<span
+							class="material-symbols-outlined">open_in_new</span></a></td>
+					{/if}
+				</tr>
+			</table>
+		</div>
 		{#if can_signup && appointment.free_capacity}
 			<form method="POST" action="?/signup">
 				<input type="hidden" name="appointment" value={appointment.id}>
-				<div class={row}>
+				{#if $page.data.user == null}
+					<label for="recipient">Email</label>
+					<input type="email" name="recipient" id="recipient" style="width: 50%" class="m-w-full">
+				{/if}
+				<div class="{row} ver-center">
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
 						<p style="display: inline-flex; margin: 0; align-items: center"><span
@@ -139,5 +147,6 @@
 		{/if}
 	</div>
 {:else}
-	<p style="display: inline-flex"><span class="material-symbols-outlined">info</span>&nbsp;{$t('research.no_appointments')}</p>
+	<p style="display: inline-flex"><span
+		class="material-symbols-outlined">info</span>&nbsp;{$t('research.no_appointments')}</p>
 {/each}
