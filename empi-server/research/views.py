@@ -2,7 +2,6 @@ from collections.abc import Iterable
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
-from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -14,7 +13,7 @@ from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from emails.types import PublicSignupEmail, ResearchCreatedEmail
+from emails.types import PublicSignupEmail, ResearchCreatedEmail, NewSignupEmail, CancelSignupEmail
 from users.models import Participant
 from users.serializers import PasswordSerializer
 from .auth import ResearchAuthentication
@@ -106,7 +105,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
             current_password = serializer.validated_data["current_password"]
             try:
                 _ = RSA.import_key(encrypted_key, current_password)
-            except ValueError:
+            except (ValueError, IndexError, TypeError):
                 raise exceptions.PermissionDenied("invalid current password")
         return Response(status=status.HTTP_200_OK)
 
@@ -159,20 +158,24 @@ class ParticipationViewSet(
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        token = get_object_or_404(Participant, pk=request.user.pk).token
+        participant = get_object_or_404(Participant, pk=request.user.pk)
 
         appointment: Appointment = serializer.validated_data["appointment"]
         if appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
         pubkeys = appointment.get_pubkeys(request.user)
 
-        encrypted_token = EncryptedToken.new(token, pubkeys)
-        encrypted_token.save()
+        with transaction.atomic():
+            encrypted_token = EncryptedToken.new(participant.token, pubkeys)
+            encrypted_token.save()
 
-        participation = Participation(appointment=appointment, encrypted_token=encrypted_token)
-        participation.save()
+            participation = Participation(appointment=appointment, encrypted_token=encrypted_token)
+            participation.save()
 
-        return Response(status=status.HTTP_200_OK)
+            email = NewSignupEmail(appointment)
+            email.send()
+
+        return Response(status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         serializer = PasswordSerializer(data=request.data)
@@ -185,6 +188,9 @@ class ParticipationViewSet(
         private_key = RSA.import_key(encrypted_key, serializer.validated_data["current_password"])
         if participation_token := participation.encrypted_token.decrypt(private_key):
             if participation_token == request_user_token:
+                email = CancelSignupEmail(participation.appointment)
+                email.send()
+
                 return super().destroy(request, *args, **kwargs)
 
         raise exceptions.PermissionDenied()

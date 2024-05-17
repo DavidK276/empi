@@ -5,7 +5,7 @@ from datetime import datetime
 from django.conf import settings
 
 from emails.models import Email
-from research.models import Research
+from research.models import Research, Appointment
 
 
 class BaseEmail:
@@ -45,3 +45,33 @@ class ResearchCreatedEmail(BaseEmail):
             "is_finalized": True,
         }
         return super().__new__(cls, {"research_admin_url": research_admin_url}, **kwargs)
+
+
+class NewSignupEmail(BaseEmail):
+    template_name = "signup_created.html"
+    subject = "Nové prihlásenie na výskum"
+
+    def __new__(cls, appointment: Appointment):
+        research = appointment.research
+        kwargs = {
+            "research": research,
+            "recipents": research.email_recipients,
+            "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
+            "is_finalized": True,
+        }
+        return super().__new__(cls, {"appointment": appointment}, **kwargs)
+
+
+class CancelSignupEmail(BaseEmail):
+    template_name = "signup_deleted.html"
+    subject = "Prihlásenie na výskum bolo zrušené"
+
+    def __new__(cls, appointment: Appointment):
+        research = appointment.research
+        kwargs = {
+            "research": research,
+            "recipents": research.email_recipients,
+            "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
+            "is_finalized": True,
+        }
+        return super().__new__(cls, {"appointment": appointment}, **kwargs)

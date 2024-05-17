@@ -1,9 +1,11 @@
 import os
+from collections.abc import Sequence
 from datetime import datetime
 from email.mime.application import MIMEApplication
 from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
+from typing import Optional
 
 import magic
 from django.core.mail import EmailMultiAlternatives
@@ -38,7 +40,7 @@ class Email(models.Model):
             return self.context
         return self.context | {"research": self.research}
 
-    def send(self):
+    def send(self, recipients: Optional[Sequence[str]] = None):
         html = render_to_string(self.template_name, context=self._get_context())
         text = html2text(html)
         attachments = [attachment.get_mimebase() for attachment in Attachment.objects.filter(email=self.pk)]
@@ -48,7 +50,7 @@ class Email(models.Model):
             body=text,
             from_email="noreply@example.com",
             to=[],
-            bcc=self.recipients,
+            bcc=recipients or self.recipients,
             connection=None,
             attachments=attachments,
             headers={},
@@ -59,7 +61,7 @@ class Email(models.Model):
         message.send()
 
         self.is_sent = True
-        self.save()
+        self.save(update_fields=["is_sent"])
 
 
 class Attachment(models.Model):
