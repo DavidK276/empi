@@ -14,7 +14,7 @@ from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from emails.types import PublicSignupEmail
+from emails.types import PublicSignupEmail, ResearchCreatedEmail
 from users.models import Participant
 from users.serializers import PasswordSerializer
 from .auth import ResearchAuthentication
@@ -57,8 +57,19 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
     serializer_class = ResearchAdminSerializer
     authentication_classes = [ResearchAuthentication, TokenAuthentication, SessionAuthentication]
     permission_classes = [ResearchPermission]
-    # permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "nanoid"
+
+    def create(self, request, *args, **kwargs):
+        serializer: ResearchAdminSerializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            research = serializer.save()
+            email = ResearchCreatedEmail(research)
+            email.send()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(
         detail=True,
@@ -252,10 +263,10 @@ class AnonymousParticipationViewSet(viewsets.ModelViewSet):
         if appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
 
-        response = super().create(request, *args, **kwargs)
+        with transaction.atomic():
+            participation = serializer.save()
+            email = PublicSignupEmail(participation.nanoid, [serializer.validated_data["recipient"]])
+            email.send()
 
-        signup_link = settings.PUBLIC_URL + f"/participation/{response.data["nanoid"]}"
-        email = PublicSignupEmail(signup_link, [serializer.validated_data["recipient"]])
-        email.send()
-
-        return response
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
