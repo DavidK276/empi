@@ -22,12 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-bn7i4a#e6&%@jrs!y5%n(et7c!d*f1!%e7i7@9h$p4v)jl&$$^"
+try:
+    with open("~/.django-secret", "r") as f:
+        SECRET_KEY = f.read()
+except FileNotFoundError:
+    pass
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = []
-PUBLIC_URL = (os.environ.get("PUBLIC_URL") or "http://localhost:5173").strip("/")
+hosts = os.environ.get("ALLOWED_HOSTS", "").strip('"')
+if hosts:
+    ALLOWED_HOSTS = hosts.split(",")
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = ("http://localhost:5173",)
@@ -143,3 +150,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.EmpiUser"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# non-Django settings
+PUBLIC_URL = (os.environ.get("PUBLIC_URL") or "http://localhost:5173").strip("/")
+
+FROM_EMAIL = os.environ.get("FROM_EMAIL") or "noreply@example.com"
+REPLY_TO_EMAILS = (os.environ.get("REPLY_TO_EMAILS") or "admin@example.com").strip('"').split(",")

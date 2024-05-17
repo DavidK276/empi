@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 from typing import Optional
 
 import magic
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models import Q
@@ -48,14 +49,14 @@ class Email(models.Model):
         message = EmailMultiAlternatives(
             subject=self.subject,
             body=text,
-            from_email="noreply@example.com",
+            from_email=settings.FROM_EMAIL,
             to=[],
             bcc=recipients or self.recipients,
             connection=None,
             attachments=attachments,
             headers={},
             cc=[],
-            reply_to=["admin@example.com"],
+            reply_to=settings.REPLY_TO_EMAILS,
         )
         message.attach_alternative(html, "text/html")
         message.send()

@@ -20,6 +20,8 @@ services:
     environment:
       ALLOWED_HOSTS: "localhost,api,127.0.0.1"
       PUBLIC_URL: "http://localhost:3000"
+      FROM_EMAIL: "noreply@example.com"
+      REPLY_TO_EMAILS: "admin@example.com"
       DEBUG: "1"
     volumes:
       - keys:/app/empi-server/keys/
