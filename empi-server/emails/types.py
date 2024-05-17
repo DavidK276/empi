@@ -10,11 +10,12 @@ from research.models import Research
 
 class BaseEmail:
     template_name: str
+    subject: str
 
     def __new__(cls, context, **kwargs):
         if cls.template_name is None:
             raise NotImplementedError()
-        return Email(template_name=cls.template_name, context=context, **kwargs)
+        return Email(template_name=cls.template_name, subject=cls.subject, context=context, **kwargs)
 
 
 class PublicSignupEmail(BaseEmail):
@@ -25,7 +26,6 @@ class PublicSignupEmail(BaseEmail):
         signup_link = settings.PUBLIC_URL + f"/participation/{participation_nanoid}"
         kwargs = {
             "recipients": recipients,
-            "subject": cls.subject,
             "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
             "is_finalized": True,
         }
@@ -41,7 +41,6 @@ class ResearchCreatedEmail(BaseEmail):
         kwargs = {
             "research": research,
             "recipents": research.email_recipients,
-            "subject": cls.subject,
             "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
             "is_finalized": True,
         }
