@@ -97,7 +97,7 @@
 		<button type="submit" style="margin-bottom: {vars.lg}">{$t('common.submit')}</button>
 	</form>
 	<Accordion>
-		<AccordionTab id="cb0" checked={!data.research.is_protected} title={$t('research.protection')}>
+		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
 						use:enhance={({submitter}) => {
 							if (submitter != null) {
@@ -134,7 +134,7 @@
 				</div>
 			</form>
 		</AccordionTab>
-		<AccordionTab id="cb1" checked={false} title={$t('common.attributes')}>
+		<AccordionTab open={false} title={$t('common.attributes')}>
 			<form method="POST"
 						action="?/attrs"
 						use:enhance={() => {
@@ -169,7 +169,7 @@
 				{/if}
 			</form>
 		</AccordionTab>
-		<AccordionTab id="cb2" checked={false} title={$t('research.appointments')}>
+		<AccordionTab open={false} title={$t('research.appointments')}>
 			{#each appointments as appointment}
 				<Appointment {appointment} nanoid={$page.params.nanoid}></Appointment>
 			{/each}
@@ -185,7 +185,7 @@
 				<span style="margin: 0 {vars.sm}; color: {vars.danger}">{$t('common.unknown_error')}</span>
 			{/if}
 		</AccordionTab>
-		<AccordionTab id="cb3" checked={data.participations?.length > 0} title={$t('research.protocol')}>
+		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
 			<div class={col}>
 				{#if data.participations}
 					{#each data.participations as p_row}

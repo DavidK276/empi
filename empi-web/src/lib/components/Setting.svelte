@@ -18,7 +18,7 @@
 				{:else}
 					<input type="radio" value={value} id="{attr.name}_{value}" name="{attr.name}[]">
 				{/if}
-				<label for="{attr.name}_{value}" style="display: inline">{value}</label>
+				<label for="{attr.name}_{value}">{value}</label>
 			{/each}
 		{:else if attr.type === 'MC'}
 			{#each attr.values as value}
@@ -27,9 +27,15 @@
 				{:else}
 					<input type="checkbox" value={value} id="{attr.name}_{value}" name="{attr.name}[]">
 				{/if}
-				<label for="{attr.name}_{value}" style="display: inline">{value}</label>
+				<label for="{attr.name}_{value}">{value}</label>
 			{/each}
 		{/if}
 	</fieldset>
 	<input type="hidden" name={attr.name} value="__blank__">
 </div>
+
+<style>
+	label {
+			display: inline;
+	}
+</style>

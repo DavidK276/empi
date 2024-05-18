@@ -1,7 +1,14 @@
 <script lang="ts">
 
-import { accordion } from '$lib/style.css';
 </script>
-<div class={accordion}>
+<div class="accordion">
 	<slot></slot>
 </div>
+
+<style>
+    .accordion {
+        border: 1px solid var(--button-primary);
+        border-radius: var(--xs);
+        overflow: hidden;
+    }
+</style>

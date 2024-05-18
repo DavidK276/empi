@@ -1,26 +1,22 @@
 import { createTheme, globalStyle } from '@vanilla-extract/css';
 
 export const [themeClass, vars] = createTheme({
-	xs: '0.375rem',
-	sm: '0.5rem',
-	md: '0.875rem',
-	lg: '1rem',
-	xl: '2rem',
-	xl2: '3rem',
-	danger: '#b00020',
-	textSecondary: '#fff',
-	textPrimary: '#000',
-	textTertiary: 'rgb(17 24 39)',
-	backgroundPrimary: '#fff',
-	backgroundSecondary: 'rgb(17 24 39)',
-	link: 'rgb(37 99 235)',
-	buttonPrimary: 'rgb(37 99 235)',
-	buttonDisabled: 'rgb(128 128 128)',
-	success: 'rgb(56, 142, 60)'
-});
-
-globalStyle('body', {
-	fontFamily: '"Source Sans Pro",sans-serif'
+	xs: 'var(--xs)',
+	sm: 'var(--sm)',
+	md: 'var(--md)',
+	lg: 'var(--lg)',
+	xl: 'var(--xl)',
+	xl2: 'var(--2xl)',
+	danger: 'var(--danger)',
+	textSecondary: 'var(--text-secondary)',
+	textPrimary: 'var(--text-primary)',
+	textTertiary: 'var(--text-tertiary)',
+	backgroundPrimary: 'var(--background-primary)',
+	backgroundSecondary: 'var(--background-secondary)',
+	link: 'var(--link)',
+	buttonPrimary: 'var(--button-primary)',
+	buttonDisabled: 'var(--button-disabled)',
+	success: 'var(--success)'
 });
 
 globalStyle('a', {
@@ -70,8 +66,7 @@ globalStyle('input, textarea', {
 	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
 	marginBottom: vars.lg,
-	boxShadow: `0 0 2px gray`,
-	boxSizing: 'border-box'
+	boxShadow: `0 0 2px gray`
 });
 
 globalStyle('input[type="radio"],input[type="checkbox"]', {
@@ -90,7 +85,6 @@ globalStyle('select', {
 	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
 	boxShadow: `0 0 2px gray`,
-	boxSizing: 'border-box',
 	backgroundColor: vars.backgroundPrimary
 });
 

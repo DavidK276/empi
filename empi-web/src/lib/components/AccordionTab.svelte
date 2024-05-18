@@ -1,17 +1,24 @@
 <script lang="ts">
 
-	import { accordionTab, accordionTabContent, accordionTabInput, accordionTabLabel } from '$lib/style.css';
-
-	export let id: string;
-	export let checked: boolean;
+	export let open: boolean;
 	export let title: string;
 </script>
-<div class={accordionTab}>
-	<input type="checkbox" name="research-accordion" id={id} class={accordionTabInput} checked={checked}>
-	<label for={id} class={accordionTabLabel}>{title}
-		<span class="material-symbols-outlined">expand_more</span>
-	</label>
-	<div class={accordionTabContent}>
+
+<details open={open}>
+	<summary>{title}</summary>
+	<div>
 		<slot></slot>
 	</div>
-</div>
+</details>
+
+<style>
+	summary {
+			cursor: pointer;
+			background-color: var(--button-primary);
+			color: var(--text-secondary);
+			padding: var(--sm);
+	}
+	details > div {
+			padding: var(--sm);
+	}
+</style>
