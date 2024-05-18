@@ -62,7 +62,10 @@ class Email(models.Model):
         message.send()
 
         self.is_sent = True
-        self.save(update_fields=["is_sent"])
+        if self.pk is not None:
+            self.save(update_fields=["is_sent"])
+        else:
+            self.save()
 
 
 class Attachment(models.Model):
