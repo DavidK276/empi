@@ -29,7 +29,7 @@ except FileNotFoundError:
     pass
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "0") == "1"
+DEBUG = os.environ.get("DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = []
 hosts = os.environ.get("ALLOWED_HOSTS", "").strip('"')
