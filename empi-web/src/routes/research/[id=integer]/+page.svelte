@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ActionData, PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
-	import { box, row } from '$lib/style.css';
+	import { box, message, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
 	import { store } from '$lib/stores';
 	import { page } from '$app/stores';
@@ -70,8 +70,8 @@
 <div class="{row} m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
 	{#if has_participated}
-		<span style="display: inline-flex; align-items: center"><span
-			class="material-symbols-outlined">info</span>&nbsp{$t('research.participated')}</span>
+		<p class={message}><span
+			class="material-symbols-outlined">info</span>&nbsp{$t('research.participated')}</p>
 	{/if}
 </div>
 <p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}
@@ -133,7 +133,7 @@
 				<div class="{row} ver-center">
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
-						<p style="display: inline-flex; margin: 0; align-items: center"><span
+						<p class={message} style="margin: 0"><span
 							class="material-symbols-outlined">info</span>&nbsp;{$t('research.anonymous_signup')}</p>
 					{/if}
 				</div>
@@ -147,6 +147,6 @@
 		{/if}
 	</div>
 {:else}
-	<p style="display: inline-flex"><span
+	<p class={message}><span
 		class="material-symbols-outlined">info</span>&nbsp;{$t('research.no_appointments')}</p>
 {/each}

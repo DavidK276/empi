@@ -3,7 +3,7 @@
 	import type { ActionData } from './$types';
 	import { goto } from '$app/navigation';
 	import { applyAction, enhance } from '$app/forms';
-	import { row } from '$lib/style.css';
+	import { message, row } from '$lib/style.css';
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import { addFormErrors } from '$lib/functions';
 
@@ -43,9 +43,9 @@
 		{:else}
 			<button type="submit" disabled>{$t('research.creating')}</button>
 		{/if}
-		<div style="display: inline-flex; align-items: center">
+		<p class={message}>
 			<span class="material-symbols-outlined">info</span>&nbsp;
 			{$t('research.creation_info')}
-		</div>
+		</p>
 	</div>
 </form>

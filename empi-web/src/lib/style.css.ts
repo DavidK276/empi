@@ -68,3 +68,9 @@ export const box = style({
 	margin: `${vars.sm} 0`,
 	padding: `${vars.sm} ${vars.lg}`
 });
+
+export const message = style({
+	display: "inline-flex",
+	alignItems: "center",
+	margin: 0
+});

@@ -5,7 +5,7 @@
 	import Setting from '$lib/components/Setting.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { box, col, error, row } from '$lib/style.css';
+	import { box, col, error, message, row } from '$lib/style.css';
 	import Appointment from './Appointment.svelte';
 	import { Appointment as Appt } from '$lib/objects/appointment';
 	import { convertFormData } from '$lib/functions';
@@ -120,7 +120,7 @@
 							};
 					}}>
 				{#if !data.research.is_protected}
-					<p class="{error}" style="display: flex"><span
+					<p class="{error} {message}"><span
 						class="material-symbols-outlined">warning</span>&nbsp;{$t('research.unprotected_warning')}</p>
 					<input type="hidden" name="current_password" value="__blank__">
 				{:else}
