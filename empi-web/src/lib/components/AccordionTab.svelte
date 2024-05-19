@@ -4,7 +4,7 @@
 	export let title: string;
 </script>
 
-<details open={open}>
+<details {open}>
 	<summary>{title}</summary>
 	<div>
 		<slot></slot>

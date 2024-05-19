@@ -13,18 +13,18 @@
 		{#if attr.type === 'SC'}
 			{#each attr.values as value}
 				{#if values.includes(value)}
-					<input type="radio" value={value} id="{attr.name}_{value}" name="{attr.name}[]" checked>
+					<input type="radio" {value} id="{attr.name}_{value}" name="{attr.name}[]" checked>
 				{:else}
-					<input type="radio" value={value} id="{attr.name}_{value}" name="{attr.name}[]">
+					<input type="radio" {value} id="{attr.name}_{value}" name="{attr.name}[]">
 				{/if}
 				<label for="{attr.name}_{value}">{value}</label>
 			{/each}
 		{:else if attr.type === 'MC'}
 			{#each attr.values as value}
 				{#if values.includes(value)}
-					<input type="checkbox" value={value} id="{attr.name}_{value}" name="{attr.name}[]" checked>
+					<input type="checkbox" {value} id="{attr.name}_{value}" name="{attr.name}[]" checked>
 				{:else}
-					<input type="checkbox" value={value} id="{attr.name}_{value}" name="{attr.name}[]">
+					<input type="checkbox" {value} id="{attr.name}_{value}" name="{attr.name}[]">
 				{/if}
 				<label for="{attr.name}_{value}">{value}</label>
 			{/each}

@@ -6,17 +6,17 @@
 	export let hintText: string;
 	export let icon: string;
 
-	let usernameHint: HTMLDivElement;
+	let hintVisible: boolean = false;
 </script>
 
 <div style="display: flex;">
 	<label for={forId} style="display: inline-flex"
-	       on:mouseenter={() => usernameHint.style['visibility'] = 'visible'}
-	       on:mouseleave={() => usernameHint.style['visibility'] = 'hidden'}>
+	       on:mouseenter={() => hintVisible = true}
+	       on:mouseleave={() => hintVisible = false}>
 		{labelText}
-		<Icon icon={icon} width="24" height="24"></Icon>
+		<Icon {icon} width="24" height="24"></Icon>
 	</label>
-	<div class="hint-parent" bind:this={usernameHint}>
+	<div class="hint-parent" style:visibility={hintVisible ? 'visible' : 'hidden'}>
 		<div class="arrow" style="margin-left: var(--sm)"></div>
 		<div class="hint" id="username-hint">{hintText}</div>
 	</div>

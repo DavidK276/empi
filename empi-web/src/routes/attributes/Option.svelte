@@ -14,7 +14,7 @@
 
 <label class="{row} ver-top" style="margin: var(--sm) 0">
 	{#if value}
-		<input type="text" name="values[]" value={value} style="margin: 0" readonly>
+		<input type="text" name="values[]" {value} style="margin: 0" readonly>
 	{:else}
 		<input type="text" name="values[]" style="margin: 0">
 	{/if}
