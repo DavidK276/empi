@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { box, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
 	import Icon from "@iconify/svelte";
 
@@ -14,8 +13,8 @@
 			});
 </script>
 
-<div class={box}>
-	<div class="{row} ver-center">
+<div class="box">
+	<div class="container row ver-center">
 		<h2>{$t('research.appointment')}</h2>
 		{#if appointment.location}
 			<button>{$t('research.in_person')}</button>

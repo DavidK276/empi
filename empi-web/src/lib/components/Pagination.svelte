@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { content, row } from '$lib/style.css';
 	import { page } from '$app/stores';
 	import { PAGE_SIZE } from '$lib/constants';
 	import Icon from "@iconify/svelte";
@@ -9,8 +8,8 @@
 	$: offset = Number.parseInt($page.url.searchParams.get('offset')!) || 0;
 </script>
 
-{#if count > PAGE_SIZE}
-	<div class="{content} {row} ver-center hor-center">
+{#if count <= PAGE_SIZE}
+	<div class="content container row ver-center hor-center">
 		<a href="?limit={limit}&offset={offset - limit}">
 			<button disabled={offset - limit < 0}
 			        aria-label="right arrow icon"

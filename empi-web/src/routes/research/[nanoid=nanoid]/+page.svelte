@@ -4,7 +4,6 @@
 	import Setting from '$lib/components/Setting.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { box, col, error, message, row } from '$lib/style.css';
 	import Appointment from './Appointment.svelte';
 	import { Appointment as Appt } from '$lib/objects/appointment';
 	import { convertFormData } from '$lib/functions';
@@ -74,7 +73,7 @@
 </script>
 <ResearchPasswordRequiredModal></ResearchPasswordRequiredModal>
 {#if data.research != null}
-	<div class="{row} ver-center m-col" style="margin-bottom: var(--sm)">
+	<div class="container row ver-center m-col" style="margin-bottom: var(--sm)">
 		<h1 style="margin: var(--sm) 0">{data.research.name}</h1>
 		{#if data.research?.is_published === false}
 			<button style="height: 100%; background: var(--danger)">{$t('research.unpublished')}</button>
@@ -123,7 +122,7 @@
 							};
 					}}>
 				{#if !data.research.is_protected}
-					<p class="{error} {message}">
+					<p class="error-msg message">
 						<Icon icon="material-symbols:warning-outline-rounded"></Icon>&nbsp;{$t('research.unprotected_warning')}</p>
 					<input type="hidden" name="current_password" value="__blank__">
 				{:else}
@@ -132,7 +131,7 @@
 				{/if}
 				<label for="new_password">{$t('common.new_password')}</label>
 				<input type="password" name="new_password" id="new_password">
-				<div class="{row} ver-center" id="submit-div">
+				<div class="container row ver-center" id="submit-div">
 					<button type="submit" id="submit">{$t('common.submit')}</button>
 				</div>
 			</form>
@@ -189,13 +188,13 @@
 			{/if}
 		</AccordionTab>
 		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
-			<div class={col}>
+			<div class="container col">
 				{#if data.participations}
 					{#each data.participations as p_row}
 						{@const width = 100 / p_row.length}
-						<div class="{row} m-col">
+						<div class="container row m-col">
 							{#each p_row as participation}
-								<div class={box} style="min-width: {width}%">
+								<div class="box" style="min-width: {width}%">
 									<form style="display: flex; justify-content: center;" class="participation-form">
 										<button style="font-weight: 700; text-align: center">{participation.token}</button>
 										<input type="hidden" name="id" value={participation.id}>

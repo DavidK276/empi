@@ -81,7 +81,7 @@ select {
     border-radius: var(--xs);
     border: none;
     box-shadow: 0 0 2px var(--text-primary);
-    background-color: var(--background-primary);
+    background-color: light-dark(var(--background-primary), #2A2933);
 }
 
 fieldset {

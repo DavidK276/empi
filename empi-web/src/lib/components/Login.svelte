@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { t } from '$lib/translations.js';
 	import { page } from '$app/stores';
-	import { error } from '$lib/style.css';
 	import { enhance } from '$app/forms';
 	import { store } from '$lib/stores.js';
 	import { goto } from '$app/navigation';
@@ -38,7 +37,7 @@
 		<label for="password">{$t('common.password')}: </label>
 		<input type="password" id="password" name="password" required minlength="4">
 		{#if $page.form?.login === false}
-			<p class={error} style="white-space: nowrap">{$t('common.wrong_login')}</p>
+			<p class=error-msg style="white-space: nowrap">{$t('common.wrong_login')}</p>
 		{/if}
 		<div style="display: flex; flex-wrap: nowrap">
 			{#if logging_in}

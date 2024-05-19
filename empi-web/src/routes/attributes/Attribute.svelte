@@ -3,7 +3,6 @@
 	import Option from './Option.svelte';
 
 	import type { Attribute } from '$lib/objects/attribute';
-	import { box } from '$lib/style.css';
 	import { t } from '$lib/translations';
 	import { ALLOW_TEXTENTRY_ATTR } from '$lib/constants';
 
@@ -17,7 +16,7 @@
 	let chosen_type: string;
 </script>
 {#if attr != null}
-	<div class={box}>
+	<div class="box">
 		<form method="POST" action="?/admin">
 			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" value={attr.name} required>
@@ -44,7 +43,7 @@
 		</form>
 	</div>
 {:else}
-	<div class={box}>
+	<div class="box">
 		<form method="POST" action="?/admin">
 			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" required>

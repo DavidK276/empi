@@ -3,7 +3,6 @@
 	import type { ActionData } from './$types';
 	import { goto } from '$app/navigation';
 	import { applyAction, enhance } from '$app/forms';
-	import { message, row } from '$lib/style.css';
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import { addFormErrors } from '$lib/functions';
 	import Icon from "@iconify/svelte";
@@ -38,13 +37,13 @@
 	<input type="url" name="info_url" id="info_url" required>
 	<EmailInput bind:this={emails}></EmailInput>
 	<input type="hidden" name="is_published" value="false">
-	<div class="{row} ver-center">
+	<div class="container row ver-center">
 		{#if !submitting}
 			<button type="submit">{$t('research.create')}</button>
 		{:else}
 			<button type="submit" disabled>{$t('research.creating')}</button>
 		{/if}
-		<p class={message}>
+		<p class="message">
 			<Icon icon="material-symbols:info-outline" width="24" height="24"></Icon>&nbsp;
 			{$t('research.creation_info')}
 		</p>

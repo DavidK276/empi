@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
 	import Pagination from '$lib/components/Pagination.svelte';
-	import { row } from '$lib/style.css';
 	import Icon from "@iconify/svelte";
 
 	export let data: PageData;
@@ -31,6 +30,6 @@
 		{/each}
 	</table>
 </div>
-<div class="{row}" style="margin-top: var(--sm)">
+<div class="container row" style="margin-top: var(--sm)">
 	<Pagination count={data.count}></Pagination>
 </div>

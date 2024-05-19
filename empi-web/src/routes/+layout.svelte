@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '@fontsource/source-sans-pro';
-	import { content, row } from '$lib/style.css';
 
 	import { t } from '$lib/translations';
 	import type { LayoutServerData } from './$types';
@@ -11,7 +10,7 @@
 	export let data: LayoutServerData;
 </script>
 
-<header class="{row} hor-center ver-center m-col">
+<header class="container row hor-center ver-center m-col">
 	<nav>
 		<a href="/" style="margin: 0 var(--sm)">{$t('common.home')}</a>
 		<a href="/about" style="margin: 0 var(--sm)">{$t('common.about')}</a>
@@ -49,12 +48,12 @@
 		</Dropdown>
 	{/if}
 </header>
-<div class="{row} ver-top hor-center">
-	<div class={content}>
+<div class="container row ver-top hor-center">
+	<div class="content">
 		<slot></slot>
 	</div>
 </div>
-<footer class="{row} ver-center hor-center">
+<footer class="container row ver-center hor-center">
 	<div>
 		<p style="text-align: justify">{$t('common.author_text')}</p>
 	</div>

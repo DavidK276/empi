@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Appointment } from '$lib/objects/appointment';
 	import { t } from '$lib/translations';
-	import { box } from '$lib/style.css';
 
 	export let appointment: Appointment | null = null;
 	export let nanoid: string;
@@ -14,7 +13,7 @@
 	}
 </script>
 <form bind:this={thisComponent} on:submit|preventDefault on:formdata={formData} class="appointment-form">
-	<div class={box}>
+	<div class="box">
 		{#if appointment != null}
 			<label for="type">{$t('research.appointment_type')}</label>
 			<select id="type" bind:value={type}>

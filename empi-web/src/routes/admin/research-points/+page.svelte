@@ -6,7 +6,6 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import type { PageServerData } from './$types';
-	import { box, content, row } from '$lib/style.css';
 
 	onMount(() => {
 		if (!$page.data.user?.is_staff) {
@@ -28,7 +27,7 @@
 </script>
 <h1>{$t('common.points')}</h1>
 {#each data.researches as research}
-	<div class={box}>
+	<div class="box">
 		<form method="POST" use:enhance={({submitter}) => {
 			return async ({result, update}) => {
 				if (result.type === 'success' && submitter != null) {
@@ -39,7 +38,7 @@
 			};
 		}}>
 			<label for="points">{research.name}</label>
-			<div class="{content} {row} ver-center">
+			<div class="content container row ver-center">
 				<input type="hidden" name="url" value={research.url}>
 				<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
 							 on:input={resetTheButton}>

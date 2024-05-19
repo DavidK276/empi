@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { row } from '$lib/style.css';
-
 	function deleteOption(e: Event) {
 		const removeButton = e.target as HTMLButtonElement;
 		const parent = removeButton.parentElement;
@@ -12,7 +10,7 @@
 	export let value: string | null;
 </script>
 
-<label class="{row} ver-top" style="margin: var(--sm) 0">
+<label class="container row ver-top" style="margin: var(--sm) 0">
 	{#if value}
 		<input type="text" name="values[]" {value} style="margin: 0" readonly>
 	{:else}

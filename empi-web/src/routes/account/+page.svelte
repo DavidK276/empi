@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
-	import { col, row } from '$lib/style.css';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
@@ -9,7 +8,7 @@
 	let user = $page.data.user;
 	let participant = $page.data.participant;
 </script>
-<div class="{row} ver-center">
+<div class="container row ver-center">
 	<h1>{$t('account.my_account')}</h1>
 	{#if user?.is_staff}
 		<button style="background-color: var(--danger)">Superuser</button>
@@ -18,9 +17,9 @@
 	{/if}
 </div>
 <h2>{$t('account.personal_info')}</h2>
-<div class={col}>
+<div class="container col">
 	{#if participant != null}
-		<div class={col}>
+		<div class="container col">
 			<label for="token" title={$t('common.token_hint')}>Token&nbsp;
 				<Icon icon="material-symbols:help-outline" width="24" height="24"></Icon>
 			</label>
@@ -36,7 +35,7 @@
 			await update({reset: false});
 		};
 	}}>
-		<div class={row}>
+		<div class="container row">
 			<div style="width: 50%">
 				<label for="first_name">{$t('common.first_name')}</label>
 				<input type="text" id="first_name" name="first_name" value={user?.first_name}>
@@ -46,7 +45,7 @@
 				<input type="text" id="last_name" name="last_name" value={user?.last_name}>
 			</div>
 		</div>
-		<div class={row}>
+		<div class="container row">
 			<div style="width: 50%">
 				<label for="username">{$t('common.username')}</label>
 				<input type="text" id="username" readonly value={user?.username}>
@@ -56,7 +55,7 @@
 				<input type="email" id="email" name="email" value={user?.email}>
 			</div>
 		</div>
-		<div class="{row} ver-center" id="submit-div">
+		<div class="container row ver-center" id="submit-div">
 			<button type="submit">{$t('common.submit')}</button>
 		</div>
 	</form>

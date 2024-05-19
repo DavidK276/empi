@@ -1,10 +1,7 @@
-import { error as errorClass } from '$lib/style.css';
-
-
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {
-		const error = `<span class="${errorClass}" id="${element.id}_error">${text}</span>`;
+		const error = `<span class="error-msg" id="${element.id}_error">${text}</span>`;
 		element.insertAdjacentHTML('afterend', error);
 		element.classList.add('error');
 	}

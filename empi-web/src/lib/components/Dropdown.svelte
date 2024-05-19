@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { col } from '$lib/style.css';
 	import Icon from "@iconify/svelte";
 
 	export let title: string;
@@ -11,7 +10,7 @@
 		{title}
 		<Icon icon="material-symbols:keyboard-arrow-down" width="24" height="24"></Icon>
 	</button>
-	<div class="dropdown-content {col}">
+	<div class="dropdown-content container col">
 		<slot></slot>
 	</div>
 </div>

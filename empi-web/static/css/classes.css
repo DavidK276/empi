@@ -3,3 +3,60 @@
         width: 100% !important;
     }
 }
+
+.container {
+    display: flex;
+    gap: var(--md);
+
+    &.ver-top {
+        align-items: start;
+    }
+    &.ver-center {
+        align-items: center;
+    }
+
+    &.hor-left {
+        justify-content: start;
+    }
+    &.hor-center {
+        justify-content: center;
+    }
+
+    &.row {
+        flex-direction: row;
+    }
+    &.col {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .row.m-col {
+        flex-direction: column;
+    }
+}
+
+.content {
+    max-width: 1280px;
+    width: 100%;
+}
+
+.error-msg {
+    color: var(--danger);
+    display: block;
+    margin: var(--sm) 0;
+}
+
+.box {
+    border: 1px solid gray;
+    border-radius: var(--xs);
+    box-shadow: 0 0 4px gray;
+    margin: var(--sm) 0;
+    padding: var(--sm) var(--lg);
+}
+
+.message {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+}

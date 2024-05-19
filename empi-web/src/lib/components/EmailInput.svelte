@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { row } from '$lib/style.css';
 	import AdditionalEmail from '$lib/components/AdditionalEmail.svelte';
 	import { onMount } from 'svelte';
 
@@ -43,7 +42,7 @@
 
 <fieldset>
 	<legend>Emails</legend>
-	<div class="{row} ver-center" style="margin: var(--sm) 0">
+	<div class="container row ver-center" style="margin: var(--sm) 0">
 		<input type="email" class="email-input" bind:this={firstEmailInput} style="margin: 0">
 	</div>
 	<button type="button" bind:this={addEmailButton} on:click={addNewEmail}>+</button>

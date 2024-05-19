@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { ActionData, PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
-	import { box, message, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
 	import { store } from '$lib/stores';
 	import { page } from '$app/stores';
@@ -67,10 +66,10 @@
 {#if $page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
-<div class="{row} m-col">
+<div class="container row m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
 	{#if has_participated}
-		<p class={message}>
+		<p class="message">
 			<Icon icon="material-symbols:info-outline" width="24" height="24"></Icon>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
@@ -85,8 +84,8 @@
 			})}
 	{@const participation = $participations?.get(appointment.id)}
 	{@const is_signedup = participation?.has_participated === false}
-	<div class={box}>
-		<div class="{row} ver-center">
+	<div class="box">
+		<div class="container row ver-center">
 			<h2>{$t('research.appointment_number')} {i + 1}</h2>
 			{#if appointment.location}
 				<button>{$t('research.in_person')}</button>
@@ -131,10 +130,10 @@
 					<label for="recipient">Email</label>
 					<input type="email" name="recipient" id="recipient" style="width: 50%" class="m-w-full">
 				{/if}
-				<div class="{row} ver-center">
+				<div class="container row ver-center">
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
-						<p class={message} style="margin: 0">
+						<p class="message" style="margin: 0">
 							<Icon icon="material-symbols:info-outline" width="24"
 							      height="24"></Icon>&nbsp;{$t('research.anonymous_signup')}</p>
 					{/if}
@@ -149,6 +148,6 @@
 		{/if}
 	</div>
 {:else}
-	<p class={message}>
+	<p class="message">
 		<Icon icon="material-symbols:info-outline" width="24" height="24"></Icon>&nbsp;{$t('research.no_appointments')}</p>
 {/each}
