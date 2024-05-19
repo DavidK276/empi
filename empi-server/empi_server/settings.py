@@ -131,7 +131,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = "sk-sk"
 
-TIME_ZONE = "Europe/Bratislava"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 

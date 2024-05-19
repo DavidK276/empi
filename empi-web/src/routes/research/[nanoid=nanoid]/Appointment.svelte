@@ -6,27 +6,15 @@
 
 	export let appointment: Appointment | null = null;
 	export let nanoid: string;
-	let nodeRef: HTMLElement;
+	let thisComponent: HTMLFormElement;
 	let type: string;
-
-	function getUtcOffset() {
-		if (appointment != null) {
-			return appointment.getUTCDatetimeAndOffset().offset;
-		}
-		const offset = new Date().getTimezoneOffset();
-		const hours = (Math.floor(Math.abs(offset) / 60) + '').padStart(2, '0');
-		const minutes = (Math.abs(offset) % 60 + '').padStart(2, '0');
-		const sign = offset > 0 ? '-' : '+';
-		return `${sign}${hours}:${minutes}`;
-	}
 
 	function formData(event: FormDataEvent) {
 		const when = event.formData.get('when') as string;
-		const utcOffset = getUtcOffset();
-		event.formData.set('when', when + utcOffset);
+		event.formData.set('when', new Date(when).toISOString());
 	}
 </script>
-<form bind:this={nodeRef} on:submit|preventDefault on:formdata={formData} class="appointment-form">
+<form bind:this={thisComponent} on:submit|preventDefault on:formdata={formData} class="appointment-form">
 	<div class={box}>
 		{#if appointment != null}
 			<label for="type">{$t('research.appointment_type')}</label>
@@ -36,7 +24,7 @@
 			</select>
 			<label for="when">{$t('research.when')}</label>
 			<input type="datetime-local" name="when" id="when" required
-						 value={appointment.getUTCDatetimeAndOffset().datetime}>
+						 value={appointment.getWhenLocal()}>
 			<div style="display: flex; width: 100%; gap: {vars.sm}">
 				<div style="display: inline-flex; flex-direction: column; width: 50%">
 					<label for="capacity">{$t('research.capacity')}</label>
@@ -78,6 +66,6 @@
 			{/if}
 		{/if}
 		<input type="hidden" name="research" value={nanoid}>
-		<button style="background-color: {vars.danger}" on:click={() => nodeRef.parentNode?.removeChild(nodeRef)}>-</button>
+		<button style="background-color: {vars.danger}" on:click={() => thisComponent.parentNode?.removeChild(thisComponent)}>-</button>
 	</div>
 </form>

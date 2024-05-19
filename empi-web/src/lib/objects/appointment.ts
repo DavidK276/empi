@@ -8,12 +8,10 @@ export class Appointment {
 	location!: string;
 	info_url!: string;
 
-	getUTCDatetimeAndOffset(): { datetime: string, offset: string } {
-		const sign = this.when[19];
-		const [datetime, offset] = this.when.split(sign);
-		return {
-			datetime,
-			offset: sign + offset
-		};
+	getWhenLocal(): string {
+		const date = new Date(this.when);
+		const timezoneOffset = -date.getTimezoneOffset();
+		date.setMinutes(date.getMinutes() + timezoneOffset);
+		return date.toISOString().slice(0, -1);
 	}
 }

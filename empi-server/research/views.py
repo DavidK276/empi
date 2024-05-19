@@ -126,8 +126,6 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
                 data_list = request.data
             for data in data_list:
                 data["research"] = research.id
-                if "utc-offset" in data:
-                    data["when"] = data["when"] + data.pop("utc-offset")
 
                 if appointment_id := data.pop("id", None):
                     appointment = get_object_or_404(Appointment, pk=appointment_id)
