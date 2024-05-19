@@ -4,6 +4,7 @@
 	import type { ActionData } from './$types';
 	import { vars } from '$lib/theme.css';
 	import { applyAction, enhance } from '$app/forms';
+	import MyLabel from "$lib/components/MyLabel.svelte";
 
 	export let form: ActionData;
 
@@ -39,10 +40,8 @@
 					submitting = false;
 				}
 			}}>
-	<label for="username" title={$t('common.username_hint')}>
-		{$t('common.username')}
-		<span class="material-symbols-outlined">help</span>
-	</label>
+	<MyLabel forId="username" labelText={$t('common.username')} hintText={$t('common.username_hint')}
+	         icon="help"></MyLabel>
 	<input type="text" name="username" id="username" required pattern="^[a-zA-Z0-9]+$"
 	       on:invalid={({currentTarget}) => {
 						addFormError(currentTarget, $t('common.username_wrong'));
@@ -54,10 +53,8 @@
 	<input type="text" name="last_name" id="last_name" required>
 	<label for="email">Email</label>
 	<input type="email" name="email" id="email" required>
-	<label for="password" title={$t('common.password_hint')}>
-		{$t('common.password')}
-		<span class="material-symbols-outlined">warning</span>
-	</label>
+	<MyLabel forId="password" labelText={$t('common.password')} hintText={$t('common.password_hint')}
+	         icon="warning"></MyLabel>
 	<input type="password" name="password" id="password" required minlength="8" bind:this={passwordInput}>
 	<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
 	<input type="password" id="repeat_password" required minlength="8" bind:this={repeatPasswordInput}>

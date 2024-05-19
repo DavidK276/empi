@@ -5,4 +5,4 @@
 
 <p class={message} style="display: flex; margin: var(--lg) 0"><span
 		class="material-symbols-outlined">info</span>&nbsp;{$t('research.cancel_success')}</p>
-<button><a href="/">{$t('common.goto_home')}</a></button>
+<button style="padding: 0"><a href="/">{$t('common.goto_home')}</a></button>

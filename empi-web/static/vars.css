@@ -5,14 +5,14 @@
     --lg: 1rem;
     --xl: 2rem;
     --2xl: 3rem;
-    --danger: #b00020;
-    --text-primary: #000;
+    --danger: light-dark(#b00020, #E93958);
+    --text-primary: light-dark(#000, #fff);
     --text-secondary: #fff;
-    --text-tertiary: rgb(17 24 39);
-    --background-primary: #fff;
-    --background-secondary: rgb(17 24 39);
-    --link: rgb(37 99 235);
-    --button-primary: rgb(37 99 235);
-    --button-disabled: rgb(128 128 128);
-    --success: rgb(56 142 60);
+    --background-primary: light-dark(#fff, rgb(17, 24, 39));
+    --background-secondary: light-dark(rgb(17, 24, 39), #fff);
+    --background-critical: #d300381a;
+    --link: rgb(37, 99, 235);
+    --button-primary: rgb(37, 99, 235);
+    --button-disabled: rgb(128, 128, 128);
+    --success: light-dark(rgb(56, 142, 60), rgb(56, 142, 62));
 }

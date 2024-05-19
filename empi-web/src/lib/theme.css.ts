@@ -10,9 +10,9 @@ export const [themeClass, vars] = createTheme({
 	danger: 'var(--danger)',
 	textSecondary: 'var(--text-secondary)',
 	textPrimary: 'var(--text-primary)',
-	textTertiary: 'var(--text-tertiary)',
 	backgroundPrimary: 'var(--background-primary)',
 	backgroundSecondary: 'var(--background-secondary)',
+	backgroundCritical: 'var(--background-critical)',
 	link: 'var(--link)',
 	buttonPrimary: 'var(--button-primary)',
 	buttonDisabled: 'var(--button-disabled)',
@@ -24,11 +24,12 @@ globalStyle('a', {
 	fontWeight: 700,
 	color: vars.link,
 	display: 'inline-flex',
-	alignItems: 'center'
+	alignItems: 'center',
 });
 
-globalStyle('button a', {
-	color: vars.textSecondary
+globalStyle('button > a', {
+	color: vars.textSecondary,
+	padding: `${vars.sm} ${vars.md}`
 });
 
 globalStyle('button', {
@@ -37,10 +38,7 @@ globalStyle('button', {
 	justifyContent: 'center',
 	gap: vars.sm,
 	borderRadius: vars.xs,
-	paddingLeft: vars.md,
-	paddingRight: vars.md,
-	paddingTop: vars.sm,
-	paddingBottom: vars.sm,
+	padding: `${vars.sm} ${vars.md}`,
 	backgroundColor: vars.buttonPrimary,
 	color: vars.textSecondary,
 	border: 'none',
@@ -55,7 +53,7 @@ globalStyle('button[disabled]', {
 
 globalStyle('label', {
 	display: 'flex',
-	color: vars.textTertiary
+	alignItems: 'center'
 });
 
 globalStyle('input, textarea', {
@@ -66,7 +64,7 @@ globalStyle('input, textarea', {
 	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
 	marginBottom: vars.lg,
-	boxShadow: `0 0 2px gray`
+	boxShadow: `0 0 2px ${vars.textPrimary}`
 });
 
 globalStyle('input[type="radio"],input[type="checkbox"]', {
@@ -82,9 +80,8 @@ globalStyle('select', {
 	marginBottom: vars.lg,
 	width: '100%',
 	borderRadius: vars.xs,
-	borderWidth: 0,
 	padding: `${vars.xs} ${vars.sm}`,
-	boxShadow: `0 0 2px gray`,
+	border: `1px solid ${vars.textPrimary}`,
 	backgroundColor: vars.backgroundPrimary
 });
 
@@ -106,7 +103,7 @@ globalStyle('fieldset', {
 });
 
 globalStyle('table, th, td', {
-	border: '1px solid black',
+	border: `1px solid ${vars.textPrimary}`,
 	borderCollapse: 'collapse',
 	padding: vars.sm
 });
