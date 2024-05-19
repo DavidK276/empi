@@ -7,50 +7,29 @@
 
 	export let form: ActionData;
 
-	const verifyForm = (form: HTMLFormElement) => {
-		let result = true;
-		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
-		const repeatPasswordInput = form.elements.namedItem('repeat_password') as HTMLInputElement;
-		if (passwordInput.value != repeatPasswordInput.value) {
+	const submit = (event: SubmitEvent) => {
+		if (passwordInput.value !== repeatPasswordInput.value) {
 			addFormError(passwordInput, $t('common.passwords_nomatch'));
 			addFormError(repeatPasswordInput, $t('common.passwords_nomatch'));
-			result = false;
+			event.preventDefault();
+			event.stopPropagation();
+			event.stopImmediatePropagation();
 		}
 		else {
 			removeFormError(passwordInput);
 			removeFormError(repeatPasswordInput);
 		}
-
-		const usernameInput = form.elements.namedItem('username') as HTMLInputElement;
-		if (!/^[a-zA-Z0-9]+$/.test(usernameInput.value)) {
-			addFormError(usernameInput, $t('common.username_wrong'));
-			result = false;
-		}
-		else {
-			removeFormError(usernameInput);
-		}
-		return result;
-	};
-
-	const formCheck = (event: Event) => {
-		const target = event.target as HTMLElement;
-		const formElement = target.parentElement as HTMLFormElement;
-		const submitButton = formElement.children.namedItem('submit');
-		if (verifyForm(formElement)) {
-			submitButton?.removeAttribute('disabled');
-		}
-		else {
-			submitButton?.setAttribute('disabled', '');
-		}
 	};
 
 	let submitting = false;
+	let passwordInput: HTMLInputElement;
+	let repeatPasswordInput: HTMLInputElement;
 </script>
 
 <h1>{$t('common.registration')}</h1>
 <form method="POST" id="register_form"
-			on:input={formCheck}
-			use:enhance={() => {
+      on:submit={submit}
+      use:enhance={() => {
 				submitting = true;
 				return async ({result, formElement}) => {
 					await applyAction(result);
@@ -64,7 +43,11 @@
 		{$t('common.username')}
 		<span class="material-symbols-outlined">help</span>
 	</label>
-	<input type="text" name="username" id="username" required>
+	<input type="text" name="username" id="username" required pattern="^[a-zA-Z0-9]+$"
+	       on:invalid={({currentTarget}) => {
+						addFormError(currentTarget, $t('common.username_wrong'));
+				 }}
+	       on:input={({currentTarget}) => removeFormError(currentTarget)}>
 	<label for="first_name">{$t('common.first_name')}</label>
 	<input type="text" name="first_name" id="first_name" required>
 	<label for="last_name">{$t('common.last_name')}</label>
@@ -75,11 +58,11 @@
 		{$t('common.password')}
 		<span class="material-symbols-outlined">warning</span>
 	</label>
-	<input type="password" name="password" id="password" required minlength="8">
+	<input type="password" name="password" id="password" required minlength="8" bind:this={passwordInput}>
 	<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
-	<input type="password" id="repeat_password" required minlength="8">
+	<input type="password" id="repeat_password" required minlength="8" bind:this={repeatPasswordInput}>
 	{#if !submitting}
-		<button type="submit" name="submit" disabled>{$t('common.register')}</button>
+		<button type="submit" name="submit">{$t('common.register')}</button>
 	{:else}
 		<button type="submit" disabled>{$t('common.registering')}</button>
 	{/if}
