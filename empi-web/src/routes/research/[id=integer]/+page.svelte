@@ -6,7 +6,6 @@
 	import { store } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { type Writable, writable } from 'svelte/store';
-	import { vars } from '$lib/theme.css';
 	import type { Participation } from '$lib/objects/participation';
 	import { onMount } from 'svelte';
 	import { goto, invalidateAll } from '$app/navigation';
@@ -94,12 +93,12 @@
 				<button>{$t('research.online')}</button>
 			{/if}
 			{#if is_signedup}
-				<button style="background: {vars.success}">{$t('research.appointment_signedup')}</button>
+				<button style="background: var(--success)">{$t('research.appointment_signedup')}</button>
 			{/if}
 		</div>
 		<p>{appointment.comment}</p>
 		<div style="width: 100%">
-			<table style="width: 50%; margin-bottom: {vars.sm}" class="m-w-full">
+			<table style="width: 50%; margin-bottom: var(--sm)" class="m-w-full">
 				<tr>
 					<th>{$t('research.when')}</th>
 					<th>{$t('research.capacity')}</th>
@@ -142,7 +141,7 @@
 		{#if is_signedup}
 			<form method="POST" on:submit|preventDefault={cancelSignup}>
 				<input type="hidden" name="participation" value={participation?.id}>
-				<button type="submit" style="background: {vars.danger};">{$t('research.cancel')}</button>
+				<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
 			</form>
 		{/if}
 	</div>

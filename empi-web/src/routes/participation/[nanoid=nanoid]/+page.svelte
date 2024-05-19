@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 	import { box, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
-	import { vars } from '$lib/theme.css';
 
 	export let data: PageData;
 
@@ -22,10 +21,10 @@
 		{:else}
 			<button>{$t('research.online')}</button>
 		{/if}
-		<button style="background: {vars.success}">{$t('research.appointment_signedup')}</button>
+		<button style="background: var(--success)">{$t('research.appointment_signedup')}</button>
 	</div>
 	<p>{appointment.comment}</p>
-	<table style="margin-bottom: {vars.sm}">
+	<table style="margin-bottom: var(--sm)">
 		<tr>
 			<th>{$t('research.when')}</th>
 			<th>{$t('research.capacity')}</th>
@@ -47,6 +46,6 @@
 		</tr>
 	</table>
 	<form method="POST" action="?/cancel">
-		<button type="submit" style="background: {vars.danger};">{$t('research.cancel')}</button>
+		<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
 	</form>
 </div>

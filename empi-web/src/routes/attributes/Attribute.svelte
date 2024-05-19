@@ -5,7 +5,6 @@
 	import type { Attribute } from '$lib/objects/attribute';
 	import { box } from '$lib/style.css';
 	import { t } from '$lib/translations';
-	import { vars } from '$lib/theme.css';
 	import { ALLOW_TEXTENTRY_ATTR } from '$lib/constants';
 
 	function addOption(e: Event) {
@@ -41,7 +40,7 @@
 			{/if}
 			<input type="hidden" name="url" value={attr.url}>
 			<button type="submit">{$t('common.submit')}</button>
-			<button type="submit" name="delete" style="background-color: {vars.danger}">{$t('attrs.delete')}</button>
+			<button type="submit" name="delete" style="background-color: var(--danger)">{$t('attrs.delete')}</button>
 		</form>
 	</div>
 {:else}
@@ -60,7 +59,7 @@
 			{#if chosen_type !== 'ET'}
 				<fieldset id="options">
 					<legend>{$t('attrs.options')}</legend>
-					<button type="button" style="margin-top: {vars.sm}" on:click={addOption}>+</button>
+					<button type="button" style="margin-top: var(--sm)" on:click={addOption}>+</button>
 				</fieldset>
 			{/if}
 			<input type="hidden" name="create">

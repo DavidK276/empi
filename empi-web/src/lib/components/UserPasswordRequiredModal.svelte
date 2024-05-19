@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { t } from '$lib/translations.js';
 	import { store } from '$lib/stores.js';
-	import { vars } from '$lib/theme.css.js';
 	import Modal from '$lib/components/Modal.svelte';
 	import { enhance } from '$app/forms';
 
@@ -31,7 +30,7 @@
 		<input type="password" name="current_password" id="password">
 		<button type="submit">{$t('common.check')}</button>
 		{#if password_ok === false}
-			<span style="color: {vars.danger}">{$t('common.wrong_login')}</span>
+			<span style="color: var(--danger)">{$t('common.wrong_login')}</span>
 		{/if}
 	</form>
 </svelte:component>

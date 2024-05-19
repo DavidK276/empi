@@ -2,7 +2,6 @@
 	import { t } from '$lib/translations';
 	import { col, row } from '$lib/style.css';
 	import { page } from '$app/stores';
-	import { vars } from '$lib/theme.css';
 	import { enhance } from '$app/forms';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 
@@ -12,7 +11,7 @@
 <div class="{row} ver-center">
 	<h1>{$t('account.my_account')}</h1>
 	{#if user?.is_staff}
-		<button style="background-color: {vars.danger}">Superuser</button>
+		<button style="background-color: var(--danger)">Superuser</button>
 	{:else}
 		<button>Participant</button>
 	{/if}

@@ -3,7 +3,6 @@
 	import { t } from '$lib/translations';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { row } from '$lib/style.css';
-	import { vars } from '$lib/theme.css';
 
 	export let data: PageData;
 </script>
@@ -29,6 +28,6 @@
 		{/each}
 	</table>
 </div>
-<div class="{row}" style="margin-top: {vars.sm}">
+<div class="{row}" style="margin-top: var(--sm)">
 	<Pagination count={data.count}></Pagination>
 </div>

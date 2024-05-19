@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Appointment } from '$lib/objects/appointment';
 	import { t } from '$lib/translations';
-	import { vars } from '$lib/theme.css';
 	import { box } from '$lib/style.css';
 
 	export let appointment: Appointment | null = null;
@@ -25,7 +24,7 @@
 			<label for="when">{$t('research.when')}</label>
 			<input type="datetime-local" name="when" id="when" required
 						 value={appointment.getWhenLocal()}>
-			<div style="display: flex; width: 100%; gap: {vars.sm}">
+			<div style="display: flex; width: 100%; gap: var(--sm)">
 				<div style="display: inline-flex; flex-direction: column; width: 50%">
 					<label for="capacity">{$t('research.capacity')}</label>
 					<input type="number" step="1" min="1" name="capacity" id="capacity" value={appointment.capacity}>
@@ -66,6 +65,6 @@
 			{/if}
 		{/if}
 		<input type="hidden" name="research" value={nanoid}>
-		<button style="background-color: {vars.danger}" on:click={() => thisComponent.parentNode?.removeChild(thisComponent)}>-</button>
+		<button style="background-color: var(--danger)" on:click={() => thisComponent.parentNode?.removeChild(thisComponent)}>-</button>
 	</div>
 </form>

@@ -2,13 +2,12 @@
 	import { t } from '$lib/translations';
 	import type { Attribute } from '$lib/objects/attribute';
 	import { box } from '$lib/style.css';
-	import { vars } from '$lib/theme.css';
 
 	export let attr: Attribute;
 	export let values: string[] = [];
 </script>
 <div class={box}>
-	<h2 style="margin: {vars.sm} 0">{attr.name}</h2>
+	<h2 style="margin: var(--sm) 0">{attr.name}</h2>
 	<fieldset id="options">
 		<legend>{$t('attrs.options')}</legend>
 		{#if attr.type === 'SC'}

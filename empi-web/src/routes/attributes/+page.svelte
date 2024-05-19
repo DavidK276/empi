@@ -8,7 +8,6 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
-	import { vars } from '$lib/theme.css';
 
 	export let data: PageData;
 
@@ -64,9 +63,9 @@
 			<button type="submit" style="margin-top: 0">{$t('common.submit')}</button>
 		{/if}
 		{#if submit_success === true}
-			<span style="margin: 0 {vars.sm}; color: green">{$t('attrs.success')}</span>
+			<span style="margin: 0 var(--sm); color: green">{$t('attrs.success')}</span>
 		{:else if submit_success === false}
-			<span style="margin: 0 {vars.sm}; color: {vars.danger}">{$t('common.unknown_error')}</span>
+			<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
 		{/if}
 	</form>
 {/if}

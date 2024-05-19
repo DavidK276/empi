@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/translations.js';
 	import { page } from '$app/stores';
-	import { error } from '$lib/style.css.js';
-	import { vars } from '$lib/theme.css.js';
+	import { error } from '$lib/style.css';
 	import { enhance } from '$app/forms';
 	import { store } from '$lib/stores.js';
 	import { goto } from '$app/navigation';
@@ -47,7 +46,7 @@
 			{:else}
 				<button type="submit" id="submit">{$t('common.login')}</button>
 			{/if}
-			<a href="/account/register" style="margin: 0 {vars.sm}">{$t('common.registration')}</a>
+			<a href="/account/register" style="margin: 0 var(--sm)">{$t('common.registration')}</a>
 		</div>
 	</form>
 {:else}

@@ -1,10 +1,9 @@
 import { style } from '@vanilla-extract/css';
-import { vars } from './theme.css';
 
 export const row = style({
 	display: 'flex',
 	flexDirection: 'row',
-	gap: vars.md,
+	gap: 'var(--md)',
 	selectors: {
 		'.ver-top&': {
 			alignItems: 'top'
@@ -33,7 +32,7 @@ export const row = style({
 export const col = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: vars.md,
+	gap: 'var(--md)',
 	selectors: {
 		'.ver-top&': {
 			alignItems: 'top'
@@ -56,17 +55,17 @@ export const content = style({
 });
 
 export const error = style({
-	color: vars.danger,
+	color: 'var(--danger)',
 	display: 'block',
-	margin: `${vars.sm} 0`
+	margin: 'var(--sm) 0'
 });
 
 export const box = style({
 	border: '1px solid gray',
-	borderRadius: vars.xs,
+	borderRadius: 'var(--xs)',
 	boxShadow: '0 0 4px gray',
-	margin: `${vars.sm} 0`,
-	padding: `${vars.sm} ${vars.lg}`
+	margin: 'var(--sm) 0',
+	padding: 'var(--sm) var(--lg)'
 });
 
 export const message = style({

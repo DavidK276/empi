@@ -2,7 +2,6 @@
 	import { t } from '$lib/translations';
 	import { addFormError, addFormErrors, removeFormError } from '$lib/functions';
 	import type { ActionData } from './$types';
-	import { vars } from '$lib/theme.css';
 	import { applyAction, enhance } from '$app/forms';
 	import MyLabel from "$lib/components/MyLabel.svelte";
 
@@ -64,6 +63,6 @@
 		<button type="submit" disabled>{$t('common.registering')}</button>
 	{/if}
 	{#if form?.success}
-		<span style="color: {vars.success}">{$t('common.registration_ok')}</span>
+		<span style="color: var(--success)">{$t('common.registration_ok')}</span>
 	{/if}
 </form>
