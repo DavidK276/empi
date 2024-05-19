@@ -8,7 +8,7 @@
 	$: offset = Number.parseInt($page.url.searchParams.get('offset')!) || 0;
 </script>
 
-{#if count <= PAGE_SIZE}
+{#if count > PAGE_SIZE}
 	<div class="content container row ver-center hor-center">
 		<a href="?limit={limit}&offset={offset - limit}">
 			<button disabled={offset - limit < 0}
