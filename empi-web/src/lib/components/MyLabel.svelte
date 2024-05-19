@@ -9,7 +9,7 @@
 	let hintVisible: boolean = false;
 </script>
 
-<div style="display: flex;">
+<div style="display: flex;" class="my-label">
 	<label for={forId} style="display: inline-flex"
 	       on:mouseenter={() => hintVisible = true}
 	       on:mouseleave={() => hintVisible = false}>

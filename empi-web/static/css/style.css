@@ -1,5 +1,5 @@
 body {
-    font-family: "Source Sans Pro","sans-serif";
+    font-family: "Source Sans Pro", "sans-serif";
     background: var(--background-primary);
 }
 
@@ -34,9 +34,11 @@ button {
     &:has(a) {
         padding: 0;
     }
+
     &[disabled] {
         background-color: var(--button-disabled);
     }
+
     a {
         color: var(--text-secondary);
         padding: var(--sm) var(--md);
@@ -46,6 +48,10 @@ button {
 label {
     display: flex;
     align-items: center;
+
+    &:has(+ input:user-invalid) {
+        color: var(--danger);
+    }
 }
 
 header {
@@ -57,10 +63,28 @@ footer {
 }
 
 input {
-    &.error {
-        box-shadow: 0 0 2px var(--danger);
+    &.error, &:user-invalid {
+        box-shadow: 0 0 4px var(--danger);
+        outline: 1px solid var(--danger);
     }
-    &[type="radio"],&[type="checkbox"] {
+
+    &:user-invalid:has(+ p.error-msg), &.error {
+        margin-bottom: 0;
+    }
+
+    &:focus {
+        outline: 2px solid var(--button-primary);
+    }
+
+    &:read-only {
+        background: light-dark(#f5f5f5, var(--background-primary))
+    }
+
+    &:not(:is(:user-invalid, .error)) + p.error-msg {
+        display: none;
+    }
+
+    &[type="radio"], &[type="checkbox"] {
         display: inline;
         width: initial;
         margin-left: var(--lg);
@@ -87,7 +111,7 @@ select {
     border-radius: var(--xs);
     border: none;
     box-shadow: 0 0 2px var(--text-primary);
-    background-color: light-dark(var(--background-primary), #2A2933);
+    background-color: light-dark(var(--background-primary), var(--input-background));
 }
 
 fieldset {

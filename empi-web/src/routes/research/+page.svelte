@@ -37,7 +37,7 @@
 	<input type="url" name="info_url" id="info_url" required>
 	<EmailInput bind:this={emails}></EmailInput>
 	<input type="hidden" name="is_published" value="false">
-	<div class="container row ver-center">
+	<div class="row ver-center">
 		{#if !submitting}
 			<button type="submit">{$t('research.create')}</button>
 		{:else}

@@ -10,7 +10,7 @@
 		{title}
 		<Icon icon="material-symbols:keyboard-arrow-down" width="24" height="24"></Icon>
 	</button>
-	<div class="dropdown-content container col">
+	<div class="dropdown-content col">
 		<slot></slot>
 	</div>
 </div>

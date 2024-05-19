@@ -38,7 +38,7 @@
 			};
 		}}>
 			<label for="points">{research.name}</label>
-			<div class="content container row ver-center">
+			<div class="content row ver-center">
 				<input type="hidden" name="url" value={research.url}>
 				<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
 							 on:input={resetTheButton}>

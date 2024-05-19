@@ -14,7 +14,7 @@
 </script>
 
 <div class="box">
-	<div class="container row ver-center">
+	<div class="row ver-center">
 		<h2>{$t('research.appointment')}</h2>
 		{#if appointment.location}
 			<button>{$t('research.in_person')}</button>

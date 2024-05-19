@@ -3,7 +3,7 @@
 	let nodeRef: HTMLElement;
 </script>
 
-<div class="container row ver-center" style="margin: var(--sm) 0" bind:this={nodeRef}>
+<div class="row ver-center" style="margin: var(--sm) 0" bind:this={nodeRef}>
 	{#if email == null}
 		<input type="email" class="email-input">
 	{:else}

@@ -30,6 +30,6 @@
 		{/each}
 	</table>
 </div>
-<div class="container row" style="margin-top: var(--sm)">
+<div class="row" style="margin-top: var(--sm)">
 	<Pagination count={data.count}></Pagination>
 </div>

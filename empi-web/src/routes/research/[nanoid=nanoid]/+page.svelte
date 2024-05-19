@@ -73,7 +73,7 @@
 </script>
 <ResearchPasswordRequiredModal></ResearchPasswordRequiredModal>
 {#if data.research != null}
-	<div class="container row ver-center m-col" style="margin-bottom: var(--sm)">
+	<div class="row ver-center m-col" style="margin-bottom: var(--sm)">
 		<h1 style="margin: var(--sm) 0">{data.research.name}</h1>
 		{#if data.research?.is_published === false}
 			<button style="height: 100%; background: var(--danger)">{$t('research.unpublished')}</button>
@@ -131,7 +131,7 @@
 				{/if}
 				<label for="new_password">{$t('common.new_password')}</label>
 				<input type="password" name="new_password" id="new_password">
-				<div class="container row ver-center" id="submit-div">
+				<div class="row ver-center" id="submit-div">
 					<button type="submit" id="submit">{$t('common.submit')}</button>
 				</div>
 			</form>
@@ -188,11 +188,11 @@
 			{/if}
 		</AccordionTab>
 		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
-			<div class="container col">
+			<div class="col">
 				{#if data.participations}
 					{#each data.participations as p_row}
 						{@const width = 100 / p_row.length}
-						<div class="container row m-col">
+						<div class="row m-col">
 							{#each p_row as participation}
 								<div class="box" style="min-width: {width}%">
 									<form style="display: flex; justify-content: center;" class="participation-form">

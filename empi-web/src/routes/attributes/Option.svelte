@@ -10,7 +10,7 @@
 	export let value: string | null;
 </script>
 
-<label class="container row ver-top" style="margin: var(--sm) 0">
+<label class="row ver-top" style="margin: var(--sm) 0">
 	{#if value}
 		<input type="text" name="values[]" {value} readonly>
 	{:else}

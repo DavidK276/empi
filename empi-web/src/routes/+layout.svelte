@@ -10,7 +10,7 @@
 	export let data: LayoutServerData;
 </script>
 
-<header class="container row hor-center ver-center m-col">
+<header class="row hor-center ver-center m-col">
 	<nav>
 		<a href="/">{$t('common.home')}</a>
 		<a href="/about">{$t('common.about')}</a>
@@ -48,12 +48,12 @@
 		</Dropdown>
 	{/if}
 </header>
-<div class="container row ver-top hor-center">
+<div class="row ver-top hor-center">
 	<div class="content">
 		<slot></slot>
 	</div>
 </div>
-<footer class="container row ver-center hor-center">
+<footer class="row ver-center hor-center">
 	<div>
 		<p style="text-align: justify">{$t('common.author_text')}</p>
 	</div>

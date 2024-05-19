@@ -41,13 +41,10 @@
 			}}>
 	<MyLabel forId="username" labelText={$t('common.username')} hintText={$t('common.username_hint')}
 	         icon="material-symbols:help-outline"></MyLabel>
-	<input type="text" name="username" id="username" required pattern="^[a-zA-Z0-9]+$"
-	       on:invalid={({currentTarget}) => {
-						addFormError(currentTarget, $t('common.username_wrong'));
-				 }}
-	       on:input={({currentTarget}) => removeFormError(currentTarget)}>
+	<input type="text" name="username" id="username" required pattern="^[a-zA-Z0-9]+$" minlength="3">
+	<p class="error-msg">{$t('common.username_wrong')}</p>
 	<label for="first_name">{$t('common.first_name')}</label>
-	<input type="text" name="first_name" id="first_name" required>
+	<input type="text" name="first_name" id="first_name" required minlength="3">
 	<label for="last_name">{$t('common.last_name')}</label>
 	<input type="text" name="last_name" id="last_name" required>
 	<label for="email">Email</label>

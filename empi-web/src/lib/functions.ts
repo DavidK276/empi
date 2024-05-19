@@ -1,7 +1,7 @@
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {
-		const error = `<span class="error-msg" id="${element.id}_error">${text}</span>`;
+		const error = `<p class="error-msg auto-error" id="${element.id}_error">${text}</p>`;
 		element.insertAdjacentHTML('afterend', error);
 		element.classList.add('error');
 	}

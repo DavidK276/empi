@@ -9,7 +9,7 @@
 </script>
 
 {#if count > PAGE_SIZE}
-	<div class="content container row ver-center hor-center">
+	<div class="content row ver-center hor-center">
 		<a href="?limit={limit}&offset={offset - limit}">
 			<button disabled={offset - limit < 0}
 			        aria-label="right arrow icon"

@@ -66,7 +66,7 @@
 {#if $page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
-<div class="container row m-col">
+<div class="row m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
 	{#if has_participated}
 		<p class="message">
@@ -85,7 +85,7 @@
 	{@const participation = $participations?.get(appointment.id)}
 	{@const is_signedup = participation?.has_participated === false}
 	<div class="box">
-		<div class="container row ver-center">
+		<div class="row ver-center">
 			<h2>{$t('research.appointment_number')} {i + 1}</h2>
 			{#if appointment.location}
 				<button>{$t('research.in_person')}</button>
@@ -130,7 +130,7 @@
 					<label for="recipient">Email</label>
 					<input type="email" name="recipient" id="recipient" style="width: 50%" class="m-w-full">
 				{/if}
-				<div class="container row ver-center">
+				<div class="row ver-center">
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
 						<p class="message">
