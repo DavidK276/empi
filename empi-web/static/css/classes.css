@@ -1,0 +1,5 @@
+@media screen and (max-width: 786px) {
+    .m-w-full {
+        width: 100% !important;
+    }
+}

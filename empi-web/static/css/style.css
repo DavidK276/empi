@@ -1,0 +1,95 @@
+body {
+    font-family: "Source Sans Pro","sans-serif";
+    background: var(--background-primary);
+}
+
+a {
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--link);
+    display: inline-flex;
+    align-items: center;
+}
+
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sm);
+    border-radius: var(--xs);
+    padding: var(--sm) var(--md);
+    background-color: var(--button-primary);
+    color: var(--text-secondary);
+    border: none;
+    white-space: nowrap;
+    height: fit-content;
+    font-weight: 700;
+
+    &:has(a) {
+        padding: 0;
+    }
+    &[disabled] {
+        background-color: var(--button-disabled);
+    }
+    a {
+        color: var(--text-secondary);
+        padding: var(--sm) var(--md);
+    }
+}
+
+label {
+    display: flex;
+    align-items: center;
+}
+
+header {
+    margin-bottom: var(--md);
+}
+
+footer {
+    margin-bottom: var(--md);
+}
+
+input {
+    &.error {
+        box-shadow: 0 0 2px var(--danger);
+    }
+    &[type="radio"],&[type="checkbox"] {
+        display: inline;
+        width: initial;
+        margin-left: var(--lg);
+        margin-bottom: initial;
+        box-shadow: none;
+    }
+}
+
+input, textarea {
+    margin-top: var(--sm);
+    margin-bottom: var(--lg);
+    width: 100%;
+    border-radius: var(--xs);
+    border: none;
+    padding: var(--xs) var(--sm);
+    box-shadow: 0 0 2px var(--text-primary);
+}
+
+select {
+    margin-top: var(--sm);
+    margin-bottom: var(--lg);
+    padding: var(--xs) var(--sm);
+    width: 100%;
+    border-radius: var(--xs);
+    border: none;
+    box-shadow: 0 0 2px var(--text-primary);
+    background-color: var(--background-primary);
+}
+
+fieldset {
+    margin-bottom: var(--sm);
+}
+
+table, th, td {
+    border: 1px solid var(--text-primary);
+    border-collapse: collapse;
+    padding: var(--sm);
+}

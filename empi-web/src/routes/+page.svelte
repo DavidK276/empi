@@ -21,7 +21,7 @@
 				<td>{research.name}</td>
 				<td style="text-align: center"><a href="{research.info_url}">{$t('common.learn_more')}</a></td>
 				<td style="text-align: center">
-					<button style="padding: 0">
+					<button>
 						<a href="research/{research.id}/">{$t('common.details')}</a>
 					</button>
 				</td>
