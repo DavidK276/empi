@@ -25,7 +25,7 @@
   "name": "Meno a priezvisko",
   "repeat_password": "Heslo (znovu)",
   "username_hint": "Prezývka, ktorú budete používať pri prihlasovaní",
-  "username_wrong": "Prihlasovacie meno môže obsahovať len písmená a čísla",
+  "username_wrong": "Musí byť dlhé aspoň 3 znaky a obsahovať len písmená a číslice",
   "passwords_nomatch": "Heslá sa nezhodujú",
   "password_hint": "Heslo sa používa na šifrovanie vašich dát! Ak ho zabudnete, stratíte prístup k účtu.",
   "registration_ok": "Registrácia úspešná. Teraz sa môžete prihlásiť s vašimi údajmi.",
