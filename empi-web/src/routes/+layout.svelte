@@ -6,6 +6,7 @@
 	import type { LayoutServerData } from './$types';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import Login from '$lib/components/Login.svelte';
+	import Icon from "@iconify/svelte";
 
 	export let data: LayoutServerData;
 </script>
@@ -18,13 +19,17 @@
 	{#if data.user != null}
 		<Dropdown title="{data.user.first_name + ' ' + data.user.last_name}">
 			{#if !data.user.is_staff}
-				<div><a href="/attributes">{$t('common.attributes')}<span
-						class="material-symbols-outlined">navigate_next</span></a></div>
-				<div><a href="/account/points">{$t('common.my_points')}<span
-						class="material-symbols-outlined">navigate_next</span></a>
+				<div><a href="/attributes">{$t('common.attributes')}
+					<Icon icon="material-symbols:keyboard-arrow-right" width="24" height="24"></Icon>
+				</a></div>
+				<div><a href="/account/points">{$t('common.my_points')}
+					<Icon icon="material-symbols:keyboard-arrow-right" width="24" height="24"></Icon>
+				</a>
 				</div>
 			{/if}
-			<div><a href="/account">{$t('common.account')}<span class="material-symbols-outlined">navigate_next</span></a>
+			<div><a href="/account">{$t('common.account')}
+				<Icon icon="material-symbols:keyboard-arrow-right" width="24" height="24"></Icon>
+			</a>
 			</div>
 			<Login is_logged_in={true}></Login>
 		</Dropdown>

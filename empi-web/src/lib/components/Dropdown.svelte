@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { col } from '$lib/style.css';
+	import Icon from "@iconify/svelte";
 
 	export let title: string;
 	let isOpen = false;
@@ -8,7 +9,7 @@
 <div class="dropdown" class:show={isOpen}>
 	<button on:click={() => (isOpen = !isOpen)}>
 		{title}
-		<span class="material-symbols-outlined" style="pointer-events: none">expand_more</span>
+		<Icon icon="material-symbols:keyboard-arrow-down" width="24" height="24"></Icon>
 	</button>
 	<div class="dropdown-content {col}">
 		<slot></slot>

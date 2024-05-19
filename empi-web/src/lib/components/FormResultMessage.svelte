@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
+	import Icon from "@iconify/svelte";
 
 	export let type: string;
 	export let message: string = '';
@@ -19,8 +20,7 @@
 
 <div class="form-result">
 	{#if type === 'error' || type === 'failure'}
-		<p style="color: var(--danger)"><span
-			class="material-symbols-outlined">error</span>&nbsp;{message}</p>
+		<p style="color: var(--danger)"><Icon icon="material-symbols:error-outline" width="24" height="24"></Icon>&nbsp;{message}</p>
 	{:else if type === 'success'}
 		<p style="color: var(--success)">{message}</p>
 	{/if}

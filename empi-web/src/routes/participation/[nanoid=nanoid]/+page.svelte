@@ -2,15 +2,16 @@
 	import type { PageData } from './$types';
 	import { box, row } from '$lib/style.css';
 	import { t } from '$lib/translations';
+	import Icon from "@iconify/svelte";
 
 	export let data: PageData;
 
 	const appointment = data.appointment;
 	const when = new Date(appointment.when)
-		.toLocaleString(undefined, {
-			timeStyle: 'short',
-			dateStyle: 'long'
-		});
+			.toLocaleString(undefined, {
+				timeStyle: 'short',
+				dateStyle: 'long'
+			});
 </script>
 
 <div class={box}>
@@ -40,8 +41,9 @@
 			{#if appointment.location}
 				<td>{appointment.location}</td>
 			{:else}
-				<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}<span
-					class="material-symbols-outlined">open_in_new</span></a></td>
+				<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}
+					<Icon icon="material-symbols:open-in-new" width="24" height="24"></Icon>
+				</a></td>
 			{/if}
 		</tr>
 	</table>

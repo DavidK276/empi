@@ -6,6 +6,7 @@
 	import { message, row } from '$lib/style.css';
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import { addFormErrors } from '$lib/functions';
+	import Icon from "@iconify/svelte";
 
 	export let form: ActionData;
 
@@ -44,7 +45,7 @@
 			<button type="submit" disabled>{$t('research.creating')}</button>
 		{/if}
 		<p class={message}>
-			<span class="material-symbols-outlined">info</span>&nbsp;
+			<Icon icon="material-symbols:info-outline" width="24" height="24"></Icon>&nbsp;
 			{$t('research.creation_info')}
 		</p>
 	</div>

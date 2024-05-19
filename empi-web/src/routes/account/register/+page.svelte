@@ -40,7 +40,7 @@
 				}
 			}}>
 	<MyLabel forId="username" labelText={$t('common.username')} hintText={$t('common.username_hint')}
-	         icon="help"></MyLabel>
+	         icon="material-symbols:help-outline"></MyLabel>
 	<input type="text" name="username" id="username" required pattern="^[a-zA-Z0-9]+$"
 	       on:invalid={({currentTarget}) => {
 						addFormError(currentTarget, $t('common.username_wrong'));
@@ -53,7 +53,7 @@
 	<label for="email">Email</label>
 	<input type="email" name="email" id="email" required>
 	<MyLabel forId="password" labelText={$t('common.password')} hintText={$t('common.password_hint')}
-	         icon="warning"></MyLabel>
+	         icon="material-symbols:warning-outline-rounded"></MyLabel>
 	<input type="password" name="password" id="password" required minlength="8" bind:this={passwordInput}>
 	<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
 	<input type="password" id="repeat_password" required minlength="8" bind:this={repeatPasswordInput}>

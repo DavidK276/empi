@@ -9,6 +9,7 @@
 	import type { Participation } from '$lib/objects/participation';
 	import { onMount } from 'svelte';
 	import { goto, invalidateAll } from '$app/navigation';
+	import Icon from "@iconify/svelte";
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -69,19 +70,19 @@
 <div class="{row} m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
 	{#if has_participated}
-		<p class={message}><span
-			class="material-symbols-outlined">info</span>&nbsp{$t('research.participated')}</p>
+		<p class={message}>
+			<Icon icon="material-symbols:info-outline" width="24" height="24"></Icon>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
 <p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}
-	&nbsp;<span
-		class="material-symbols-outlined">open_in_new</span></a></p>
+	<Icon icon="material-symbols:open-in-new" width="24" height="24"></Icon>
+</a></p>
 {#each data.appointments as appointment, i}
 	{@const when = new Date(appointment.when)
-		.toLocaleString(undefined, {
-			timeStyle: 'short',
-			dateStyle: 'long'
-		})}
+			.toLocaleString(undefined, {
+				timeStyle: 'short',
+				dateStyle: 'long'
+			})}
 	{@const participation = $participations?.get(appointment.id)}
 	{@const is_signedup = participation?.has_participated === false}
 	<div class={box}>
@@ -116,8 +117,9 @@
 					{#if appointment.location}
 						<td>{appointment.location}</td>
 					{:else if is_signedup}
-						<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}<span
-							class="material-symbols-outlined">open_in_new</span></a></td>
+						<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}
+							<Icon icon="material-symbols:open-in-new" width="24" height="24"></Icon>
+						</a></td>
 					{/if}
 				</tr>
 			</table>
@@ -132,8 +134,9 @@
 				<div class="{row} ver-center">
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
-						<p class={message} style="margin: 0"><span
-							class="material-symbols-outlined">info</span>&nbsp;{$t('research.anonymous_signup')}</p>
+						<p class={message} style="margin: 0">
+							<Icon icon="material-symbols:info-outline" width="24"
+							      height="24"></Icon>&nbsp;{$t('research.anonymous_signup')}</p>
 					{/if}
 				</div>
 			</form>
@@ -146,6 +149,6 @@
 		{/if}
 	</div>
 {:else}
-	<p class={message}><span
-		class="material-symbols-outlined">info</span>&nbsp;{$t('research.no_appointments')}</p>
+	<p class={message}>
+		<Icon icon="material-symbols:info-outline" width="24" height="24"></Icon>&nbsp;{$t('research.no_appointments')}</p>
 {/each}

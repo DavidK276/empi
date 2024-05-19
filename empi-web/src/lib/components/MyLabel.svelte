@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Icon from "@iconify/svelte";
+
 	export let forId: string;
 	export let labelText: string;
 	export let hintText: string;
@@ -12,7 +14,7 @@
 	       on:mouseenter={() => usernameHint.style['visibility'] = 'visible'}
 	       on:mouseleave={() => usernameHint.style['visibility'] = 'hidden'}>
 		{labelText}
-		<span class="material-symbols-outlined">{icon}</span>
+		<Icon icon={icon} width="24" height="24"></Icon>
 	</label>
 	<div class="hint-parent" bind:this={usernameHint}>
 		<div class="arrow" style="margin-left: var(--sm)"></div>
