@@ -12,9 +12,15 @@
 
 <label class="container row ver-top" style="margin: var(--sm) 0">
 	{#if value}
-		<input type="text" name="values[]" {value} style="margin: 0" readonly>
+		<input type="text" name="values[]" {value} readonly>
 	{:else}
-		<input type="text" name="values[]" style="margin: 0">
+		<input type="text" name="values[]">
 	{/if}
 	<button type="button" style="background-color: var(--danger); margin: 0" on:click={deleteOption}>-</button>
 </label>
+
+<style>
+	input {
+			margin: 0;
+	}
+</style>

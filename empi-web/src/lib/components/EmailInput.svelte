@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AdditionalEmail from '$lib/components/AdditionalEmail.svelte';
 	import { onMount } from 'svelte';
+	import { t } from "$lib/translations";
 
 	function addNewEmail(event: Event) {
 		const target = event.target as HTMLButtonElement;
@@ -41,7 +42,7 @@
 </script>
 
 <fieldset>
-	<legend>Emails</legend>
+	<legend>{$t('common.emails')}</legend>
 	<div class="container row ver-center" style="margin: var(--sm) 0">
 		<input type="email" class="email-input" bind:this={firstEmailInput} style="margin: 0">
 	</div>

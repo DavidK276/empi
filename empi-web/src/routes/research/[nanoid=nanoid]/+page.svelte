@@ -165,7 +165,7 @@
 					<button type="submit" style="margin-top: 0">{$t('common.submit')}</button>
 				{/if}
 				{#if submit_success_attrs === true}
-					<span style="margin: 0 var(--sm); color: green">{$t('attrs.success')}</span>
+					<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>
 				{:else if submit_success_attrs === false}
 					<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
 				{/if}
@@ -219,7 +219,7 @@
 					<button type="button" on:click={submitParticipations}>{$t('common.submit')}</button>
 				{/if}
 				{#if submit_success_participations === true}
-					<span style="margin: 0 var(--sm); color: green">{$t('attrs.success')}</span>
+					<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>
 				{:else if submit_success_participations === false}
 					<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
 				{/if}

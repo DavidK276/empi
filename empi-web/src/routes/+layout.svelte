@@ -12,8 +12,11 @@
 
 <header class="container row hor-center ver-center m-col">
 	<nav>
-		<a href="/" style="margin: 0 var(--sm)">{$t('common.home')}</a>
-		<a href="/about" style="margin: 0 var(--sm)">{$t('common.about')}</a>
+		<a href="/">{$t('common.home')}</a>
+		<a href="/about">{$t('common.about')}</a>
+		{#if data.user == null}
+			<a href="/research">{$t('common.create_research')}</a>
+		{/if}
 	</nav>
 	{#if data.user != null}
 		<Dropdown title="{data.user.first_name + ' ' + data.user.last_name}">
@@ -33,9 +36,6 @@
 			<Login is_logged_in={true}></Login>
 		</Dropdown>
 	{:else}
-		<a href="/research">
-			{$t('common.create_research')}
-		</a>
 		<Dropdown title={$t('common.account')}>
 			<Login is_logged_in={false}></Login>
 		</Dropdown>

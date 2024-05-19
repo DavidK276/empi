@@ -133,7 +133,7 @@
 				<div class="container row ver-center">
 					<button type="submit">{$t('research.signup')}</button>
 					{#if $page.data.user == null}
-						<p class="message" style="margin: 0">
+						<p class="message">
 							<Icon icon="material-symbols:info-outline" width="24"
 							      height="24"></Icon>&nbsp;{$t('research.anonymous_signup')}</p>
 					{/if}
