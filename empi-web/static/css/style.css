@@ -90,6 +90,7 @@ input {
         margin-left: var(--lg);
         margin-bottom: initial;
         box-shadow: none;
+        outline: none;
     }
 }
 

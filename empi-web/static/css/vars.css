@@ -16,4 +16,7 @@
     --button-disabled: rgb(128, 128, 128);
     --input-background: #2A2933;
     --success: light-dark(rgb(56, 142, 60), rgb(56, 142, 62));
+
+    --filter-white: invert(100%) sepia(0%) saturate(0%) hue-rotate(353deg) brightness(104%) contrast(101%);
+    --filter-black: invert(0%) sepia(0%) saturate(0%) hue-rotate(223deg) brightness(97%) contrast(107%);
 }

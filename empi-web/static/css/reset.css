@@ -4,6 +4,14 @@
 
 :root {
     color-scheme: light dark;
+
+    &:has(option[value="light"]:checked) {
+        color-scheme: light;
+    }
+
+    &:has(option[value="dark"]:checked) {
+        color-scheme: dark;
+    }
 }
 
 body {
