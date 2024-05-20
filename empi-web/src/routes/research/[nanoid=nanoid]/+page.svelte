@@ -15,7 +15,9 @@
 	import { invalidateAll } from '$app/navigation';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 	import ResearchPasswordRequiredModal from '$lib/components/ResearchPasswordRequiredModal.svelte';
-	import Icon from "@iconify/svelte";
+	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
+	import MaterialSymbolsVisibilityOutline from 'virtual:icons/material-symbols/visibility-outline';
+	import MaterialSymbolsVisibilityOffOutline from 'virtual:icons/material-symbols/visibility-outline';
 
 	export let data: PageServerData;
 	$: appointments = plainToInstance(Appt, data.appointments);
@@ -79,20 +81,20 @@
 			<button style="height: 100%; background: var(--danger)">{$t('research.unpublished')}</button>
 			<form method="POST" action="?/publish" use:enhance>
 				<button type="submit">{$t('research.publish')}
-					<Icon icon="material-symbols:visibility-outline" width="24" height="24"></Icon>
+					<MaterialSymbolsVisibilityOutline width="24" height="24"></MaterialSymbolsVisibilityOutline>
 				</button>
 			</form>
 		{:else if data.research?.is_published === true}
 			<button style="background: var(--success)">{$t('research.published')}</button>
 			<form method="POST" action="?/unpublish" use:enhance>
 				<button type="submit" style="background: var(--danger)">{$t('research.unpublish')}
-					<Icon icon="material-symbols:visibility-off-outline" width="24" height="24"></Icon>
+					<MaterialSymbolsVisibilityOffOutline width="24" height="24"></MaterialSymbolsVisibilityOffOutline>
 				</button>
 			</form>
 		{/if}
 	</div>
 	<form method="POST" action="?/update"
-	      on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+				on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
@@ -101,7 +103,7 @@
 	<Accordion>
 		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
-			      use:enhance={({submitter}) => {
+						use:enhance={({submitter}) => {
 							if (submitter != null) {
 								submitter.toggleAttribute('disabled');
 								submitter.innerHTML = $t('common.submitting');
@@ -123,7 +125,8 @@
 					}}>
 				{#if !data.research.is_protected}
 					<p class="error-msg message">
-						<Icon icon="material-symbols:warning-outline-rounded"></Icon>&nbsp;{$t('research.unprotected_warning')}</p>
+						<MaterialSymbolsWarningOutline></MaterialSymbolsWarningOutline>&nbsp;{$t('research.unprotected_warning')}
+					</p>
 					<input type="hidden" name="current_password" value="__blank__">
 				{:else}
 					<label for="current_password">{$t('common.current_password')}</label>
@@ -138,8 +141,8 @@
 		</AccordionTab>
 		<AccordionTab open={false} title={$t('common.attributes')}>
 			<form method="POST"
-			      action="?/attrs"
-			      use:enhance={() => {
+						action="?/attrs"
+						use:enhance={() => {
 							submitting_attrs = true;
 							submit_success_attrs = null;
 							return async ({ update, result }) => {

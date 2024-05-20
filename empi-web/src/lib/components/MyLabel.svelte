@@ -1,20 +1,26 @@
 <script lang="ts">
-	import Icon from "@iconify/svelte";
+	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
+	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
+
 
 	export let forId: string;
 	export let labelText: string;
 	export let hintText: string;
-	export let icon: string;
+	export let icon: 'info' | 'warning';
 
 	let hintVisible: boolean = false;
 </script>
 
 <div style="display: flex;" class="my-label">
 	<label for={forId} style="display: inline-flex"
-	       on:mouseenter={() => hintVisible = true}
-	       on:mouseleave={() => hintVisible = false}>
+				 on:mouseenter={() => hintVisible = true}
+				 on:mouseleave={() => hintVisible = false}>
 		{labelText}
-		<Icon {icon} width="24" height="24"></Icon>
+		{#if icon === 'info'}
+			<MaterialSymbolsInfoOutline width="24px" height="24px"></MaterialSymbolsInfoOutline>
+		{:else if icon === 'warning'}
+			<MaterialSymbolsWarningOutline width="24px" height="24px"></MaterialSymbolsWarningOutline>
+		{/if}
 	</label>
 	<div class="hint-parent" style:visibility={hintVisible ? 'visible' : 'hidden'}>
 		<div class="arrow" style="margin-left: var(--sm)"></div>
@@ -28,14 +34,14 @@
     }
 
     .hint-parent {
-		    visibility: hidden;
-		    display: flex;
+        visibility: hidden;
+        display: flex;
     }
 
     @media screen and (max-width: 767px) {
-		    .hint-parent {
-				    visibility: visible;
-		    }
+        .hint-parent {
+            visibility: visible;
+        }
     }
 
     .hint {

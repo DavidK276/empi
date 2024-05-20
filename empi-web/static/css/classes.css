@@ -84,6 +84,7 @@
 #theme-toggle {
     background: none;
     padding: 0;
+    cursor: pointer;
 
     &:has(option[value="os"]:checked)::after {
         display: inline-block;

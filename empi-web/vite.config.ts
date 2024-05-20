@@ -1,14 +1,19 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import Icons from 'unplugin-icons/vite'
 
-export default defineConfig(({mode}) => ({
-	plugins: [sveltekit(), vanillaExtractPlugin()],
+export default defineConfig(({ mode }) => ({
+	plugins: [
+		sveltekit(),
+		Icons({
+			compiler: 'svelte'
+		})
+	],
 	resolve: {
-		conditions: mode === 'test' ? ['browser'] : [],
+		conditions: mode === 'test' ? ['browser'] : []
 	},
 	test: {
 		environment: 'jsdom',
-		setupFiles: ['src/lib/tests/setup.ts'],
+		setupFiles: ['src/lib/tests/setup.ts']
 	}
 }));

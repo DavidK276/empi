@@ -5,8 +5,9 @@
 	import type { LayoutServerData } from './$types';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import Login from '$lib/components/Login.svelte';
-	import Icon from "@iconify/svelte";
-	import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+
+	import MaterialSymbolsKeyboardArrowRight from 'virtual:icons/material-symbols/keyboard-arrow-right';
 
 	export let data: LayoutServerData;
 </script>
@@ -24,15 +25,15 @@
 			<Dropdown title="{(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}">
 				{#if !data.user.is_staff}
 					<div><a href="/attributes">{$t('common.attributes')}
-						<Icon icon="material-symbols:keyboard-arrow-right" width="24" height="24"></Icon>
+						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 					</a></div>
 					<div><a href="/account/points">{$t('common.my_points')}
-						<Icon icon="material-symbols:keyboard-arrow-right" width="24" height="24"></Icon>
+						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 					</a>
 					</div>
 				{/if}
 				<div><a href="/account">{$t('common.account')}
-					<Icon icon="material-symbols:keyboard-arrow-right" width="24" height="24"></Icon>
+						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 				</a>
 				</div>
 				<Login is_logged_in={true}></Login>

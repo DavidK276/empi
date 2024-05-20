@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from "@iconify/svelte";
+	import MaterialSymbolsKeyboardArrowRight from 'virtual:icons/material-symbols/keyboard-arrow-right';
 
 	export let title: string;
 	let isOpen = false;
@@ -8,7 +8,7 @@
 <div class="dropdown" class:show={isOpen}>
 	<button on:click={() => (isOpen = !isOpen)}>
 		{title}
-		<Icon icon="material-symbols:keyboard-arrow-down" width="24" height="24"></Icon>
+		<MaterialSymbolsKeyboardArrowRight icon="material-symbols:keyboard-arrow-down" width="24" height="24"></MaterialSymbolsKeyboardArrowRight>
 	</button>
 	<div class="dropdown-content col">
 		<slot></slot>

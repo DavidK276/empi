@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
-	import Icon from "@iconify/svelte";
+	import MaterialSymbolsHelpOutline from 'virtual:icons/material-symbols/error-outline';
 
 	let user = $page.data.user;
 	let participant = $page.data.participant;
@@ -21,7 +21,7 @@
 	{#if participant != null}
 		<div class="col">
 			<label for="token" title={$t('common.token_hint')}>Token&nbsp;
-				<Icon icon="material-symbols:help-outline" width="24" height="24"></Icon>
+				<MaterialSymbolsHelpOutline width="24" height="24"></MaterialSymbolsHelpOutline>
 			</label>
 			<button id="token" style="font-size: 18px">{participant.token}</button>
 		</div>

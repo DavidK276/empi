@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
-	import Icon from "@iconify/svelte";
 
 	export let data: PageData;
 
@@ -40,9 +39,7 @@
 			{#if appointment.location}
 				<td>{appointment.location}</td>
 			{:else}
-				<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}
-					<Icon icon="material-symbols:open-in-new" width="24" height="24"></Icon>
-				</a></td>
+				<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}</a></td>
 			{/if}
 		</tr>
 	</table>
