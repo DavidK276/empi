@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '@fontsource/source-sans-pro';
+	import '$lib/styles';
 
 	import { t } from '$lib/translations';
 	import type { LayoutServerData } from './$types';
