@@ -61,6 +61,10 @@ label {
     &:has(+ input:user-invalid) {
         color: var(--danger);
     }
+
+    &:has(+ input[type="radio"]) {
+        margin-right: var(--xl);
+    }
 }
 
 header {
@@ -96,9 +100,8 @@ input {
     &[type="radio"], &[type="checkbox"] {
         display: inline;
         width: initial;
-        margin-left: var(--lg);
-        margin-bottom: initial;
-        box-shadow: none;
+        margin: 0 calc(1em / 2) 0 0;
+        box-shadow: darkgray 0 0 2px 0;
         outline: none;
     }
 }

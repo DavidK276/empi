@@ -12,9 +12,9 @@
 </script>
 
 <div style="display: flex;" class="my-label">
-	<label for={forId} style="display: inline-flex"
-				 on:mouseenter={() => hintVisible = true}
-				 on:mouseleave={() => hintVisible = false}>
+	<label for={forId} style="display: inline-flex; min-width: fit-content"
+	       on:mouseenter={() => hintVisible = true}
+	       on:mouseleave={() => hintVisible = false}>
 		{labelText}
 		{#if icon === 'info'}
 			<MaterialSymbolsInfoOutline width="24px" height="24px"></MaterialSymbolsInfoOutline>
@@ -22,7 +22,7 @@
 			<MaterialSymbolsWarningOutline width="24px" height="24px"></MaterialSymbolsWarningOutline>
 		{/if}
 	</label>
-	<div class="hint-parent" style:visibility={hintVisible ? 'visible' : 'hidden'}>
+	<div class="hint-parent" class:hidden={!hintVisible}>
 		<div class="arrow" style="margin-left: var(--sm)"></div>
 		<div class="hint" id="username-hint">{hintText}</div>
 	</div>
@@ -34,29 +34,26 @@
     }
 
     .hint-parent {
-        visibility: hidden;
         display: flex;
     }
 
-    @media screen and (max-width: 767px) {
-        .hint-parent {
-            visibility: visible;
+    @media screen and (min-width: 768px) {
+        .hidden {
+            visibility: hidden;
         }
     }
 
     .hint {
         align-items: center;
-        border: 2px solid var(--text-primary);
-        border-left: none;
-        border-radius: var(--xs);
-        padding: var(--sm);
+        border: 3px solid var(--background-secondary);
+        border-radius: 12px;
+        padding: var(--xs);
         display: inline-block;
-        color: light-dark(#fff, #000);
-        background-color: var(--background-secondary);
+        color: var(--text-primary);
     }
 
     .arrow::before {
-        --height: calc(var(--arrow-size) / 2 * 3);
+        --height: calc(var(--arrow-size));
 
         content: '';
         position: relative;

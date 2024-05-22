@@ -9,6 +9,7 @@
 	import { onMount } from 'svelte';
 	import { goto, invalidateAll } from '$app/navigation';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
+	import { localeDateStringFromUTCString } from "$lib/functions";
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -71,17 +72,12 @@
 	{#if has_participated}
 		<p class="message">
 			<MaterialSymbolsInfoOutline width="24"
-																	height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
+			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
 <p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
 </p>
 {#each data.appointments as appointment, i}
-	{@const when = new Date(appointment.when)
-		.toLocaleString(undefined, {
-			timeStyle: 'short',
-			dateStyle: 'long'
-		})}
 	{@const participation = $participations?.get(appointment.id)}
 	{@const is_signedup = participation?.has_participated === false}
 	<div class="box">
@@ -97,8 +93,8 @@
 			{/if}
 		</div>
 		<p>{appointment.comment}</p>
-		<div style="width: 100%">
-			<table style="width: 50%; margin-bottom: var(--sm)" class="m-w-full">
+		<div style="width: 50%" class="m-w-full">
+			<table style="width: 100%; margin-bottom: var(--sm)">
 				<tr>
 					<th>{$t('research.when')}</th>
 					{#if appointment.location}
@@ -109,7 +105,9 @@
 					<th>{$t('research.capacity')}</th>
 				</tr>
 				<tr>
-					<td>{when}</td>
+					<td>
+						<time datetime="{appointment.when}">{localeDateStringFromUTCString(appointment.when)}</time>
+					</td>
 					{#if appointment.location}
 						<td>{appointment.location}</td>
 					{:else if is_signedup}
@@ -120,34 +118,34 @@
 					</td>
 				</tr>
 			</table>
-		</div>
-		{#if can_signup && appointment.free_capacity}
-			<form method="POST" action="?/signup">
-				<input type="hidden" name="appointment" value={appointment.id}>
-				{#if $page.data.user == null}
-					<label for="recipient">Email</label>
-					<input type="email" name="recipient" id="recipient" style="width: 50%" class="m-w-full">
-				{/if}
-				<div class="row ver-center">
-					<button type="submit">{$t('research.signup')}</button>
+			{#if can_signup && appointment.free_capacity}
+				<form method="POST" action="?/signup">
+					<input type="hidden" name="appointment" value={appointment.id}>
 					{#if $page.data.user == null}
-						<p class="message">
-							<MaterialSymbolsInfoOutline width="24" height="24"
-							></MaterialSymbolsInfoOutline>&nbsp;{$t('research.anonymous_signup')}
-						</p>
+						<label for="recipient">Email</label>
+						<input type="email" name="recipient" id="recipient" class="m-w-full">
 					{/if}
-				</div>
-			</form>
-		{/if}
-		{#if is_signedup}
-			<form method="POST" on:submit|preventDefault={cancelSignup}>
-				<input type="hidden" name="participation" value={participation?.id}>
-				<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
-			</form>
-		{/if}
+					<div class="row ver-center">
+						<button type="submit">{$t('research.signup')}</button>
+						{#if $page.data.user == null}
+							<p class="message">
+								<MaterialSymbolsInfoOutline width="24" height="24"
+								></MaterialSymbolsInfoOutline>&nbsp;{$t('research.anonymous_signup')}
+							</p>
+						{/if}
+					</div>
+				</form>
+			{/if}
+			{#if is_signedup}
+				<form method="POST" on:submit|preventDefault={cancelSignup}>
+					<input type="hidden" name="participation" value={participation?.id}>
+					<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
+				</form>
+			{/if}
+		</div>
 	</div>
 {:else}
 	<p class="message">
 		<MaterialSymbolsInfoOutline width="24"
-																height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
+		                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
 {/each}

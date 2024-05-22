@@ -1,15 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
+	import { localeDateStringFromUTCString } from "$lib/functions";
 
 	export let data: PageData;
 
 	const appointment = data.appointment;
-	const when = new Date(appointment.when)
-			.toLocaleString(undefined, {
-				timeStyle: 'short',
-				dateStyle: 'long'
-			});
 </script>
 
 <div class="box">
@@ -34,7 +30,7 @@
 			{/if}
 		</tr>
 		<tr>
-			<td>{when}</td>
+			<td><time datetime="{appointment.when}">{localeDateStringFromUTCString(appointment.when)}</time></td>
 			<td><span style="color: {appointment.free_capacity ? 'initial' : 'red'}">{appointment.free_capacity}</span></td>
 			{#if appointment.location}
 				<td>{appointment.location}</td>

@@ -2,18 +2,6 @@
     box-sizing: border-box;
 }
 
-:root {
-    color-scheme: light dark;
-
-    &:has(option[value="light"]:checked) {
-        color-scheme: light;
-    }
-
-    &:has(option[value="dark"]:checked) {
-        color-scheme: dark;
-    }
-}
-
 body {
     line-height: 1.2;
     -webkit-font-smoothing: antialiased;

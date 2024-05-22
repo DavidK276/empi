@@ -92,3 +92,15 @@ export function getCurrentAcadYear() {
 
 	return `${startYear}/${(startYear + 1) % 100}`;
 }
+
+export function localeDateStringFromUTCString(utcString: string) {
+	return new Date(utcString)
+			.toLocaleString(undefined, {
+				weekday: "long",
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+				hour: "numeric",
+				minute: "numeric"
+			});
+}
