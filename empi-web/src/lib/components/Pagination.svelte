@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { PAGE_SIZE } from '$lib/constants';
-	import MaterialSymbolsArrowBack from '~icons/material-symbols/arrow-back';
-	import MaterialSymbolsArrowForward from '~icons/material-symbols/arrow-forward';
+	import MaterialSymbolsArrowBack from 'virtual:icons/material-symbols/arrow-back';
+	import MaterialSymbolsArrowForward from 'virtual:icons/material-symbols/arrow-forward';
 
 	export let count: number;
 	$: limit = Number.parseInt($page.url.searchParams.get('limit')!) || PAGE_SIZE;
