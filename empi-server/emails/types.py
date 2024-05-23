@@ -23,7 +23,7 @@ class PublicSignupEmail(BaseEmail):
     subject = "Prihláška na výskum"
 
     def __new__(cls, participation_nanoid: str, recipients: Sequence[str]):
-        signup_link = settings.PUBLIC_URL + f"/participation/{participation_nanoid}"
+        signup_link = settings.EMPI_PUBLIC_URL + f"/participation/{participation_nanoid}"
         kwargs = {
             "recipients": recipients,
             "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
@@ -37,7 +37,7 @@ class ResearchCreatedEmail(BaseEmail):
     subject = "Link na výskum"
 
     def __new__(cls, research: Research):
-        research_admin_url = settings.PUBLIC_URL + f"/research/{research.nanoid}/"
+        research_admin_url = settings.EMPI_PUBLIC_URL + f"/research/{research.nanoid}/"
         kwargs = {
             "research": research,
             "recipents": research.email_recipients,

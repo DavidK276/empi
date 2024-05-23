@@ -29,10 +29,11 @@ RUN useradd -ms /bin/bash appuser
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONFAULTHANDLER 1
 ENV PATH=/home/appuser/.local/bin:$PATH
+ENV EMPI_DOCKER 1
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt update \
-    && apt install -y caddy xz-utils libmagic1 patch \
+    && apt install -y caddy xz-utils libmagic1 \
     && apt -y upgrade \
     && apt -y clean \
     && rm -rf /var/lib/apt/lists/*
@@ -57,25 +58,18 @@ RUN poetry install ${POETRY_INSTALL_ARGS} --no-root
 COPY --chown=appuser empi-server ./empi-server
 RUN poetry install ${POETRY_INSTALL_ARGS}
 
-WORKDIR /app/empi-server
-COPY --chown=appuser docker/patches/settings.py.patch ./
-RUN patch empi_server/settings.py settings.py.patch
-
-RUN poetry run python manage.py collectstatic --no-input
+RUN poetry run ./empi-server/manage.py collectstatic --no-input
 
 CMD ["/init"]
 
-FROM node:22-bookworm-slim AS web
+FROM node:22-alpine AS web
 
 RUN mkdir /app
-RUN useradd -ms /bin/bash appuser
-RUN chown -R appuser:appuser /app
-USER appuser
 RUN mkdir /app/empi-web
 
 WORKDIR /app/empi-web
 
-COPY --from=web-build --chown=appuser /build/package*.json ./
+COPY --from=web-build /build/package*.json ./
 
 RUN npm ci --production --ignore-scripts
 RUN npm audit fix

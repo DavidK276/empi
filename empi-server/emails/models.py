@@ -49,14 +49,14 @@ class Email(models.Model):
         message = EmailMultiAlternatives(
             subject=self.subject,
             body=text,
-            from_email=settings.FROM_EMAIL,
+            from_email=settings.EMPI_FROM_EMAIL,
             to=[],
             bcc=recipients or self.recipients,
             connection=None,
             attachments=attachments,
             headers={},
             cc=[],
-            reply_to=settings.REPLY_TO_EMAILS,
+            reply_to=settings.EMPI_REPLY_TO_EMAILS,
         )
         message.attach_alternative(html, "text/html")
         message.send()

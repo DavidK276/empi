@@ -1,0 +1,17 @@
+services:
+  api:
+    command: "/app/empi-server/start_dev.sh"
+    environment:
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+      WEB_URL: "http://localhost:3000"
+      FROM_EMAIL: "noreply@example.com"
+      REPLY_TO_EMAILS: "admin@example.com"
+      DEBUG: "1"
+  web:
+    build:
+      args:
+        ORIGIN: "http://localhost:3000"
+    environment:
+      INT_SERVER_URL: "http://api:8000/"
+      EXT_SERVER_URL: "http://127.0.0.1:8000/"
+      COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long

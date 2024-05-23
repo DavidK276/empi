@@ -23,20 +23,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-bn7i4a#e6&%@jrs!y5%n(et7c!d*f1!%e7i7@9h$p4v)jl&$$^"
 try:
-    with open("~/.django-secret", "r") as f:
+    with open(BASE_DIR / ".django-secret", "r") as f:
         SECRET_KEY = f.read()
 except FileNotFoundError:
-    pass
+    print(
+        "\033[93m" + f"Unable to open {BASE_DIR / ".django_secret"}, SECRET_KEY will use an insecure value." + "\033[0m"
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "1") == "1"
+if DEBUG:
+    print("\033[93m" + "Django debug is enabled. Remember to not run with debug turned on in production." + "\033[0m")
 
 ALLOWED_HOSTS = []
 hosts = os.environ.get("ALLOWED_HOSTS", "").strip('"')
 if hosts:
     ALLOWED_HOSTS = hosts.split(",")
+if os.environ.get("EMPI_DOCKER", ""):
+    ALLOWED_HOSTS += ["api"]
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = ("http://localhost:5173",)
 
 # Application definition
@@ -89,12 +95,24 @@ WSGI_APPLICATION = "empi_server.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if os.environ.get("EMPI_DOCKER", ""):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("DB_NAME", "postgres"),
+            "USER": os.environ.get("DB_USER", "postgres"),
+            "PASSWORD": os.environ.get("DB_PASSWORD", "postgres"),
+            "HOST": os.environ.get("DB_HOST", "db"),
+            "PORT": os.environ.get("DB_PORT", "5432"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -141,6 +159,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR.parent / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -152,7 +172,7 @@ AUTH_USER_MODEL = "users.EmpiUser"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # non-Django settings
-PUBLIC_URL = (os.environ.get("PUBLIC_URL") or "http://localhost:5173").strip("/")
+EMPI_PUBLIC_URL = (os.environ.get("WEB_URL") or "http://localhost:5173").strip("/")
 
-FROM_EMAIL = os.environ.get("FROM_EMAIL") or "noreply@example.com"
-REPLY_TO_EMAILS = (os.environ.get("REPLY_TO_EMAILS") or "admin@example.com").strip('"').split(",")
+EMPI_FROM_EMAIL = os.environ.get("FROM_EMAIL") or "noreply@example.com"
+EMPI_REPLY_TO_EMAILS = (os.environ.get("REPLY_TO_EMAILS") or "admin@example.com").strip('"').split(",")
