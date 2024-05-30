@@ -40,7 +40,7 @@ class ResearchCreatedEmail(BaseEmail):
         research_admin_url = settings.EMPI_PUBLIC_URL + f"/research/{research.nanoid}/"
         kwargs = {
             "research": research,
-            "recipents": research.email_recipients,
+            "recipients": research.email_recipients,
             "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
             "is_finalized": True,
         }
@@ -55,11 +55,11 @@ class NewSignupEmail(BaseEmail):
         research = appointment.research
         kwargs = {
             "research": research,
-            "recipents": research.email_recipients,
+            "recipients": research.email_recipients,
             "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
             "is_finalized": True,
         }
-        return super().__new__(cls, {"appointment": appointment}, **kwargs)
+        return super().__new__(cls, {"appointment": appointment.serialize()}, **kwargs)
 
 
 class CancelSignupEmail(BaseEmail):
@@ -70,8 +70,8 @@ class CancelSignupEmail(BaseEmail):
         research = appointment.research
         kwargs = {
             "research": research,
-            "recipents": research.email_recipients,
+            "recipients": research.email_recipients,
             "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
             "is_finalized": True,
         }
-        return super().__new__(cls, {"appointment": appointment}, **kwargs)
+        return super().__new__(cls, {"appointment": appointment.serialize()}, **kwargs)

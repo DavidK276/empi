@@ -26,8 +26,8 @@ class Email(models.Model):
     subject = models.CharField(max_length=78, verbose_name="predmet")
     template_name = models.CharField(max_length=255, verbose_name="šablóna")
     context = models.JSONField(verbose_name="kontextové dáta")
-    send_when = models.DateTimeField(verbose_name="dátum a čas odoslania", blank=True, null=True)
-    is_finalized = models.BooleanField(verbose_name="je publikovaný", null=False, default=False)
+    send_when = models.DateTimeField(verbose_name="dátum a čas odoslania")
+    is_finalized = models.BooleanField(verbose_name="je publikovaný", default=False)
     is_sent = models.BooleanField(verbose_name="odoslaný", default=False, editable=False)
 
     @classmethod
@@ -39,7 +39,7 @@ class Email(models.Model):
     def _get_context(self):
         if self.research is None:
             return self.context
-        return self.context | {"research": self.research}
+        return self.context | {"research": self.research.serialize()}
 
     def send(self, recipients: Optional[Sequence[str]] = None):
         html = render_to_string(self.template_name, context=self._get_context())

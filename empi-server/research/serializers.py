@@ -30,12 +30,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class ParticipationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Participation
-        fields = ["id", "appointment", "has_participated"]
+        fields = ["id", "appointment", "is_confirmed"]
 
 
 class ParticipationUpdateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    has_participated = serializers.BooleanField(default=False)
+    is_confirmed = serializers.BooleanField(default=False)
 
 
 class AnonymousParticipationSerializer(serializers.Serializer):
