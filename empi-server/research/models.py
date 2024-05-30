@@ -1,16 +1,16 @@
 import os
-from collections.abc import Sequence
+from collections.abc import Sequence, Mapping
 from typing import Self, Optional
 
 from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
-from Crypto.Random import get_random_bytes
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q, Manager
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.forms import model_to_dict
 from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
@@ -44,6 +44,9 @@ class Research(models.Model):
 
     def __str__(self):
         return self.name
+
+    def serialize(self) -> Mapping:
+        return model_to_dict(self, fields=['name', 'points', 'info_url'])
 
     def change_password(self, old_raw_password, new_raw_password):
         _, encrypted_key = self.get_keypair()
@@ -138,6 +141,11 @@ class Appointment(models.Model):
     def free_capacity(self) -> int:
         return self.capacity - Participation.objects.filter(appointment=self).count()
 
+    def serialize(self) -> Mapping:
+        d = model_to_dict(self)
+        d['when'] = self.when.isoformat(timespec='minutes')
+        return d
+
 
 class EncryptedToken(models.Model):
     __AES_KEY_LENGTH = 16
@@ -148,24 +156,20 @@ class EncryptedToken(models.Model):
 
     @classmethod
     def new(cls, token: str, pubkeys: Sequence[RsaKey]) -> Self:
-        session_key = get_random_bytes(cls.__AES_KEY_LENGTH)
-        enc_session_keys = []
+        token_bytes = token.encode("UTF-8")
+        enc_keys: list[bytes] = []
         for pubkey in pubkeys:
             cipher_rsa = PKCS1_OAEP.new(pubkey)
-            enc_session_keys.append(cipher_rsa.encrypt(session_key))
+            enc_keys.append(cipher_rsa.encrypt(token_bytes))
 
-        cipher_aes = AES.new(session_key, AES.MODE_EAX)
-        ciphertext, tag = cipher_aes.encrypt_and_digest(token.encode("utf-8"))
-
-        del session_key  # the session key is sensitive, so delete it immediately
         return cls(
-            session_keys=enc_session_keys,
-            nonce=cipher_aes.nonce,
-            tag=tag,
-            ciphertext=ciphertext,
+            session_keys=enc_keys,
+            nonce=b'',
+            tag=b'',
+            ciphertext=b'',
         )
 
-    def decrypt(self, private_key: RsaKey) -> Optional[str]:
+    def _old_decrypt(self, private_key: RsaKey) -> Optional[str]:
         cipher_rsa = PKCS1_OAEP.new(private_key)
         for enc_key in self.session_keys:
             try:
@@ -185,9 +189,21 @@ class EncryptedToken(models.Model):
             return token
         return None
 
+    def decrypt(self, private_key: RsaKey) -> Optional[str]:
+        if self.tag:
+            return self._old_decrypt(private_key)
+
+        cipher_rsa = PKCS1_OAEP.new(private_key)
+        for enc_token in self.session_keys:
+            try:
+                token_bytes = cipher_rsa.decrypt(enc_token)
+            except ValueError:
+                continue
+            return token_bytes.decode("UTF-8")
+
 
 class Participation(models.Model):
     nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
-    has_participated = models.BooleanField(default=False, blank=True, null=False)
+    is_confirmed = models.BooleanField(default=False, blank=True, null=False)
     encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=True)
