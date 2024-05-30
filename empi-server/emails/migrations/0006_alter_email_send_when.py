@@ -7,14 +7,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('emails', '0005_alter_email_research'),
+        ("emails", "0005_alter_email_research"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='email',
-            name='send_when',
-            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name='dátum a čas odoslania'),
+            model_name="email",
+            name="send_when",
+            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name="dátum a čas odoslania"),
             preserve_default=False,
         ),
     ]

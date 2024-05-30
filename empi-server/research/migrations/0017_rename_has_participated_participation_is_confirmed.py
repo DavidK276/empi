@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0016_remove_research_uuid'),
+        ("research", "0016_remove_research_uuid"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='participation',
-            old_name='has_participated',
-            new_name='is_confirmed',
+            model_name="participation",
+            old_name="has_participated",
+            new_name="is_confirmed",
         ),
     ]

@@ -46,7 +46,7 @@ class Research(models.Model):
         return self.name
 
     def serialize(self) -> Mapping:
-        return model_to_dict(self, fields=['name', 'points', 'info_url'])
+        return model_to_dict(self, fields=["name", "points", "info_url"])
 
     def change_password(self, old_raw_password, new_raw_password):
         _, encrypted_key = self.get_keypair()
@@ -143,7 +143,7 @@ class Appointment(models.Model):
 
     def serialize(self) -> Mapping:
         d = model_to_dict(self)
-        d['when'] = self.when.isoformat(timespec='minutes')
+        d["when"] = self.when.isoformat(timespec="minutes")
         return d
 
 
@@ -164,9 +164,9 @@ class EncryptedToken(models.Model):
 
         return cls(
             session_keys=enc_keys,
-            nonce=b'',
-            tag=b'',
-            ciphertext=b'',
+            nonce=b"",
+            tag=b"",
+            ciphertext=b"",
         )
 
     def _old_decrypt(self, private_key: RsaKey) -> Optional[str]:
