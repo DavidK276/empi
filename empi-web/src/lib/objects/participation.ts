@@ -2,6 +2,6 @@ export class Participation {
 	id!: number;
 	appointment?: number;
 	research!: number;
-	has_participated!: boolean;
+	is_confirmed!: boolean;
 	token?: string;
 }
