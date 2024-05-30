@@ -245,10 +245,10 @@ class ParticipationViewSet(
 
         serializer = ParticipationUpdateSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
-        data = {data["id"]: data["has_participated"] for data in serializer.data}
+        data = {data["id"]: data["is_confirmed"] for data in serializer.data}
         participations = Participation.objects.filter(appointment__research=research).filter(pk__in=data.keys())
         for participation in participations:
-            participation.has_participated = data[participation.pk]
+            participation.is_confirmed = data[participation.pk]
             participation.save()
         return Response(status.HTTP_200_OK)
 

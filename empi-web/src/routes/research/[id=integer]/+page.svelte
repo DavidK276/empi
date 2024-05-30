@@ -25,7 +25,7 @@
 		const response = await fetch('/server/participations/user', { method: 'POST', body: formData });
 		const responseJSON = await response.json() as Array<{
 			appointment: number,
-			has_participated: boolean,
+			is_confirmed: boolean,
 			research: number
 		}>;
 		const participationMap = new Map();
@@ -33,7 +33,7 @@
 			if (participation.research === data.research?.id) {
 				participationMap.set(participation.appointment, participation);
 				can_signup = false;
-				has_participated ||= participation.has_participated;
+				is_confirmed ||= participation.is_confirmed;
 			}
 		}
 		participations.set(participationMap);
@@ -51,7 +51,7 @@
 		await invalidateAll();
 		await getSignups();
 		can_signup = true;
-		has_participated = false;
+		is_confirmed = false;
 	}
 
 	onMount(() => {
@@ -62,14 +62,14 @@
 
 	let participations: Writable<Map<number, Participation>> = writable();
 	let can_signup = !$page.data.user?.is_staff;
-	let has_participated = false;
+	let is_confirmed = false;
 </script>
 {#if $page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
 <div class="row m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
-	{#if has_participated}
+	{#if is_confirmed}
 		<p class="message">
 			<MaterialSymbolsInfoOutline width="24"
 			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
@@ -79,7 +79,7 @@
 </p>
 {#each data.appointments as appointment, i}
 	{@const participation = $participations?.get(appointment.id)}
-	{@const is_signedup = participation?.has_participated === false}
+	{@const is_signedup = participation?.is_confirmed === false}
 	<div class="box">
 		<div class="row ver-center">
 			<h2>{$t('research.appointment_number')} {i + 1}</h2>

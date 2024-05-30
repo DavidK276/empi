@@ -18,7 +18,7 @@
 		const response = await fetch('/server/participations/user', { method: 'POST', body: formData });
 		const responseJSON = await response.json() as Array<{
 			appointment: number,
-			has_participated: boolean,
+			is_confirmed: boolean,
 			research: number
 		}>;
 		const participationMap: Participation[] = [];
@@ -53,7 +53,7 @@
 					{:else}
 						<td style="text-align: center">?</td>
 					{/if}
-					{#if participation.has_participated}
+					{#if participation.is_confirmed}
 						<td style="text-align: center">{$t('research.yes')} ✅</td>
 					{:else}
 						<td style="text-align: center">{$t('research.notyet')}</td>

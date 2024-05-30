@@ -19,7 +19,7 @@
 		const response = await fetch('/server/participations/user', { method: 'POST', body: formData });
 		const responseJSON = await response.json() as Array<{
 			appointment: number,
-			has_participated: boolean,
+			is_confirmed: boolean,
 			research: number
 		}>;
 

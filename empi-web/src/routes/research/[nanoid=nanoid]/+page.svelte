@@ -201,10 +201,10 @@
 									<form style="display: flex; justify-content: center;" class="participation-form">
 										<button style="font-weight: 700; text-align: center">{participation.token}</button>
 										<input type="hidden" name="id" value={participation.id}>
-										{#if participation.has_participated}
-											<input type="checkbox" name="has_participated" checked style="margin: 0 var(--sm)" value="true">
+										{#if participation.is_confirmed}
+											<input type="checkbox" name="is_confirmed" checked style="margin: 0 var(--sm)" value="true">
 										{:else}
-											<input type="checkbox" name="has_participated" style="margin: 0 var(--sm)" value="true">
+											<input type="checkbox" name="is_confirmed" style="margin: 0 var(--sm)" value="true">
 										{/if}
 									</form>
 								</div>
