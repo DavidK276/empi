@@ -27,6 +27,8 @@ services:
       target: web
     ports:
       - "3000:3000"
+    environment:
+      INT_SERVER_URL: "http://api:8000/"
 
 volumes:
   postgres_data:
