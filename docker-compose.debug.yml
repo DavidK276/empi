@@ -7,6 +7,9 @@ services:
       FROM_EMAIL: "noreply@example.com"
       REPLY_TO_EMAILS: "admin@example.com"
       DEBUG: "1"
+      DJANGO_SUPERUSER_USERNAME: ""
+      DJANGO_SUPERUSER_EMAIL: ""
+      DJANGO_SUPERUSER_PASSWORD: ""
   web:
     build:
       args:
