@@ -42,11 +42,10 @@ class ResearchUserViewSet(
         methods=[HTTPMethod.GET],
         serializer_class=AppointmentSerializer,
     )
-    @transaction.atomic
     def appointments(self, request, id=None):
         research: Research = self.get_object()
 
-        appointments = Appointment.objects.filter(research=research)
+        appointments = Appointment.objects.filter(research=research).order_by("when")
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
 
