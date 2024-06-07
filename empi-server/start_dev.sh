@@ -14,4 +14,5 @@ set -euo pipefail
 
 cd /app/empi-server
 poetry run ./manage.py migrate
+poetry run ./manage.py createinitialuser --noinput
 exec poetry run ./manage.py runserver 0.0.0.0:8000
