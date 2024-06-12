@@ -36,6 +36,13 @@ class PasswordSerializer(serializers.Serializer):
     )
 
 
+class PasswordResetSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
+    passphrase = serializers.CharField(
+        min_length=32, max_length=32, write_only=True, default=None, style={"input_type": "password"}
+    )
+
+
 class AttributeValueSimpleSerializer(serializers.BaseSerializer):
 
     def to_internal_value(self, data):

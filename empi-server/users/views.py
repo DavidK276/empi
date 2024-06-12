@@ -1,4 +1,5 @@
-from django.contrib.auth.models import AnonymousUser
+import datetime
+
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -9,13 +10,13 @@ from rest_framework.response import Response
 from rest_framework.routers import reverse
 
 from research.models import Research
-from .models import EmpiUser, Participant, Attribute, AttributeValue
+from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey
 from .permissions import *
 from .serializers import (
     UserSerializer,
     PasswordSerializer,
     ParticipantSerializer,
-    AttributeSerializer,
+    AttributeSerializer, PasswordResetSerializer,
 )
 
 
@@ -32,7 +33,7 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def change_password(self, request, pk=None):
         user: EmpiUser = self.get_object()
-        if isinstance(request.user, AnonymousUser) or request.user != self.get_object():
+        if request.user != self.get_object():
             raise exceptions.AuthenticationFailed("only changing own password is allowed")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -47,12 +48,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        name="Reset password",
+        name="Change password by admin",
         methods=[HTTPMethod.POST],
         serializer_class=PasswordSerializer,
         permission_classes=[IsAdminUser],
     )
-    def reset_password(self, request, pk=None):
+    def change_password_admin(self, request, pk=None):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -60,23 +61,58 @@ class UserViewSet(viewsets.ModelViewSet):
         admin: EmpiUser = request.user
 
         admin_password = serializer.validated_data["current_password"]
-        new_user_password = serializer.validated_data["new_passpword"]
+        new_user_password = serializer.validated_data["new_password"]
 
-        user.reset_password(admin, admin_password, new_user_password)
+        user.change_password_admin(admin, admin_password, new_user_password)
+
+    @action(
+        detail=True,
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordSerializer,
+        permission_classes=[IsAdminUser]
+    )
+    def start_password_reset(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user: EmpiUser = self.get_object()
+        admin: EmpiUser = request.user
+
+        admin_password = serializer.validated_data["current_password"]
+        user.make_reset_key(admin, admin_password)
+
+    @action(
+        detail=True,
+        methods=[HTTPMethod.POST],
+        serializer_class=PasswordResetSerializer,
+        permission_classes=[AllowAny]
+    )
+    def complete_password_reset(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user: EmpiUser = self.get_object()
+        passphrase = serializer.validated_data["passphrase"]
+        new_password = serializer.validated_data["new_password"]
+
+        reset_key = get_object_or_404(ResetKey, user=user.pk)
+        if datetime.datetime.now() > reset_key.valid_until:
+            reset_key.delete()
+            _ = get_object_or_404(ResetKey, user=user.pk)
+
+        user.reset_password(reset_key, passphrase, new_password)
 
     @action(
         detail=False,
         name="Check password",
         methods=[HTTPMethod.POST],
         serializer_class=PasswordSerializer,
-        permission_classes=[AllowAny],
+        permission_classes=[IsAuthenticated],
     )
     def check_password(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if isinstance(request.user, AnonymousUser):
-            return exceptions.NotAuthenticated()
         user: EmpiUser = request.user
         if user.check_password(request.data["current_password"]):
             return Response(status=status.HTTP_200_OK)

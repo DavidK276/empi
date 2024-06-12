@@ -178,7 +178,7 @@ class EncryptedToken(models.Model):
                 continue
             if len(session_key) != self.__AES_KEY_LENGTH:  # anything else means decryption failed
                 continue
-            cipher_aes = AES.new(session_key, AES.MODE_EAX, self.nonce)
+            cipher_aes = AES.new(session_key, AES.MODE_EAX, nonce=self.nonce)
             try:
                 token_data = cipher_aes.decrypt_and_verify(self.ciphertext, self.tag)
             except ValueError:
