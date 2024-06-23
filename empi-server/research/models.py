@@ -1,32 +1,89 @@
-import os
+import datetime
 from collections.abc import Sequence, Mapping
 from typing import Self, Optional
 
 from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
+from Crypto.Random import get_random_bytes
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q, Manager
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
 from django.forms import model_to_dict
 from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
-from users import models as user_models
+from users.models import EmpiUser, AttributeValue
 from .fields import SeparatedBinaryField
 from .utils.constants import *
-from .utils.keys import export_privkey, get_keydir
+from utils.keys import export_privkey, export_privkey_plaintext
 from .utils.misc import generate_nanoid
 
 
 class ResearchManager(Manager):
 
+    @staticmethod
+    def init_keys(password: str):
+        new_user_privkey = RSA.generate(2048)
+        privkey = export_privkey(new_user_privkey, password)
+        pubkey = new_user_privkey.publickey().export_key(format="PEM")
+
+        session_key = get_random_bytes(16)
+        nonce = get_random_bytes(16)
+        cipher_aes = AES.new(session_key, AES.MODE_EAX, nonce=nonce, mac_len=16)
+        ciphertext, tag = cipher_aes.encrypt_and_digest(export_privkey_plaintext(new_user_privkey))
+
+        backup_privkey = BackupKey(nonce=nonce, tag=tag, backup_key=ciphertext)
+        backup_privkey.save()
+
+        for admin in EmpiUser.users.filter(is_staff=True):
+            admin_pubkey = RSA.import_key(admin.pubkey)
+            cipher_rsa = PKCS1_OAEP.new(admin_pubkey)
+            enc_session_key = EncryptedSessionKey(
+                admin=admin,
+                backup_key=backup_privkey,
+                data=cipher_rsa.encrypt(session_key)
+            )
+            enc_session_key.save()
+        return {
+            "privkey": privkey,
+            "pubkey": pubkey,
+            "backup_privkey": backup_privkey
+        }
+
+    def get_queryset(self):
+        return super().get_queryset().defer("pubkey", "privkey", "backup_privkey")
+
     def create(self, **kwargs):
-        research: Research = super().create(**kwargs)
-        research.new_key()
-        return research
+        return super().create(**(kwargs | self.init_keys("unprotected")))
+
+
+class EncryptedSessionKey(models.Model):
+    admin = models.ForeignKey('Research', on_delete=models.CASCADE)
+    backup_key = models.ForeignKey('BackupKey', on_delete=models.CASCADE)
+
+    data = models.BinaryField(max_length=1024)
+
+
+class BackupKey(models.Model):
+    nonce = models.BinaryField(max_length=16)
+    tag = models.BinaryField(max_length=16)
+    backup_key = models.BinaryField(max_length=4096)
+
+
+class ResetKey(models.Model):
+    user = models.OneToOneField('Research', on_delete=models.CASCADE)
+    valid_until = models.DateTimeField()
+    backup_key = models.BinaryField(max_length=4096)
+
+    @classmethod
+    def new(cls, user, backup_key: bytes):
+        try:
+            ResetKey.objects.get(user=user.pk).delete()
+        except ResetKey.DoesNotExist:
+            pass
+        valid_until = datetime.datetime.now() + datetime.timedelta(hours=12)
+        return cls(valid_until=valid_until, backup_key=backup_key)
 
 
 class Research(models.Model):
@@ -37,10 +94,14 @@ class Research(models.Model):
     info_url = models.URLField()
     points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    chosen_attribute_values = models.ManyToManyField(user_models.AttributeValue, blank=True)
+    chosen_attribute_values = models.ManyToManyField(AttributeValue, blank=True)
     is_protected = models.BooleanField(default=False, editable=False)
     is_published = models.BooleanField(default=False, null=False)
     email_recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
+
+    pubkey = models.TextField(max_length=1024)
+    privkey = models.BinaryField(max_length=4096)
+    backup_privkey = models.ForeignKey(BackupKey, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -52,51 +113,20 @@ class Research(models.Model):
         _, encrypted_key = self.get_keypair()
         try:
             private_key = RSA.import_key(encrypted_key, old_raw_password if self.is_protected else "unprotected")
-        except ValueError:
+        except (ValueError, IndexError, TypeError):
             raise exceptions.PermissionDenied("invalid current password")
         encrypted_key = export_privkey(private_key, new_raw_password)
 
-        key_dir = get_keydir(self.name)
-        with open(key_dir / "privatekey.der", "wb") as keyfile:
-            keyfile.write(encrypted_key)
-        if not self.is_protected:
-            self.is_protected = True
-            self.save()
-
-    def new_key(self):
-        key = RSA.generate(2048)
-        encrypted_key = export_privkey(key, "unprotected")
-
-        key_dir = get_keydir(self.name)
-        key_dir.mkdir(mode=0o700, parents=True)
-        with open(key_dir / "privatekey.der", "wb") as keyfile:
-            keyfile.write(encrypted_key)
-
-        public_key = key.publickey().export_key(format="PEM")
-        with open(key_dir / "receiver.pem", "wb") as keyfile:
-            keyfile.write(public_key)
+        self.privkey = encrypted_key
+        self.save()
 
     def get_keypair(self) -> (bytes, bytes):
         """
         Retrieves the keypair for this user.
         :return: a tuple of the exported public key and the exported private key
         """
-        key_dir = get_keydir(self.name)
 
-        with open(key_dir / "receiver.pem", "rb") as keyfile:
-            public_key = keyfile.read()
-        with open(key_dir / "privatekey.der", "rb") as keyfile:
-            private_key = keyfile.read()
-        return public_key, private_key
-
-
-@receiver(post_delete, sender=Research)
-def keys_delete(sender, instance, **kwargs):
-    key_dir = get_keydir(instance.name)
-    os.unlink(key_dir / "receiver.pem")
-    os.unlink(key_dir / "privatekey.der")
-    if len(os.listdir(key_dir)) == 0:
-        key_dir.rmdir()
+        return self.pubkey, self.privkey
 
 
 class Appointment(models.Model):

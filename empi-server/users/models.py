@@ -12,7 +12,7 @@ from django.db import models
 from nanoid import generate
 from rest_framework import exceptions
 
-from .utils.keys import export_privkey, export_privkey_plaintext
+from utils.keys import export_privkey, export_privkey_plaintext
 
 
 class EmpiUserManager(UserManager):
