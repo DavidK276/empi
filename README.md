@@ -38,4 +38,4 @@ emaily, napr. `admin@example.com`
 # Vytvorenie prvého konta vyučujúceho
 
 Prvé konto pre vyučujúceho sa vytvorí automaticky, pokiaľ budú pre kontajner `api` nastavené hodnoty pre premenné
-prostredia `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL`, `DJANGO_SUPERUSER_PASSWORD`
+prostredia `DJANGO_SUPERUSER_EMAIL`, `DJANGO_SUPERUSER_PASSWORD`

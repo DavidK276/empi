@@ -3,7 +3,7 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework import permissions
 from rest_framework.response import Response
 
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from .serializers import AuthTokenSerializer
 from rest_framework.serializers import ValidationError
 
 

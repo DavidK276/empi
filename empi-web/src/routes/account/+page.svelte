@@ -46,11 +46,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div style="width: 50%">
-				<label for="username">{$t('common.username')}</label>
-				<input type="text" id="username" readonly value={user?.username}>
-			</div>
-			<div style="width: 50%">
+			<div style="width: 100%">
 				<label for="email">Email</label>
 				<input type="email" id="email" name="email" value={user?.email}>
 			</div>

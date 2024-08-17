@@ -39,9 +39,6 @@
 					submitting = false;
 				}
 			}}>
-	<MyLabel forId="username" labelText={$t('common.username')} hintText={$t('common.username_hint')}
-	         icon="info"></MyLabel>
-	<input type="text" name="username" id="username" required pattern="^[a-zA-Z0-9]+$" minlength="3">
 	<label for="email">Email</label>
 	<input type="email" name="email" id="email" required>
 	<p class="error-msg">{$t('common.username_wrong')}</p>

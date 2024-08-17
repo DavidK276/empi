@@ -8,7 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = models.EmpiUser
         fields = [
             "id",
-            "username",
             "first_name",
             "last_name",
             "email",
@@ -27,6 +26,11 @@ class UserSerializer(serializers.ModelSerializer):
                 raise exceptions.PermissionDenied("Creating admin users from the API is forbidden.")
 
         return self.Meta.model.users.create_user(**validated_data)
+
+    def update(self, instance, validated_data):
+        if "password" in validated_data:
+            validated_data.pop("password")
+        return super().update(instance, validated_data)
 
 
 class PasswordSerializer(serializers.Serializer):

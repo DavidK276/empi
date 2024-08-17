@@ -7,7 +7,11 @@ from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
 from Crypto.Random import get_random_bytes
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser, UserManager, PermissionsMixin
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 from nanoid import generate
 from rest_framework import exceptions
@@ -46,18 +50,41 @@ class EmpiUserManager(UserManager):
             "backup_privkey": backup_privkey
         }
 
+    def _create_user(self, email, password, **extra_fields):
+        """
+        Create and save a user with the given username, email, and password.
+        """
+        if not email:
+            raise ValueError("The email must be set")
+        email = self.normalize_email(email)
+
+        user = self.model(email=email, **extra_fields)
+        user.password = make_password(password)
+        user.save(using=self._db)
+        return user
+
     def get_queryset(self):
         return super().get_queryset().defer("pubkey", "privkey", "backup_privkey")
 
-    def create_superuser(self, username, email=None, password=None, **extra_fields):
+    def create_superuser(self, email=None, password=None, **extra_fields):
         if password is not None:
             extra_fields |= self.init_keys(password)
-        return super().create_superuser(username, email, password, **extra_fields)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-    def create_user(self, username, email=None, password=None, **extra_fields):
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        return self._create_user(email, password, **extra_fields)
+
+    def create_user(self, email=None, password=None, **extra_fields):
         if password is not None:
             extra_fields |= self.init_keys(password)
-        return super().create_user(username, email, password, **extra_fields)
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(email, password, **extra_fields)
 
 
 class EncryptedSessionKey(models.Model):
@@ -88,14 +115,37 @@ class ResetKey(models.Model):
         return cls(valid_until=valid_until, backup_key=backup_key)
 
 
-class EmpiUser(AbstractUser):
+class EmpiUser(AbstractBaseUser, PermissionsMixin):
     users = EmpiUserManager()
 
-    pubkey = models.TextField(max_length=1024)
+    first_name = models.CharField(_("first name"), max_length=150, blank=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    email = models.EmailField(_("email address"), blank=True, unique=True)
+    is_staff = models.BooleanField(
+        _("staff status"),
+        default=False,
+        help_text=_("Designates whether the user can log into this admin site."),
+    )
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            "Designates whether this user should be treated as active. "
+            "Unselect this instead of deleting accounts."
+        ),
+    )
+    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+
+    pubkey = models.BinaryField(max_length=1024)
     privkey = models.BinaryField(max_length=4096)
     backup_privkey = models.ForeignKey(BackupKey, on_delete=models.CASCADE)
 
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "email"
+
     class Meta:
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
         default_manager_name = "users"
 
     def get_keypair(self) -> (bytes, bytes):
