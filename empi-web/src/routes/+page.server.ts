@@ -13,14 +13,14 @@ export const actions = {
 		delete locals.user;
 		delete locals.participant;
 
+		const responseJSON = await response.json();
 		if (response.ok) {
-			const responseJSON = await response.json();
 			const expires = new Date(Date.parse(responseJSON.expiry));
 			cookies.set(consts.TOKEN_COOKIE, responseJSON.token, { path: '/', httpOnly: true, expires });
 			return { login: true };
 		}
 		if (response.status === 401) {
-			return fail(401, { login: false });
+			return fail(401, { login: false, message: responseJSON });
 		}
 		throw error(response.status);
 	},
