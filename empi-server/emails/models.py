@@ -15,6 +15,8 @@ from django.db.models import Q
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.template.loader import render_to_string
+from django.utils import timezone
+
 from empi_server.fields import SeparatedValuesField
 from research import models as research_models
 from html2text import html2text
@@ -72,13 +74,13 @@ class Attachment(models.Model):
     file = models.FileField(verbose_name="súbor", upload_to="attachment/")
     email = models.ForeignKey(Email, on_delete=models.CASCADE)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        now = datetime.now()
+    def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
+        now = timezone.now()
         year, month = now.year, now.month
         directory = self.file.file.value.parent
         destination = directory / str(year) / str(month)
         self.file.file.value = destination
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, force_insert, force_update, using, update_fields)
 
     def get_mimebase(self):
         maintype, subtype = magic.from_file(self.file.path, mime=True).split("/", maxsplit=1)

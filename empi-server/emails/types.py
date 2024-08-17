@@ -1,8 +1,7 @@
-import zoneinfo
 from collections.abc import Sequence
-from datetime import datetime
 
 from django.conf import settings
+from django.utils import timezone
 
 from emails.models import Email
 from research.models import Research, Appointment
@@ -26,7 +25,7 @@ class PublicSignupEmail(BaseEmail):
         signup_link = settings.EMPI_PUBLIC_URL + f"/participation/{participation_nanoid}"
         kwargs = {
             "recipients": recipients,
-            "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
+            "send_when": timezone.now(),
             "is_finalized": True,
         }
         return super().__new__(cls, {"signup_link": signup_link}, **kwargs)
@@ -41,7 +40,7 @@ class ResearchCreatedEmail(BaseEmail):
         kwargs = {
             "research": research,
             "recipients": research.email_recipients,
-            "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
+            "send_when": timezone.now(),
             "is_finalized": True,
         }
         return super().__new__(cls, {"research_admin_url": research_admin_url}, **kwargs)
@@ -56,7 +55,7 @@ class NewSignupEmail(BaseEmail):
         kwargs = {
             "research": research,
             "recipients": research.email_recipients,
-            "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
+            "send_when": timezone.now(),
             "is_finalized": True,
         }
         return super().__new__(cls, {"appointment": appointment.serialize()}, **kwargs)
@@ -71,7 +70,21 @@ class CancelSignupEmail(BaseEmail):
         kwargs = {
             "research": research,
             "recipients": research.email_recipients,
-            "send_when": datetime.now(tz=zoneinfo.ZoneInfo(settings.TIME_ZONE)),
+            "send_when": timezone.now(),
             "is_finalized": True,
         }
         return super().__new__(cls, {"appointment": appointment.serialize()}, **kwargs)
+
+
+class PasswordResetEmail(BaseEmail):
+    template_name = "password_reset.html"
+    subject = "Link na obnovu hesla"
+
+    def __new__(cls, passphrase: str, recipients: Sequence[str]):
+        password_reset_url = settings.EMPI_PUBLIC_URL + f"/account/password-reset/{passphrase}/"
+        kwargs = {
+            "recipients": recipients,
+            "send_when": timezone.now(),
+            "is_finalized": True,
+        }
+        return super().__new__(cls, {"password_reset_url": password_reset_url}, **kwargs)

@@ -3,12 +3,15 @@ import datetime
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.response import Response
 from rest_framework.routers import reverse
+from rest_framework.status import HTTP_200_OK
 
+from emails.types import PasswordResetEmail
 from research.models import Research
 from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey
 from .permissions import *
@@ -65,6 +68,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
         user.change_password_admin(admin, admin_password, new_user_password)
 
+        return Response(status=status.HTTP_200_OK)
+
     @action(
         detail=True,
         methods=[HTTPMethod.POST],
@@ -79,7 +84,12 @@ class UserViewSet(viewsets.ModelViewSet):
         admin: EmpiUser = request.user
 
         admin_password = serializer.validated_data["current_password"]
-        user.make_reset_key(admin, admin_password)
+        passphrase = user.make_reset_key(admin, admin_password)
+
+        email = PasswordResetEmail(passphrase, [user.email])
+        email.send()
+
+        return Response(status=HTTP_200_OK)
 
     @action(
         detail=True,
@@ -96,7 +106,7 @@ class UserViewSet(viewsets.ModelViewSet):
         new_password = serializer.validated_data["new_password"]
 
         reset_key = get_object_or_404(ResetKey, user=user.pk)
-        if datetime.datetime.now() > reset_key.valid_until:
+        if timezone.now() > reset_key.valid_until:
             reset_key.delete()
             _ = get_object_or_404(ResetKey, user=user.pk)
 

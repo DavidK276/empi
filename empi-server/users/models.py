@@ -111,8 +111,8 @@ class ResetKey(models.Model):
             ResetKey.objects.get(user=user.pk).delete()
         except ResetKey.DoesNotExist:
             pass
-        valid_until = datetime.datetime.now() + datetime.timedelta(hours=12)
-        return cls(valid_until=valid_until, backup_key=backup_key)
+        valid_until = timezone.now() + datetime.timedelta(hours=24)
+        return cls(user=user, valid_until=valid_until, backup_key=backup_key)
 
 
 class EmpiUser(AbstractBaseUser, PermissionsMixin):
@@ -193,10 +193,12 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
 
     def make_reset_key(self, admin: Self, admin_password: str):
         decrypted_user_privkey = self.use_backup_key(admin, admin_password)
-        passphrase = generate(alphabet="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", size=32)
+        passphrase = generate(alphabet="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", size=64)
 
         reset_key = ResetKey.new(self, export_privkey(decrypted_user_privkey, passphrase))
         reset_key.save()
+
+        return passphrase
 
     def reset_password(self, reset_key: ResetKey, passphrase: str, new_password: str):
         try:
@@ -271,7 +273,7 @@ def generate_token():
 
 
 def generate_acad_year():
-    now = datetime.datetime.now()
+    now = timezone.now()
     if now.month >= 8:
         year = now.year
     else:

@@ -1,5 +1,6 @@
 import datetime
 from collections.abc import Sequence, Mapping
+from django.utils import timezone
 from typing import Self, Optional
 
 from Crypto.Cipher import PKCS1_OAEP, AES
@@ -83,7 +84,7 @@ class ResetKey(models.Model):
             ResetKey.objects.get(user=user.pk).delete()
         except ResetKey.DoesNotExist:
             pass
-        valid_until = datetime.datetime.now() + datetime.timedelta(hours=12)
+        valid_until = timezone.now() + datetime.timedelta(hours=24)
         return cls(valid_until=valid_until, backup_key=backup_key)
 
 
