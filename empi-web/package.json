@@ -43,6 +43,7 @@
   "dependencies": {
     "@fontsource/source-sans-pro": "^5.0.8",
     "@furudean/svelte-persistent-store": "^0.9.0",
+    "@types/node": "^20.14.2",
     "class-transformer": "^0.5.1",
     "dotenv": "^16.4.5",
     "svelte-kit-cookie-session": "^4.0.0",

@@ -3,7 +3,7 @@ import { INT_API_ENDPOINT } from '$lib/constants';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
-	default: async ({ fetch, request, locals }) => {
+	updateInfo: async ({ fetch, request, locals }) => {
 		const formData = await request.formData();
 		const userId = locals.user?.id;
 		if (userId == null) {
@@ -14,7 +14,23 @@ export const actions = {
 			body: formData
 		});
 		if (!response.ok) {
-			return fail(response.status);
+			return fail(response.status, { success: false, errors: await response.json() });
 		}
+		return { success: true }
+	},
+	changePassword: async ({ fetch, request, locals }) => {
+		const formData = await request.formData();
+		const userId = locals.user?.id;
+		if (userId == null) {
+			return;
+		}
+		const response = await fetch(INT_API_ENDPOINT + `user/${userId}/change_password/`, {
+			method: 'POST',
+			body: formData
+		});
+		if (!response.ok) {
+			return fail(response.status, { success: false, errors: await response.json() });
+		}
+		return { success: true }
 	}
 } satisfies Actions;

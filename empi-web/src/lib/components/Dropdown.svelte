@@ -51,4 +51,8 @@
     :is(.dropdown:hover, .dropdown.show) .dropdown-content {
         display: flex;
     }
+
+    .dropdown:has(:focus) .dropdown-content {
+		    display: flex;
+    }
 </style>

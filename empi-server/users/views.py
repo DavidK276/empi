@@ -41,7 +41,7 @@ class UserViewSet(viewsets.ModelViewSet):
         current_password = serializer.validated_data["current_password"]
         new_password = serializer.validated_data["new_password"]
         if not user.check_password(current_password):
-            raise exceptions.NotFound("invalid current password")
+            raise exceptions.AuthenticationFailed("invalid current password")
         user.change_password(current_password, new_password)
         user.save()
         return Response(status=status.HTTP_200_OK)

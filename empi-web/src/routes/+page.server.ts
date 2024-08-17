@@ -20,7 +20,7 @@ export const actions = {
 			return { login: true };
 		}
 		if (response.status === 401) {
-			return fail(401, { login: false, message: responseJSON });
+			return fail(401, { login: false, errors: responseJSON });
 		}
 		throw error(response.status);
 	},

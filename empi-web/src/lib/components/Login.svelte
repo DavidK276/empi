@@ -25,7 +25,7 @@
 				is_logged_in = true;
 			}
 			else if (result.type === 'failure') {
-				const message = result.data?.message;
+				const message = result.data?.errors;
 
 				if (message.non_field_errors != null) {
 					login_message = message.non_field_errors[0];

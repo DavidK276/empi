@@ -45,7 +45,7 @@
 	<div class="row">
 		<div class="col" style="width: 50%; gap: 0">
 			<label for="first_name">{$t('common.first_name')}</label>
-			<input type="text" name="first_name" id="first_name" required minlength="3">
+			<input type="text" name="first_name" id="first_name" required minlength="2">
 		</div>
 		<div class="col" style="width: 50%; gap: 0">
 			<label for="last_name">{$t('common.last_name')}</label>
@@ -56,7 +56,7 @@
 		<div class="col m-w-full" style="width: 50%; gap: 0">
 			<MyLabel forId="password" labelText={$t('common.password')} hintText={$t('common.password_hint')}
 			         icon="warning"></MyLabel>
-			<input type="password" name="password" id="password" required minlength="8" bind:this={passwordInput}>
+			<input type="password" name="password" id="password" required minlength="4" bind:this={passwordInput}>
 		</div>
 		<div class="col m-w-full" style="width: 50%; gap: 0">
 			<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
