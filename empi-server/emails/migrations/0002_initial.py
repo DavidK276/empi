@@ -9,19 +9,21 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('emails', '0001_initial'),
-        ('research', '0001_initial'),
+        ("emails", "0001_initial"),
+        ("research", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='email',
-            name='research',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='research.research'),
+            model_name="email",
+            name="research",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="research.research"
+            ),
         ),
         migrations.AddField(
-            model_name='attachment',
-            name='email',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='emails.email'),
+            model_name="attachment",
+            name="email",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="emails.email"),
         ),
     ]

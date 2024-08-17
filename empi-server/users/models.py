@@ -39,16 +39,10 @@ class EmpiUserManager(UserManager):
             admin_pubkey = RSA.import_key(admin.pubkey)
             cipher_rsa = PKCS1_OAEP.new(admin_pubkey)
             enc_session_key = EncryptedSessionKey(
-                admin=admin,
-                backup_key=backup_privkey,
-                data=cipher_rsa.encrypt(session_key)
+                admin=admin, backup_key=backup_privkey, data=cipher_rsa.encrypt(session_key)
             )
             enc_session_key.save()
-        return {
-            "privkey": privkey,
-            "pubkey": pubkey,
-            "backup_privkey": backup_privkey
-        }
+        return {"privkey": privkey, "pubkey": pubkey, "backup_privkey": backup_privkey}
 
     def _create_user(self, email, password, **extra_fields):
         """
@@ -88,8 +82,8 @@ class EmpiUserManager(UserManager):
 
 
 class EncryptedSessionKey(models.Model):
-    admin = models.ForeignKey('EmpiUser', on_delete=models.CASCADE, related_name="user_esk_admin")
-    backup_key = models.ForeignKey('BackupKey', on_delete=models.CASCADE)
+    admin = models.ForeignKey("EmpiUser", on_delete=models.CASCADE, related_name="user_esk_admin")
+    backup_key = models.ForeignKey("BackupKey", on_delete=models.CASCADE)
 
     data = models.BinaryField(max_length=1024)
 
@@ -101,7 +95,7 @@ class BackupKey(models.Model):
 
 
 class ResetKey(models.Model):
-    user = models.OneToOneField('EmpiUser', on_delete=models.CASCADE)
+    user = models.OneToOneField("EmpiUser", on_delete=models.CASCADE)
     valid_until = models.DateTimeField()
     backup_key = models.BinaryField(max_length=4096)
 
@@ -130,8 +124,7 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
         _("active"),
         default=True,
         help_text=_(
-            "Designates whether this user should be treated as active. "
-            "Unselect this instead of deleting accounts."
+            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
@@ -242,7 +235,7 @@ class AttributeValue(models.Model):
         return "%s > %s" % (str(self.attribute), self.value.capitalize())
 
     @classmethod
-    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str: Sequence[str]]:
+    def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str : Sequence[str]]:
         result = {}
         if all:
             for attr in Attribute.objects.all():
@@ -253,7 +246,7 @@ class AttributeValue(models.Model):
         return result
 
     @classmethod
-    def from_groups(cls, groups: Mapping[str: Sequence[str]]) -> Iterable[Self]:
+    def from_groups(cls, groups: Mapping[str : Sequence[str]]) -> Iterable[Self]:
         result = []
         for name, values in groups.items():
             result.extend(cls.objects.filter(attribute__name=name).filter(value__in=values))

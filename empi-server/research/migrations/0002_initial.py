@@ -9,33 +9,36 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('research', '0001_initial'),
-        ('users', '0001_initial'),
+        ("research", "0001_initial"),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='research',
-            name='chosen_attribute_values',
-            field=models.ManyToManyField(blank=True, to='users.attributevalue'),
+            model_name="research",
+            name="chosen_attribute_values",
+            field=models.ManyToManyField(blank=True, to="users.attributevalue"),
         ),
         migrations.AddField(
-            model_name='encryptedsessionkey',
-            name='admin',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='research.research'),
+            model_name="encryptedsessionkey",
+            name="admin",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="research.research"),
         ),
         migrations.AddField(
-            model_name='appointment',
-            name='research',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='research.research'),
+            model_name="appointment",
+            name="research",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="research.research"),
         ),
         migrations.AddField(
-            model_name='resetkey',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='research.research'),
+            model_name="resetkey",
+            name="user",
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="research.research"),
         ),
         migrations.AddConstraint(
-            model_name='appointment',
-            constraint=models.CheckConstraint(check=models.Q(('info_url__isnull', True), ('location__isnull', True), _connector='XOR'), name='one_of_url_location_null'),
+            model_name="appointment",
+            constraint=models.CheckConstraint(
+                check=models.Q(("info_url__isnull", True), ("location__isnull", True), _connector="XOR"),
+                name="one_of_url_location_null",
+            ),
         ),
     ]

@@ -42,16 +42,10 @@ class ResearchManager(Manager):
             admin_pubkey = RSA.import_key(admin.pubkey)
             cipher_rsa = PKCS1_OAEP.new(admin_pubkey)
             enc_session_key = EncryptedSessionKey(
-                admin=admin,
-                backup_key=backup_privkey,
-                data=cipher_rsa.encrypt(session_key)
+                admin=admin, backup_key=backup_privkey, data=cipher_rsa.encrypt(session_key)
             )
             enc_session_key.save()
-        return {
-            "privkey": privkey,
-            "pubkey": pubkey,
-            "backup_privkey": backup_privkey
-        }
+        return {"privkey": privkey, "pubkey": pubkey, "backup_privkey": backup_privkey}
 
     def get_queryset(self):
         return super().get_queryset().defer("pubkey", "privkey", "backup_privkey")
@@ -62,7 +56,7 @@ class ResearchManager(Manager):
 
 class EncryptedSessionKey(models.Model):
     admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="research_esk_admin")
-    backup_key = models.ForeignKey('BackupKey', on_delete=models.CASCADE)
+    backup_key = models.ForeignKey("BackupKey", on_delete=models.CASCADE)
 
     data = models.BinaryField(max_length=1024)
 
@@ -74,7 +68,7 @@ class BackupKey(models.Model):
 
 
 class ResetKey(models.Model):
-    user = models.OneToOneField('Research', on_delete=models.CASCADE)
+    user = models.OneToOneField("Research", on_delete=models.CASCADE)
     valid_until = models.DateTimeField()
     backup_key = models.BinaryField(max_length=4096)
 

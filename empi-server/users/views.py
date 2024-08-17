@@ -19,7 +19,8 @@ from .serializers import (
     UserSerializer,
     PasswordSerializer,
     ParticipantSerializer,
-    AttributeSerializer, PasswordResetSerializer,
+    AttributeSerializer,
+    PasswordResetSerializer,
 )
 
 
@@ -71,10 +72,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_200_OK)
 
     @action(
-        detail=True,
-        methods=[HTTPMethod.POST],
-        serializer_class=PasswordSerializer,
-        permission_classes=[IsAdminUser]
+        detail=True, methods=[HTTPMethod.POST], serializer_class=PasswordSerializer, permission_classes=[IsAdminUser]
     )
     def start_password_reset(self, request, pk=None):
         serializer = self.get_serializer(data=request.data)
@@ -92,10 +90,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(status=HTTP_200_OK)
 
     @action(
-        detail=True,
-        methods=[HTTPMethod.POST],
-        serializer_class=PasswordResetSerializer,
-        permission_classes=[AllowAny]
+        detail=True, methods=[HTTPMethod.POST], serializer_class=PasswordResetSerializer, permission_classes=[AllowAny]
     )
     def complete_password_reset(self, request, pk=None):
         serializer = self.get_serializer(data=request.data)
