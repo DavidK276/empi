@@ -1,22 +1,18 @@
 from rest_framework import serializers
 
 from . import models
-from .models import Participation
 
 
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Research
-        exclude = ["chosen_attribute_values", "nanoid", "email_recipients"]
+        fields = ["id", "name", "info_url", "points", "created", "is_protected", "is_published"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Research
-        exclude = ["chosen_attribute_values"]
-        extra_kwargs = {
-            "url": {"view_name": "research-admin-detail", "lookup_field": "nanoid"},
-        }
+        fields = ["nanoid", "name", "info_url", "points", "created", "is_protected", "is_published", "email_recipients"]
 
 
 class AppointmentSerializer(serializers.ModelSerializer):

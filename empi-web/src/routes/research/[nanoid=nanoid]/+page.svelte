@@ -118,7 +118,7 @@
 
 									const submitDiv = formElement.children.namedItem('submit-div');
 									if (submitDiv != null) {
-										new FormResultMessage({target: submitDiv, props: {type: result.type}});
+										new FormResultMessage({target: submitDiv, props: {result}});
 									}
 								}
 							};

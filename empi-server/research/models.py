@@ -6,6 +6,7 @@ from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
 from Crypto.Random import get_random_bytes
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q, Manager
@@ -59,7 +60,7 @@ class ResearchManager(Manager):
 
 
 class EncryptedSessionKey(models.Model):
-    admin = models.ForeignKey('Research', on_delete=models.CASCADE)
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="research_esk_admin")
     backup_key = models.ForeignKey('BackupKey', on_delete=models.CASCADE)
 
     data = models.BinaryField(max_length=1024)
@@ -99,7 +100,7 @@ class Research(models.Model):
     is_published = models.BooleanField(default=False, null=False)
     email_recipients = SeparatedValuesField(verbose_name="príjemcovia", field=models.EmailField)
 
-    pubkey = models.TextField(max_length=1024)
+    pubkey = models.BinaryField(max_length=1024)
     privkey = models.BinaryField(max_length=4096)
     backup_privkey = models.ForeignKey(BackupKey, on_delete=models.CASCADE)
 
@@ -161,7 +162,7 @@ class Appointment(models.Model):
         public_key_bytes, _ = user.get_keypair()
         pubkeys.append(RSA.import_key(public_key_bytes))
 
-        admins = get_user_model().objects.filter(is_staff=True)
+        admins = get_user_model().users.filter(is_staff=True)
         for admin in admins:
             public_key_bytes, _ = admin.get_keypair()
             pubkeys.append(RSA.import_key(public_key_bytes))

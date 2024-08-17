@@ -88,7 +88,7 @@ class EmpiUserManager(UserManager):
 
 
 class EncryptedSessionKey(models.Model):
-    admin = models.ForeignKey('EmpiUser', on_delete=models.CASCADE)
+    admin = models.ForeignKey('EmpiUser', on_delete=models.CASCADE, related_name="user_esk_admin")
     backup_key = models.ForeignKey('BackupKey', on_delete=models.CASCADE)
 
     data = models.BinaryField(max_length=1024)

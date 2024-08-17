@@ -47,7 +47,7 @@
 				{@const research = data.researches.get(participation.research)}
 				<tr>
 					<td>{research?.name}</td>
-					<td><a href="{research?.info_url}">{$t('common.learn_more')}</a></td>
+					<td style="text-align: center"><a href="{research?.info_url}" target="_blank">{$t('common.learn_more')}</a></td>
 					{#if research?.points != null}
 						<td style="text-align: center">{research.points}</td>
 					{:else}

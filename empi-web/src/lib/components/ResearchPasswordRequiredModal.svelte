@@ -11,9 +11,8 @@
 
 	onMount(async () => {
 		const response = await fetch('?/checkPassword', { method: 'POST', body: new FormData() });
-		if (!response.ok) {
-			show = true;
-		}
+		const responseJSON = await response.json();
+		show = responseJSON.type !== 'success';
 	});
 </script>
 
@@ -23,7 +22,7 @@
 		<p>{$t('common.password_entry_text')}</p>
 	</div>
 	<form method="POST" action="?/checkPassword"
-				use:enhance={() => {
+	      use:enhance={() => {
 					password_ok = null;
 					return async ({result}) => {
 						password_ok = result.type === 'success';
@@ -35,9 +34,11 @@
 				}}>
 		<label for="password">{$t('common.password')}</label>
 		<input type="password" name="current_password" id="password">
-		<button type="submit">{$t('common.check')}</button>
-		{#if password_ok === false}
-			<span style="color: var(--danger)">{$t('common.wrong_login')}</span>
-		{/if}
+		<div style="width: 100%">
+			<button type="submit">{$t('common.check')}</button>
+			{#if password_ok === false}
+				<span style="color: var(--danger)">{$t('common.wrong_login')}</span>
+			{/if}
+		</div>
 	</form>
 </svelte:component>

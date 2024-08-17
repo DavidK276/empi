@@ -1,6 +1,6 @@
 import * as consts from '$lib/constants';
 import { columnify, convertFormData } from '$lib/functions';
-import { type Actions, error, fail } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
 import type { Appointment } from '$lib/objects/appointment';
 import type { PageServerLoad } from './$types';
@@ -122,10 +122,10 @@ export const actions = {
 		});
 		if (response.ok) {
 			await locals.session.set({ research_password: password });
-			return {};
+			return {success: true};
 		}
 		await locals.session.set({ research_password: '' });
-		error(response.status);
+		return fail(response.status, {success: false, errors: await response.json()});
 	}
 } satisfies Actions;
 
