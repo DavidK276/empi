@@ -1,12 +1,15 @@
-from drf_spectacular.utils import extend_schema_serializer
-from rest_framework import serializers, validators, exceptions
+from collections.abc import Iterable
 
-from . import models
+from drf_spectacular.utils import extend_schema_field
+from rest_framework import serializers, validators, exceptions
+from rest_framework.fields import empty
+
+from .models import AttributeValue, EmpiUser, Attribute, Participant
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.EmpiUser
+        model = EmpiUser
         fields = [
             "id",
             "first_name",
@@ -49,68 +52,61 @@ class PasswordResetSerializer(serializers.Serializer):
     )
 
 
-class AttributeValueSimpleSerializer(serializers.BaseSerializer):
+@extend_schema_field({"type": "array", "items": {"type": "string"}})
+class AttributeValueField(serializers.Field):
 
-    def to_internal_value(self, data) -> str:
-        return data
+    def run_validation(self, data=empty):
+        if not isinstance(data, Iterable):
+            raise exceptions.ValidationError("values must be an array of strings")
+        for value in data:
+            if not isinstance(value, str):
+                raise exceptions.ValidationError("values must be an array of strings")
+        return super().run_validation(data)
 
-    def to_representation(self, instance: models.AttributeValue) -> str:
-        return instance.value
+    def to_representation(self, value):
+        return list(value.all().values_list("value", flat=True))
+
+    def to_internal_value(self, data):
+        return [AttributeValue(value=value) for value in data]
 
 
-@extend_schema_serializer(exclude_fields=["values"])
 class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     # for this to work, related_name="values" must be set on the foreign key field in AttributeValue
-    values = AttributeValueSimpleSerializer(many=True)
+    values = AttributeValueField()
 
     class Meta:
-        model = models.Attribute
+        model = Attribute
         fields = ["url", "name", "type", "values"]
-
-    def to_representation(self, instance):
-        return super().to_representation(instance)
 
     def create(self, validated_data):
         values = validated_data.pop("values")
-        attribute = models.Attribute(**validated_data)
+        attribute = Attribute(**validated_data)
         attribute.save()
         for value in values:
-            attribute_value = models.AttributeValue(attribute=attribute, value=value)
-            attribute_value.save()
+            attribute.values.create(value=value)
         return attribute
 
-    def update(self, instance: models.Attribute, validated_data):
+    def update(self, instance: Attribute, validated_data):
         if name := validated_data.get("name", None):
             instance.name = name
-            instance.save()
+            instance.save(update_fields=["name"])
         if values := validated_data.get("values", None):
-            new_values = set(values)
-            current_values_queryset = models.AttributeValue.objects.filter(attribute=instance)
-            current_values: set[str] = {value.value for value in current_values_queryset}
-
-            # delete values not in recieved ones
-            to_delete = current_values - new_values
-            current_values_queryset.filter(value__in=to_delete).delete()
-
-            # create newly received valued
-            to_create = new_values - current_values
-            for value in to_create:
-                attribute_value = models.AttributeValue(attribute=instance, value=value)
-                attribute_value.save()
+            AttributeValue.objects.filter(attribute=instance).delete()
+            instance.values.set(values, bulk=False)
         return instance
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
-        queryset=models.EmpiUser.users.get_queryset().filter(is_staff=False),
+        queryset=EmpiUser.users.get_queryset().filter(is_staff=False),
         validators=[
             validators.UniqueValidator(
-                queryset=models.Participant.objects.get_queryset(),
+                queryset=Participant.objects.get_queryset(),
                 message="This user is already a participant",
             )
         ],
     )
 
     class Meta:
-        model = models.Participant
+        model = Participant
         exclude = ["chosen_attribute_values"]
