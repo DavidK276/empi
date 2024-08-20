@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_serializer
 from rest_framework import serializers, validators, exceptions
 
 from . import models
@@ -50,13 +51,16 @@ class PasswordResetSerializer(serializers.Serializer):
 
 class AttributeValueSimpleSerializer(serializers.BaseSerializer):
 
-    def to_internal_value(self, data):
+    def to_internal_value(self, data) -> str:
         return data
 
-    def to_representation(self, instance: models.AttributeValue):
+    def to_representation(self, instance: models.AttributeValue) -> str:
         return instance.value
 
 
+@extend_schema_serializer(
+    exclude_fields=["values"]
+)
 class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     # for this to work, related_name="values" must be set on the foreign key field in AttributeValue
     values = AttributeValueSimpleSerializer(many=True)
@@ -64,6 +68,9 @@ class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Attribute
         fields = ["url", "name", "type", "values"]
+
+    def to_representation(self, instance):
+        return super().to_representation(instance)
 
     def create(self, validated_data):
         values = validated_data.pop("values")

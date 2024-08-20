@@ -18,6 +18,9 @@ class SeparatedValuesField(models.Field):
     def db_type(self, connection):
         return "text"
 
+    def get_internal_type(self):
+        return "CharField"
+
     @property
     def non_db_attrs(self):
         return super().non_db_attrs + ("field",)
