@@ -8,13 +8,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='encryptedsessionkey',
-            name='admin',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_esk_admin', to=settings.AUTH_USER_MODEL),
+            model_name="encryptedsessionkey",
+            name="admin",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="user_esk_admin", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

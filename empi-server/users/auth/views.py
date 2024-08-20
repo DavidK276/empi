@@ -14,15 +14,10 @@ from ..serializers import UserSerializer
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="LoginRquestSerializer",
-        fields={"email": CharField, "password": CharField}
-    ),
+    request=inline_serializer(name="LoginRquestSerializer", fields={"email": CharField, "password": CharField}),
     responses=inline_serializer(
-        name="LoginResponseSerializer",
-        fields={"expiry": DateTimeField, "token": CharField, "user": UserSerializer}
-    )
-
+        name="LoginResponseSerializer", fields={"expiry": DateTimeField, "token": CharField, "user": UserSerializer}
+    ),
 )
 class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
@@ -45,8 +40,7 @@ class LoginView(KnoxLoginView):
 
 @extend_schema(
     request=inline_serializer("LogoutRequestSerializer", fields={}),
-    responses=inline_serializer(name="LogoutResponseSerializer", fields={})
-
+    responses=inline_serializer(name="LogoutResponseSerializer", fields={}),
 )
 class LogoutView(KnowLogoutView):
     pass
@@ -54,8 +48,7 @@ class LogoutView(KnowLogoutView):
 
 @extend_schema(
     request=inline_serializer("LogoutAllRequestSerializer", fields={}),
-    responses=inline_serializer(name="LogoutAllResponseSerializer", fields={})
-
+    responses=inline_serializer(name="LogoutAllResponseSerializer", fields={}),
 )
 class LogoutAllView(KnowLogoutAllView):
     pass

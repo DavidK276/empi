@@ -58,9 +58,7 @@ class AttributeValueSimpleSerializer(serializers.BaseSerializer):
         return instance.value
 
 
-@extend_schema_serializer(
-    exclude_fields=["values"]
-)
+@extend_schema_serializer(exclude_fields=["values"])
 class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     # for this to work, related_name="values" must be set on the foreign key field in AttributeValue
     values = AttributeValueSimpleSerializer(many=True)

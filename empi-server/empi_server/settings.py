@@ -136,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "knox.auth.TokenAuthentication",
@@ -147,15 +147,15 @@ REST_FRAMEWORK = {
 }
 
 REST_KNOX = {
-  'USER_SERIALIZER': 'users.serializers.UserSerializer',
+    "USER_SERIALIZER": "users.serializers.UserSerializer",
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Empi API',
-    'DESCRIPTION': 'The backend API of Empi',
-    'VERSION': '0.1.0',
-    'SERVE_INCLUDE_SCHEMA': True,
-    'SERVERS': [{"url": "http://localhost:8000"}]
+    "TITLE": "Empi API",
+    "DESCRIPTION": "The backend API of Empi",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": True,
+    "SERVERS": [{"url": "http://localhost:8000"}],
 }
 
 # Internationalization

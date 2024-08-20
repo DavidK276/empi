@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0003_alter_encryptedsessionkey_admin'),
+        ("research", "0003_alter_encryptedsessionkey_admin"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='research',
-            name='pubkey',
+            model_name="research",
+            name="pubkey",
             field=models.BinaryField(max_length=1024),
         ),
     ]
