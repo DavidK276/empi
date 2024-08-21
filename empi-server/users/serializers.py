@@ -38,11 +38,15 @@ class UserSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class PasswordSerializer(serializers.Serializer):
+class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
     new_password = serializers.CharField(
         max_length=100, write_only=True, default=None, style={"input_type": "password"}
     )
+
+
+class PasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
 
 
 class PasswordResetSerializer(serializers.Serializer):

@@ -5,17 +5,19 @@ from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
 from knox.auth import TokenAuthentication
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
+from rest_framework.fields import CharField
 from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from emails.types import PublicSignupEmail, ResearchCreatedEmail, NewSignupEmail, CancelSignupEmail
 from users.models import Participant
-from users.serializers import PasswordSerializer
+from users.serializers import PasswordChangeSerializer, PasswordSerializer
 from .auth import ResearchAuthentication
 from .models import Appointment, Research, Participation, EncryptedToken
 from .permissions import *
@@ -73,7 +75,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         detail=True,
         name="Change password",
         methods=[HTTPMethod.POST],
-        serializer_class=PasswordSerializer,
+        serializer_class=PasswordChangeSerializer,
         url_path="password/set",
     )
     def change_password(self, request, nanoid=None):
@@ -101,7 +103,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
 
             _, encrypted_key = research.get_keypair()
-            current_password = serializer.validated_data["current_password"]
+            current_password = serializer.validated_data["password"]
             try:
                 _ = RSA.import_key(encrypted_key, current_password)
             except (ValueError, IndexError, TypeError):
@@ -148,11 +150,20 @@ class ParticipationViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
+    """
+    Used for working with :class:`Participation` objects by registered users.
+    """
+
     queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=False)
     serializer_class = ParticipationSerializer
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        """
+        Creates the :class:`Participation` if there is free space in the specified appointment.
+        Also sends an info email to the specified address.
+        The `is_confirmed` body parameter should not be sent as it is ignored.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         participant = get_object_or_404(Participant, pk=request.user.pk)
@@ -182,7 +193,7 @@ class ParticipationViewSet(
         participation: Participation = self.get_object()
 
         _, encrypted_key = request.user.get_keypair()
-        private_key = RSA.import_key(encrypted_key, serializer.validated_data["current_password"])
+        private_key = RSA.import_key(encrypted_key, serializer.validated_data["password"])
         if participation_token := participation.encrypted_token.decrypt(private_key):
             if participation_token == request_user_token:
                 email = CancelSignupEmail(participation.appointment)
@@ -208,7 +219,7 @@ class ParticipationViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        password = serializer.validated_data["current_password"]
+        password = serializer.validated_data["password"]
         if not request.user.check_password(password):
             raise exceptions.AuthenticationFailed("invalid password")
 
@@ -253,12 +264,20 @@ class ParticipationViewSet(
 
 
 class AnonymousParticipationViewSet(viewsets.ModelViewSet):
+    """
+    Used for working with :class:`Participation` objects by anonymous users.
+    """
+
     queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=True)
     serializer_class = AnonymousParticipationSerializer
     permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "nanoid"
 
     def create(self, request, *args, **kwargs):
+        """
+        Creates the anonymous :class:`Participation` if there is free space in the specified appointment.
+        Also sends an info email to the specified address.
+        """
         serializer: AnonymousParticipationSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

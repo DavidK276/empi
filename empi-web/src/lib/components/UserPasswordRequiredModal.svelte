@@ -27,7 +27,7 @@
 		};
 	}}>
 		<label for="password">{$t('common.password')}</label>
-		<input type="password" name="current_password" id="password">
+		<input type="password" name="password" id="password">
 		<button type="submit">{$t('common.check')}</button>
 		{#if password_ok === false}
 			<span style="color: var(--danger)">{$t('common.wrong_login')}</span>

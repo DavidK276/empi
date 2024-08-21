@@ -15,10 +15,11 @@ from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey
 from .permissions import *
 from .serializers import (
     UserSerializer,
-    PasswordSerializer,
+    PasswordChangeSerializer,
     ParticipantSerializer,
     AttributeSerializer,
     PasswordResetSerializer,
+    PasswordSerializer,
 )
 
 
@@ -31,7 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
         detail=True,
         name="Change password",
         methods=[HTTPMethod.POST],
-        serializer_class=PasswordSerializer,
+        serializer_class=PasswordChangeSerializer,
     )
     def change_password(self, request, pk=None):
         user: EmpiUser = self.get_object()
@@ -52,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
         detail=True,
         name="Change password by admin",
         methods=[HTTPMethod.POST],
-        serializer_class=PasswordSerializer,
+        serializer_class=PasswordChangeSerializer,
         permission_classes=[IsAdminUser],
     )
     def change_password_admin(self, request, pk=None):
@@ -79,7 +80,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user: EmpiUser = self.get_object()
         admin: EmpiUser = request.user
 
-        admin_password = serializer.validated_data["current_password"]
+        admin_password = serializer.validated_data["password"]
         passphrase = user.make_reset_key(admin, admin_password)
 
         email = PasswordResetEmail(passphrase, [user.email])
@@ -117,7 +118,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         user: EmpiUser = request.user
-        if user.check_password(request.data["current_password"]):
+        if user.check_password(request.data["password"]):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
