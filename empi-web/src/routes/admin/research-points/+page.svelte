@@ -39,7 +39,7 @@
 		}}>
 			<label for="points">{research.name}</label>
 			<div class="content row ver-center">
-				<input type="hidden" name="url" value={research.url}>
+				<input type="hidden" name="nanoid" value={research.nanoid}>
 				<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
 							 on:input={resetTheButton}>
 				<button type="submit" id="submit">{$t('common.submit')}</button>

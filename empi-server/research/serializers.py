@@ -6,7 +6,7 @@ from . import models
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Research
-        fields = ["id", "name", "info_url", "points", "created", "is_protected", "is_published"]
+        fields = ["id", "name", "info_url", "points", "created"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):

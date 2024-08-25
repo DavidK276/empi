@@ -5,12 +5,11 @@ from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, extend_schema_view, inline_serializer
+from django.utils.translation import gettext_lazy as _
 from knox.auth import TokenAuthentication
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
-from rest_framework.fields import CharField
 from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -102,12 +101,12 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            _, encrypted_key = research.get_keypair()
+            __, encrypted_key = research.get_keypair()  # noqa: F841
             current_password = serializer.validated_data["password"]
             try:
-                _ = RSA.import_key(encrypted_key, current_password)
+                __ = RSA.import_key(encrypted_key, current_password)  # noqa: F841
             except (ValueError, IndexError, TypeError):
-                raise exceptions.PermissionDenied("invalid current password")
+                raise exceptions.PermissionDenied(_("invalid current password"))
         return Response(status=status.HTTP_200_OK)
 
     @action(
@@ -242,7 +241,7 @@ class ParticipationViewSet(
             if research.is_protected:
                 serializer = PasswordSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                password = serializer.validated_data["current_password"]
+                password = serializer.validated_data["password"]
             else:
                 password = "unprotected"
             _, encrypted_key = research.get_keypair()

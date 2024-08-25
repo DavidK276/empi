@@ -20,9 +20,15 @@ from django.urls import include, path
 
 from . import api
 
+
+def trigger_error(request):
+    division_by_zero = 1 / 0  # noqa: F841
+
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("api/", include(api)),
     path("admin/", admin.site.urls),
+    path("sentry-debug/", trigger_error),
 ]

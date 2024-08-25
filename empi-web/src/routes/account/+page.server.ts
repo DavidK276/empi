@@ -4,8 +4,10 @@ import { fail } from '@sveltejs/kit';
 
 export const actions = {
 	updateInfo: async ({ fetch, request, locals }) => {
+		const session = locals.session.data;
 		const formData = await request.formData();
-		const userId = locals.user?.id;
+
+		const userId = session.user.id;
 		if (userId == null) {
 			return;
 		}
@@ -19,8 +21,10 @@ export const actions = {
 		return { success: true }
 	},
 	changePassword: async ({ fetch, request, locals }) => {
+		const session = locals.session.data;
 		const formData = await request.formData();
-		const userId = locals.user?.id;
+
+		const userId = session.user.id;
 		if (userId == null) {
 			return;
 		}

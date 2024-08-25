@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import *
@@ -44,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
         current_password = serializer.validated_data["current_password"]
         new_password = serializer.validated_data["new_password"]
         if not user.check_password(current_password):
-            raise exceptions.AuthenticationFailed("invalid current password")
+            raise exceptions.AuthenticationFailed(_("invalid current password"))
         user.change_password(current_password, new_password)
         user.save()
         return Response(status=status.HTTP_200_OK)
@@ -124,9 +125,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, name="Get own details", methods=[HTTPMethod.GET], permission_classes=[IsAuthenticated])
     def get_self(self, request):
-        user: EmpiUser = request.user
-        serializer = self.get_serializer(instance=user, context={"request": request})
-        return HttpResponseRedirect(reverse("empiuser-detail", [serializer.data["id"]], request=request))
+        return HttpResponseRedirect(reverse("empiuser-detail", [request.user.id], request=request))
 
 
 class ParticipantViewSet(

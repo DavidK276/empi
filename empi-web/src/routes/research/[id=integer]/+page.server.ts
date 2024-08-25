@@ -1,5 +1,7 @@
 import * as consts from '$lib/constants';
 import { type Actions, error, fail } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
+import type { Participation } from "$lib/objects/participation";
 
 export const actions = {
 	signup: async ({ request, fetch, cookies }) => {
@@ -33,16 +35,17 @@ export const actions = {
 			success: false
 		});
 	},
-	cancel: async ({ request, fetch, cookies }) => {
+	cancel: async ({ request, fetch, cookies, locals }) => {
+		const session = locals.session.data;
 		const formData = await request.formData();
+		const participationId = formData.get('participation-id');
+
 		const authToken = cookies.get(consts.TOKEN_COOKIE);
 		if (authToken != null) {
-			const response = await fetch(consts.INT_API_ENDPOINT + `participation/`, {
-				method: 'POST',
-				body: formData,
-				headers: {
-					'Authorization': `Token ${authToken}`
-				}
+			formData.set('password', session.user_password);
+			const response = await fetch(consts.INT_API_ENDPOINT + `participation/${participationId}/`, {
+				method: 'DELETE',
+				body: formData
 			});
 			if (response.ok) {
 				return {
@@ -56,3 +59,24 @@ export const actions = {
 		throw error(401, 'unuthorized');
 	}
 } satisfies Actions;
+
+export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
+	const { session } = await parent();
+
+	const formData = new FormData();
+	formData.set('password', session?.user_password);
+	if (cookies.get(consts.TOKEN_COOKIE)) {
+		const response = await fetch(consts.INT_API_ENDPOINT + `participation/user/`, {
+			body: formData,
+			method: 'POST'
+		});
+		const responseJSON = await response.json();
+
+		const participations: Map<number, Participation> = new Map();
+		for (const participation of responseJSON) {
+				participations.set(participation.appointment, participation);
+		}
+		return {participations}
+	}
+	return {participations: null}
+}

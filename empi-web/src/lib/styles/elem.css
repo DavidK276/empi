@@ -62,7 +62,7 @@ label {
         color: var(--danger);
     }
 
-    &:has(+ input[type="radio"]) {
+    &:has(+ input[type="radio"], + input[type="checkbox"]) {
         margin-right: var(--xl);
     }
 }

@@ -99,32 +99,35 @@ export const actions = {
 			body: formData
 		});
 		if (response.ok) {
-			await locals.session.set({ research_password: formData.get('new_password') });
+			await locals.session.update(() => ({ research_password: formData.get('new_password') }));
 			return {
 				success: true
 			};
 		}
 		return fail(response.status, {
-			success: false
+			success: false,
+			errors: await response.json()
 		});
 	},
 	checkPassword: async ({ fetch, params, request, locals }) => {
 		let formData = await request.formData();
-		let password = formData.get('current_password');
+		const session = locals.session.data;
+
+		let password = formData.get('password');
 		if (password == null) {
-			password = locals.session.data.research_password || 'unprotected';
+			password = session.research_password || 'unprotected';
 			formData = new FormData();
-			formData.set('current_password', password!);
+			formData.set('password', password!);
 		}
 		const response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${params.nanoid}/password/check/`, {
 			body: formData,
 			method: 'POST'
 		});
 		if (response.ok) {
-			await locals.session.set({ research_password: password });
+			await locals.session.update(() => ({ research_password: password }));
 			return {success: true};
 		}
-		await locals.session.set({ research_password: '' });
+		await locals.session.update(() => ({ research_password: undefined }));
 		return fail(response.status, {success: false, errors: await response.json()});
 	}
 } satisfies Actions;
@@ -168,7 +171,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 	const password = locals.session.data.research_password;
 	if (password != null) {
 		const formData = new FormData();
-		formData.set('current_password', password);
+		formData.set('password', password);
 		response = await fetch(consts.INT_API_ENDPOINT + `participation/research/${params.nanoid}/get/`, {
 			body: formData,
 			method: 'POST'

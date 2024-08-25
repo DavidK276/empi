@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q, Manager
 from django.forms import model_to_dict
+from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
@@ -106,15 +107,15 @@ class Research(models.Model):
         return model_to_dict(self, fields=["name", "points", "info_url"])
 
     def change_password(self, old_raw_password, new_raw_password):
-        _, encrypted_key = self.get_keypair()
+        __, encrypted_key = self.get_keypair()
         try:
             private_key = RSA.import_key(encrypted_key, old_raw_password if self.is_protected else "unprotected")
         except (ValueError, IndexError, TypeError):
-            raise exceptions.PermissionDenied("invalid current password")
+            raise exceptions.PermissionDenied(_("invalid current password"))
         encrypted_key = export_privkey(private_key, new_raw_password)
 
         self.privkey = encrypted_key
-        self.save()
+        self.save(update_fields=["privkey"])
 
     def get_keypair(self) -> (bytes, bytes):
         """

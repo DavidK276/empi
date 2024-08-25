@@ -7,7 +7,7 @@ import { browser } from '$app/environment';
 
 const API_ENDPOINT = (browser) ? consts.EXT_API_ENDPOINT : consts.INT_API_ENDPOINT;
 
-export const load: PageLoad = async ({ fetch, params }) => {
+export const load: PageLoad = async ({ fetch, params, data }) => {
 	let response = await fetch(API_ENDPOINT + `research-user/${params.id}/`);
 
 	let research: Research | null = null;
@@ -39,6 +39,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
 	return {
 		research,
-		appointments
+		appointments,
+		participations: data.participations
 	};
 };

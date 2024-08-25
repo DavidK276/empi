@@ -9,14 +9,15 @@ export const actions = {
 			body: formData,
 			method: 'POST'
 		});
+
+		await locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
 		cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
-		delete locals.user;
-		delete locals.participant;
 
 		const responseJSON = await response.json();
 		if (response.ok) {
 			const expires = new Date(Date.parse(responseJSON.expiry));
 			cookies.set(consts.TOKEN_COOKIE, responseJSON.token, { path: '/', httpOnly: true, expires });
+			await locals.session.update(() => ({ user_password: formData.get('password') }));
 			return { login: true };
 		}
 		if (response.status === 401) {
@@ -29,24 +30,26 @@ export const actions = {
 			await fetch(consts.INT_API_ENDPOINT + 'auth/logout/', {
 				method: 'POST'
 			});
+
+			await locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
 			cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
-			delete locals.user;
-			delete locals.participant;
 		}
 	},
-	checkPassword: async ({ request, fetch, cookies }) => {
-		let status = 401;
+	checkPassword: async ({ request, fetch, cookies, locals }) => {
 		if (cookies.get(consts.TOKEN_COOKIE)) {
 			const formData = await request.formData();
+			const password = formData.get('password');
+
 			const response = await fetch(consts.INT_API_ENDPOINT + 'user/check_password/', {
 				body: formData,
 				method: 'POST'
 			});
 			if (response.ok) {
+				await locals.session.update(() => ({ user_password: password }));
 				return {};
 			}
-			status = response.status;
+			throw error(response.status);
 		}
-		throw error(status);
+		throw error(401);
 	}
 } satisfies Actions;

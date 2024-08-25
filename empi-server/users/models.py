@@ -232,7 +232,10 @@ class AttributeValue(models.Model):
         constraints = [models.UniqueConstraint("attribute", "value", name="unique_value_per_attribute")]
 
     def __str__(self):
-        return "%s > %s" % (str(self.attribute), self.value.capitalize())
+        try:
+            return "%s > %s" % (str(self.attribute), self.value)
+        except AttributeValue.attribute.RelatedObjectDoesNotExist:
+            return self.value
 
     @classmethod
     def group_by_attribute(cls, queryset: Iterable[Self], all=False) -> Mapping[str : Sequence[str]]:

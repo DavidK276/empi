@@ -2,26 +2,15 @@
 	import { t } from '$lib/translations.js';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
-	import { store } from '$lib/stores.js';
 	import { goto } from '$app/navigation';
 	import type { ActionResult } from "@sveltejs/kit";
 
-	function setPasswordSession(form: HTMLFormElement) {
-		const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
-		$store.user_password = passwordInput?.value;
-	}
-
-	function unsetPasswordSession() {
-		$store.user_password = '';
-	}
-
-	async function login({ formElement }: {formElement: HTMLFormElement}) {
+	async function login() {
 		logging_in = true;
 
 		return async ({ update, result }: {update: () => Promise<void>, result: ActionResult}) => {
 			logging_in = false;
 			if (result.type === 'success') {
-				setPasswordSession(formElement);
 				is_logged_in = true;
 			}
 			else if (result.type === 'failure') {
@@ -64,7 +53,7 @@
 		</div>
 	</form>
 {:else}
-	<form method="POST" action="/?/logout" on:submit={unsetPasswordSession}
+	<form method="POST" action="/?/logout"
 	      use:enhance={() => {
 									logging_out = true;
 

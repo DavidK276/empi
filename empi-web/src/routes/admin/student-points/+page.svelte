@@ -1,15 +1,16 @@
 <script lang="ts">
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
-	import { store } from '$lib/stores';
+	import { page } from '$app/stores';
 	import { type Writable, writable } from 'svelte/store';
 	import { Participation } from '$lib/objects/participation';
 	import type { PageData } from './$types';
 	import { plainToInstance } from 'class-transformer';
 
 	export let data: PageData;
+	$: session = $page.data.session;
 
-	store.subscribe(async ({ user_password }) => {
+	session.subscribe(async ({ user_password }) => {
 		if (!user_password) {
 			return;
 		}

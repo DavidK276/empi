@@ -11,8 +11,9 @@
 
 	export let data: PageData;
 
+	$: session = $page.data.session;
 	onMount(() => {
-		if ($page.data.user?.is_staff == null) {
+		if (session?.user.is_staff == null) {
 			goto('/', { replaceState: true });
 		}
 	});
@@ -27,14 +28,14 @@
 	let submit_success: boolean | null = null;
 </script>
 <h1>{$t('common.attributes')}</h1>
-{#if $page.data.user?.is_staff === true}
+{#if session?.user.is_staff === true}
 	{#each data.attrs as attr}
 		<Attribute {attr}></Attribute>
 	{:else}
 		<p>{$t('attrs.no_attrs')}</p>
 	{/each}
 	<button on:click={addAttr}>{$t('attrs.add')}</button>
-{:else if $page.data.user?.is_staff === false}
+{:else if session?.user.is_staff === false}
 	<form method="POST"
 				action="?/user"
 				use:enhance={() => {

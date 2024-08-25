@@ -115,7 +115,7 @@
 								if (submitter != null) {
 									submitter.toggleAttribute('disabled');
 									submitter.innerHTML = $t('common.submit');
-
+									console.log(result);
 									const submitDiv = formElement.children.namedItem('submit-div');
 									if (submitDiv != null) {
 										new FormResultMessage({target: submitDiv, props: {result}});
@@ -194,10 +194,10 @@
 			<div class="col">
 				{#if data.participations}
 					{#each data.participations as p_row}
-						{@const width = 100 / p_row.length}
+						{@const width = 100 / p_row.length + '%'}
 						<div class="row m-col">
 							{#each p_row as participation}
-								<div class="box" style="min-width: {width}%">
+								<div class="box" style="min-width: calc({width} - var(--md) / {p_row.length}">
 									<form style="display: flex; justify-content: center;" class="participation-form">
 										<button style="font-weight: 700; text-align: center">{participation.token}</button>
 										<input type="hidden" name="id" value={participation.id}>

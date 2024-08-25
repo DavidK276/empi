@@ -6,12 +6,12 @@ import { paginationParams } from '$lib/functions';
 export const actions = {
 	default: async ({ fetch, request, cookies }) => {
 		const formData = await request.formData();
-		const url = formData.get('url');
+		const nanoid = formData.get('nanoid');
 		const authToken = cookies.get(consts.TOKEN_COOKIE);
 
-		if (typeof url == 'string' && authToken) {
-			formData.delete('url');
-			const response = await fetch(url, {
+		if (authToken != null) {
+			formData.delete('nanoid');
+			const response = await fetch(consts.INT_API_ENDPOINT + `research-admin/${nanoid}/`, {
 				method: 'PATCH',
 				body: formData
 			});

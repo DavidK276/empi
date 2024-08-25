@@ -2,65 +2,38 @@
 	import type { ActionData, PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
-	import { store } from '$lib/stores';
 	import { page } from '$app/stores';
-	import { type Writable, writable } from 'svelte/store';
-	import type { Participation } from '$lib/objects/participation';
 	import { onMount } from 'svelte';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { localeDateStringFromUTCString } from "$lib/functions";
 
 	export let data: PageData;
 	export let form: ActionData;
 
-	store.subscribe(() => getSignups());
-
-	async function getSignups() {
-		if (!$store.user_password || $page.data.user.is_staff) {
-			return;
-		}
-		const formData = new FormData();
-		formData.set('current_password', $store.user_password);
-		const response = await fetch('/server/participations/user', { method: 'POST', body: formData });
-		const responseJSON = await response.json() as Array<{
-			appointment: number,
-			is_confirmed: boolean,
-			research: number
-		}>;
-		const participationMap = new Map();
-		for (const participation of responseJSON) {
-			if (participation.research === data.research?.id) {
-				participationMap.set(participation.appointment, participation);
-				can_signup = false;
-				is_confirmed ||= participation.is_confirmed;
-			}
-		}
-		participations.set(participationMap);
-	}
-
-	async function cancelSignup(event: Event) {
-		const form = event.target as HTMLFormElement;
-		const formData = new FormData(form);
-		formData.set('current_password', $store.user_password);
-		const participationId = formData.get('participation')!;
-		formData.delete('participation');
-
-		await fetch(`/server/participations/${participationId}/`, { method: 'DELETE', body: formData });
-
-		await invalidateAll();
-		await getSignups();
-		can_signup = true;
-		is_confirmed = false;
-	}
-
 	onMount(() => {
 		if (form?.success && form.participation != null) {
 			goto(`/participation/${form.participation.nanoid}/`);
 		}
+
+		page.subscribe(async ({ data }) => {
+			const { session, participations, research } = data;
+
+			if (!session?.user_password || session?.user.is_staff) {
+				return;
+			}
+
+			for (const participation of participations.values()) {
+				console.log(participation);
+				if (participation.research === research.id) {
+					can_signup = false;
+					is_confirmed ||= participation.is_confirmed;
+					break;
+				}
+			}
+		});
 	});
 
-	let participations: Writable<Map<number, Participation>> = writable();
 	let can_signup = !$page.data.user?.is_staff;
 	let is_confirmed = false;
 </script>
@@ -78,8 +51,8 @@
 <p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
 </p>
 {#each data.appointments as appointment, i}
-	{@const participation = $participations?.get(appointment.id)}
-	{@const is_signedup = participation?.is_confirmed === false}
+	{@const participation = $page.data.participations?.get(appointment.id)}
+	{@const is_confirmed = participation?.is_confirmed === true}
 	<div class="box">
 		<div class="row ver-center">
 			<h2>{$t('research.appointment_number')} {i + 1}</h2>
@@ -88,7 +61,7 @@
 			{:else}
 				<button>{$t('research.online')}</button>
 			{/if}
-			{#if is_signedup}
+			{#if participation != null}
 				<button style="background: var(--success)">{$t('research.appointment_signedup')}</button>
 			{/if}
 		</div>
@@ -99,7 +72,7 @@
 					<th>{$t('research.when')}</th>
 					{#if appointment.location}
 						<th>{$t('research.location')}</th>
-					{:else if is_signedup}
+					{:else if participation != null && !is_confirmed}
 						<th>{$t('research.join_appointment_url')}</th>
 					{/if}
 					<th>{$t('research.capacity')}</th>
@@ -110,11 +83,11 @@
 					</td>
 					{#if appointment.location}
 						<td>{appointment.location}</td>
-					{:else if is_signedup}
+					{:else if participation != null && !is_confirmed}
 						<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}</a></td>
 					{/if}
 					<td style="text-align: center">
-						<span style="color: {appointment.free_capacity ? 'initial' : 'red'}">{appointment.free_capacity}</span>
+						<span style="color: {appointment.free_capacity ? 'var(--text-primary)' : 'red'}">{appointment.free_capacity}</span>
 					</td>
 				</tr>
 			</table>
@@ -136,9 +109,9 @@
 					</div>
 				</form>
 			{/if}
-			{#if is_signedup}
-				<form method="POST" on:submit|preventDefault={cancelSignup}>
-					<input type="hidden" name="participation" value={participation?.id}>
+			{#if participation != null && !is_confirmed}
+				<form method="POST" action="?/cancel">
+					<input type="hidden" name="participation-id" value={participation?.id}>
 					<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
 				</form>
 			{/if}
