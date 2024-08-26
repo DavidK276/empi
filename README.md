@@ -7,13 +7,13 @@ Systém pre správu obsahu pre predmet `Účasť na empirickom výskume`.
 Pre otestovanie systému na lokálnom systéme je možné použiť príkaz
 
 ```shell
-docker compose up -f docker-compose.yml -f docker-compose.debug.yml up
+docker compose -f compose.yml -f compose.debug.yml up
 ```
 
 Na nasadenie do prevádzky slúži príkaz
 
 ```shell
-docker compose up -d docker-compose.yml -f docker-compose.production.yml up -d
+docker compose -d compose.yml -f compose.production.yml up -d
 ```
 
 # Konfigurácia
