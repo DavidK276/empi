@@ -48,13 +48,15 @@ class EmpiUserManager(UserManager):
         """
         Create and save a user with the given username, email, and password.
         """
-        if password is not None:
-            extra_fields |= self.init_keys(password)
         if not email:
             raise ValueError("The email must be set")
         email = self.normalize_email(email)
 
-        user = self.model(email=email, **extra_fields)
+        if password is not None:
+            keydata = self.init_keys(password)
+        else:
+            keydata = {}
+        user = self.model(email=email, **(extra_fields | keydata))
         user.password = make_password(password)
         user.save(using=self._db)
         return user
