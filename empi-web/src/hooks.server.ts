@@ -28,7 +28,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 
 const myHandle: Handle = async ({ event, resolve }) => {
 	if (!event.cookies.get(consts.TOKEN_COOKIE)) {
-		await event.locals.session.update(() => ({user: undefined, user_password: undefined, participant: undefined}));
+		await event.locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
 		return resolve(event);
 	}
 	if (!event.locals.session.data.user) {
@@ -37,7 +37,7 @@ const myHandle: Handle = async ({ event, resolve }) => {
 		});
 		if (!userResponse.ok) {
 			event.cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
-		await event.locals.session.update(() => ({user: undefined, user_password: undefined, participant: undefined}));
+			await event.locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
 			return resolve(event);
 		}
 
