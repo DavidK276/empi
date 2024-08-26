@@ -17,7 +17,6 @@ from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
 from users.models import EmpiUser, AttributeValue
-from utils.setlocale import setlocale
 from .fields import SeparatedBinaryField
 from .utils.constants import *
 from utils.keys import export_privkey, export_privkey_plaintext
@@ -235,3 +234,6 @@ class Participation(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     is_confirmed = models.BooleanField(default=False, blank=True, null=False)
     encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return self.appointment.when.isoformat(timespec="minutes") + f" ({self.pk})"

@@ -10,3 +10,4 @@ services:
     environment:
       COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long
       ORIGIN: "http://localhost:3000"
+      EXT_SERVER_URL: "http://localhost:8000"

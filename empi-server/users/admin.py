@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin
-from .models import EmpiUser
+from .models import EmpiUser, Attribute, AttributeValue, Participant
 from django.utils.translation import gettext_lazy as _
 
 
@@ -42,3 +43,9 @@ class EmpiUserAdmin(UserAdmin):
 
 
 admin.site.register(EmpiUser, EmpiUserAdmin)
+
+admin.site.register(Attribute, ModelAdmin)
+
+admin.site.register(AttributeValue, ModelAdmin)
+
+admin.site.register(Participant, ModelAdmin)
