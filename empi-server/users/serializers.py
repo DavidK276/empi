@@ -110,6 +110,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
             )
         ],
     )
+    user_detail = UserSerializer(read_only=True, source="user")
 
     class Meta:
         model = Participant

@@ -75,6 +75,5 @@ RUN npm ci --production --ignore-scripts
 RUN npm audit fix
 
 COPY --from=web-build --chown=appuser /build/build ./
-ARG ORIGIN
-ENV ORIGIN ${ORIGIN}
-CMD ["node", "-r", "dotenv/config", "."]
+
+CMD ["node", "."]

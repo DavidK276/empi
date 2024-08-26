@@ -138,6 +138,7 @@ class ParticipantViewSet(
     queryset = Participant.objects.get_queryset().filter(user__is_active=True).order_by("pk")
     serializer_class = ParticipantSerializer
     permission_classes = [ReadOnly | IsAdminUser]
+    lookup_field = "token"
 
     @action(
         detail=False,

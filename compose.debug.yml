@@ -7,11 +7,9 @@ services:
       FROM_EMAIL: "noreply@example.com"
       REPLY_TO_EMAILS: "admin@example.com"
       DEBUG: "1"
-      DJANGO_SUPERUSER_EMAIL: ""
-      DJANGO_SUPERUSER_PASSWORD: ""
+      DJANGO_SUPERUSER_EMAIL: "admin1@example.com"
+      DJANGO_SUPERUSER_PASSWORD: "asdf"
   web:
-    build:
-      args:
-        ORIGIN: "http://localhost:3000"
     environment:
       COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long
+      ORIGIN: "http://localhost:3000"

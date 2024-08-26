@@ -6,8 +6,6 @@ services:
       FROM_EMAIL: "noreply@example.com"
       REPLY_TO_EMAILS: "admin@example.com"
   web:
-    build:
-      args:
-        ORIGIN: "http://localhost:3000"
     environment:
       COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long
+      ORIGIN: "http://localhost:3000"
