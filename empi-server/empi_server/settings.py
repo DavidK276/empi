@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-bn7i4a#e6&%@jrs!y5%n(et7c!d*f1!%e7i7@9h$p4v)jl&$$^"
 try:
     with open(BASE_DIR / ".django-secret", "r") as f:
-        SECRET_KEY = f.read()
+        SECRET_KEY = f.read().strip()
 except FileNotFoundError:
     print(
         "\033[93m" + f"Unable to open {BASE_DIR / ".django_secret"}, SECRET_KEY will use an insecure value." + "\033[0m"

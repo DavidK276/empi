@@ -13,6 +13,9 @@ done
 set -euo pipefail
 
 cd /app/empi-server
+chown appuser:appuser .django_secret
+chmod 600 .django_secret
+
 poetry run ./manage.py migrate
 poetry run ./manage.py createinitialuser --noinput
 
