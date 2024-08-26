@@ -1,6 +1,5 @@
 services:
   api:
-    command: "/app/empi-server/start_dev.sh"
     environment:
       ALLOWED_HOSTS: "localhost,127.0.0.1"
       WEB_URL: "http://localhost:3000"
