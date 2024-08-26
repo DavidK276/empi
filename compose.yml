@@ -16,8 +16,6 @@ services:
       target: api
     ports:
       - "8000:8000"
-    volumes:
-      - keys:/app/empi-server/keys/
 
   web:
     depends_on:
@@ -32,4 +30,3 @@ services:
 
 volumes:
   postgres_data:
-  keys:
