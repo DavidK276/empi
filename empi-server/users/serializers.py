@@ -8,17 +8,15 @@ from .models import AttributeValue, EmpiUser, Attribute, Participant
 
 
 class UserSerializer(serializers.ModelSerializer):
+    token = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+        allow_null=True,
+        source="participant.token",
+    )
+
     class Meta:
         model = EmpiUser
-        fields = [
-            "id",
-            "first_name",
-            "last_name",
-            "email",
-            "password",
-            "is_staff",
-            "date_joined",
-        ]
+        fields = ["id", "first_name", "last_name", "email", "password", "is_staff", "date_joined", "token"]
         extra_kwargs = {
             "password": {"style": {"input_type": "password"}, "write_only": True, "max_length": 128},
             "date_joined": {"read_only": True},
