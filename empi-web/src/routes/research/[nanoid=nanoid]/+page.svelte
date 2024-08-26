@@ -94,7 +94,7 @@
 		{/if}
 	</div>
 	<form method="POST" action="?/update"
-				on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+	      on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
@@ -103,7 +103,7 @@
 	<Accordion>
 		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
-						use:enhance={({submitter}) => {
+			      use:enhance={({submitter}) => {
 							if (submitter != null) {
 								submitter.toggleAttribute('disabled');
 								submitter.innerHTML = $t('common.submitting');
@@ -138,10 +138,11 @@
 				</div>
 			</form>
 		</AccordionTab>
-		<AccordionTab open={false} title={$t('common.attributes')}>
-			<form method="POST"
-						action="?/attrs"
-						use:enhance={() => {
+		{#if data.attrs}
+			<AccordionTab open={false} title={$t('common.attributes')}>
+				<form method="POST"
+				      action="?/attrs"
+				      use:enhance={() => {
 							submitting_attrs = true;
 							submit_success_attrs = null;
 							return async ({ update, result }) => {
@@ -152,27 +153,26 @@
 								update({ reset: false });
 							};
 						}}>
-				{#each data.attrs as attr}
-					{#if Reflect.has(data.research_attrs, attr.name)}
-						<Setting {attr} values={data.research_attrs[attr.name]}></Setting>
+					{#each data.attrs as attr}
+						{#if Reflect.has(data.research_attrs, attr.name)}
+							<Setting {attr} values={data.research_attrs[attr.name]}></Setting>
+						{:else}
+							<Setting {attr}></Setting>
+						{/if}
+					{/each}
+					{#if submitting_attrs}
+						<button type="submit" style="margin-top: 0" disabled>{$t('common.submitting')}</button>
 					{:else}
-						<Setting {attr}></Setting>
+						<button type="submit" style="margin-top: 0">{$t('common.submit')}</button>
 					{/if}
-				{:else}
-					<p>{$t('attrs.no_attrs')}</p>
-				{/each}
-				{#if submitting_attrs}
-					<button type="submit" style="margin-top: 0" disabled>{$t('common.submitting')}</button>
-				{:else}
-					<button type="submit" style="margin-top: 0">{$t('common.submit')}</button>
-				{/if}
-				{#if submit_success_attrs === true}
-					<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>
-				{:else if submit_success_attrs === false}
-					<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
-				{/if}
-			</form>
-		</AccordionTab>
+					{#if submit_success_attrs === true}
+						<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>
+					{:else if submit_success_attrs === false}
+						<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
+					{/if}
+				</form>
+			</AccordionTab>
+		{/if}
 		<AccordionTab open={false} title={$t('research.appointments')}>
 			{#each appointments as appointment}
 				<Appointment {appointment} nanoid={$page.params.nanoid}></Appointment>
