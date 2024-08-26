@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% block body %}
-	<p>Prihlásenie na výskum bolo zrušené</p>
-	{% include "research.html" %}
-	<p>Termín</p>
-	{% include "appointment.html" %}
+	<h1>Prihláška na výskum {{ research.name }} bola zrušená</h1>
+	<p>Na termín {{ appointment.when }}</p>
 {% endblock body %}

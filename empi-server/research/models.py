@@ -17,6 +17,7 @@ from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
 from users.models import EmpiUser, AttributeValue
+from utils.setlocale import setlocale
 from .fields import SeparatedBinaryField
 from .utils.constants import *
 from utils.keys import export_privkey, export_privkey_plaintext
@@ -170,7 +171,7 @@ class Appointment(models.Model):
 
     def serialize(self) -> Mapping:
         d = model_to_dict(self)
-        d["when"] = self.when.isoformat(timespec="minutes")
+        d["when"] = self.when.strftime("%d. %m. %Y %H:%M")
         return d
 
 

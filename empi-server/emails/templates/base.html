@@ -1,11 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
+	<meta charset="UTF-8">
 	<title>{{ subject }}</title>
+	<style>
+      {% include "styles/vars.css" %}
+      {% include "styles/reset.css" %}
+      {% include "styles/colorScheme.css" %}
+      {% include "styles/elem.css" %}
+      {% include "styles/classes.css" %}
+      {% include "styles/themeToggle.css" %}
+	</style>
 </head>
 <body>
-<h1>Účasť na empirickom výskume</h1>
 {% block body %}
 {% endblock body %}
 </body>
