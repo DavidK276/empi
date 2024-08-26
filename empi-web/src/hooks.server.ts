@@ -19,7 +19,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 			request.headers.set('Authorization', `Basic ${btoa(binString)}`);
 		}
 		else if (authToken != null) {
-			request.headers.set('Authorization', `Token ${authToken}`);
+			request.headers.set('Authorization', `Bearer ${authToken}`);
 		}
 	}
 

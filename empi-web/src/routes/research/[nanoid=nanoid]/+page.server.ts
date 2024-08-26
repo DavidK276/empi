@@ -59,7 +59,7 @@ export const actions = {
 	},
 	participations: async ({ fetch, params, request }) => {
 		const response = await fetch(consts.INT_API_ENDPOINT + `participation/research/${params.nanoid}/set/`, {
-			method: 'POST',
+			method: 'PUT',
 			body: await request.text(),
 			headers: {
 				'Content-Type': 'application/json'

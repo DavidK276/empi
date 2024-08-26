@@ -5,7 +5,8 @@ from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as t
+from drf_spectacular.utils import extend_schema, OpenApiParameter, PolymorphicProxySerializer
 from knox.auth import TokenAuthentication
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import SessionAuthentication
@@ -101,12 +102,12 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            __, encrypted_key = research.get_keypair()  # noqa: F841
+            _, encrypted_key = research.get_keypair()
             current_password = serializer.validated_data["password"]
             try:
-                __ = RSA.import_key(encrypted_key, current_password)  # noqa: F841
+                _ = RSA.import_key(encrypted_key, current_password)
             except (ValueError, IndexError, TypeError):
-                raise exceptions.PermissionDenied(_("invalid current password"))
+                raise exceptions.PermissionDenied(t("invalid current password"))
         return Response(status=status.HTTP_200_OK)
 
     @action(
@@ -184,15 +185,17 @@ class ParticipationViewSet(
 
         return Response(status=status.HTTP_201_CREATED)
 
-    def destroy(self, request, *args, **kwargs):
-        serializer = PasswordSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    @extend_schema(parameters=[OpenApiParameter("password", str)])
+    def destroy(self, request: Request, *args, **kwargs):
+        password = request.query_params["password"]
+        if not password:
+            raise exceptions.ValidationError(t("A password is required"))
 
-        request_user_token = get_object_or_404(Participant, pk=request.user.pk).token
+        request_user_token = request.user.participant.token
         participation: Participation = self.get_object()
 
         _, encrypted_key = request.user.get_keypair()
-        private_key = RSA.import_key(encrypted_key, serializer.validated_data["password"])
+        private_key = RSA.import_key(encrypted_key, password)
         if participation_token := participation.encrypted_token.decrypt(private_key):
             if participation_token == request_user_token:
                 email = CancelSignupEmail(participation.appointment)
@@ -231,35 +234,47 @@ class ParticipationViewSet(
     @action(
         detail=False,
         methods=[HTTPMethod.POST],
-        permission_classes=[AllowAny],
-        url_path="research/(?P<nanoid>[A-Z0-9-]{20})/(?P<action>get|set/?)",
+        permission_classes=[],
+        serializer_class=PasswordSerializer,
+        url_path="research/(?P<nanoid>[A-Z0-9-]{20})/get",
     )
-    def research_participations(self, request: Request, nanoid: str, action: str) -> Response:
+    def get_research_participations(self, request: Request, nanoid: str) -> Response:
         research: Research = get_object_or_404(Research, nanoid=nanoid)
 
-        if action == "get":
-            if research.is_protected:
-                serializer = PasswordSerializer(data=request.data)
-                serializer.is_valid(raise_exception=True)
-                password = serializer.validated_data["password"]
-            else:
-                password = "unprotected"
-            _, encrypted_key = research.get_keypair()
-            try:
-                private_key = RSA.import_key(encrypted_key, password)
-            except (ValueError, IndexError, TypeError):
-                raise exceptions.AuthenticationFailed("invalid password")
-            participations = self.get_queryset()
-            return Response(self.get_participations_for_key(private_key, participations, request))
+        if research.is_protected:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
 
-        serializer = ParticipationUpdateSerializer(data=request.data, many=True)
+            password = serializer.validated_data["password"]
+        else:
+            password = "unprotected"
+        _, encrypted_key = research.get_keypair()
+        try:
+            private_key = RSA.import_key(encrypted_key, password)
+        except (ValueError, IndexError, TypeError):
+            raise exceptions.AuthenticationFailed("invalid password")
+        participations = self.get_queryset()
+        return Response(self.get_participations_for_key(private_key, participations, request))
+
+    @action(
+        detail=False,
+        methods=[HTTPMethod.PUT],
+        permission_classes=[],
+        serializer_class=ParticipationUpdateSerializer,
+        url_path="research/(?P<nanoid>[A-Z0-9-]{20})/set",
+    )
+    def set_research_participations(self, request: Request, nanoid: str) -> Response:
+        research: Research = get_object_or_404(Research, nanoid=nanoid)
+
+        serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
+
         data = {data["id"]: data["is_confirmed"] for data in serializer.data}
         participations = Participation.objects.filter(appointment__research=research).filter(pk__in=data.keys())
         for participation in participations:
             participation.is_confirmed = data[participation.pk]
             participation.save()
-        return Response(status.HTTP_200_OK)
+        return Response(status.HTTP_204_NO_CONTENT)
 
 
 class AnonymousParticipationViewSet(viewsets.ModelViewSet):

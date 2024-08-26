@@ -42,10 +42,8 @@ export const actions = {
 
 		const authToken = cookies.get(consts.TOKEN_COOKIE);
 		if (authToken != null) {
-			formData.set('password', session.user_password);
-			const response = await fetch(consts.INT_API_ENDPOINT + `participation/${participationId}/`, {
-				method: 'DELETE',
-				body: formData
+			const response = await fetch(consts.INT_API_ENDPOINT + `participation/${participationId}/?password=${session.user_password}`, {
+				method: 'DELETE'
 			});
 			if (response.ok) {
 				return {
