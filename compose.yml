@@ -19,7 +19,7 @@ services:
     volumes:
       - type: bind
         source: ${PWD}/empi-server/.django_secret
-        target: /app/empi-server/.django-secret
+        target: /app/empi-server/.django_secret
 
   web:
     depends_on:
