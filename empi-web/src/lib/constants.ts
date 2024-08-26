@@ -6,7 +6,7 @@ if (typeof process != 'undefined') {
 }
 
 export const INT_SERVER_URL = (env?.INT_SERVER_URL || 'http://127.0.0.1:8000/').replace(/\/$/, '') + '/';
-export const EXT_SERVER_URL = 'http://127.0.0.1:8000/';
+export const EXT_SERVER_URL = (env?.EXT_SERVER_URL || 'http://127.0.0.1:8000/').replace(/\/$/, '') + '/';
 export const INT_API_ENDPOINT = INT_SERVER_URL + 'api/';
 export const EXT_API_ENDPOINT = EXT_SERVER_URL + 'api/';
 export const TOKEN_COOKIE = 'sessiontoken';
