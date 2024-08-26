@@ -138,7 +138,7 @@
 				</div>
 			</form>
 		</AccordionTab>
-		{#if data.attrs}
+		{#if data.attrs?.length > 0}
 			<AccordionTab open={false} title={$t('common.attributes')}>
 				<form method="POST"
 				      action="?/attrs"
