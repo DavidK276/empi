@@ -24,7 +24,6 @@
 			}
 
 			for (const participation of participations.values()) {
-				console.log(participation);
 				if (participation.research === research.id) {
 					can_signup = false;
 					is_confirmed ||= participation.is_confirmed;

@@ -1,40 +1,38 @@
 import type { PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
-import { error } from '@sveltejs/kit';
-import type { User } from '$lib/objects/user';
 
 
-export const load: PageServerLoad = async ({ fetch, cookies }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
+	const { session } = await parent();
+
+	const formData = new FormData();
+	formData.set('password', session?.user_password);
 	if (cookies.get(consts.TOKEN_COOKIE)) {
-		let response = await fetch(consts.INT_API_ENDPOINT + 'user/');
+		const response = await fetch(consts.INT_API_ENDPOINT + `participation/user/`, {
+			body: formData,
+			method: 'POST'
+		});
+		const responseJSON = await response.json();
+		const participations: Map<string, {name: string, points: number}> = new Map();
+		const researches: Map<number, number> = new Map<number, number>();
+		for (const participation of responseJSON) {
+			const token = participation.token;
+			const researchId = participation.research;
 
-		const users: Map<number, User> = new Map();
-		if (response.ok) {
-			let responseJSON = await response.json();
-			responseJSON.results.forEach((user: User) => {
-				users.set(user.id, user);
-			});
+			const participantResponse = await fetch(consts.INT_API_ENDPOINT + `participant/${token}/`);
+			const participantDetail = await participantResponse.json();
+			const name = participantDetail.user_detail.first_name + ' ' + participantDetail.user_detail.last_name;
 
-			while (responseJSON.next != null) {
-				response = await fetch(responseJSON.next);
-
-				if (response.ok) {
-					responseJSON = await response.json();
-					responseJSON.results.forEach((user: User) => {
-						users.set(user.id, user);
-					});
-				}
-				else {
-					break;
-				}
+			if (!researches.has(researchId)) {
+				const researchResponse = await fetch(consts.INT_API_ENDPOINT + `research-user/${researchId}/`);
+				const researchDetail = await researchResponse.json();
+				researches.set(researchId, researchDetail.points);
 			}
-			return {
-				users
-			};
+
+			const currentPoints = participations.get(token)?.points || 0;
+			participations.set(token, {name, points: researches.get(researchId)! + currentPoints})
 		}
-		else {
-			throw error(response.status);
-		}
+		return {participations}
 	}
-	throw error(401);
-};
+	return {participations: null}
+}

@@ -1,49 +1,10 @@
 <script lang="ts">
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
-	import { page } from '$app/stores';
-	import { type Writable, writable } from 'svelte/store';
-	import { Participation } from '$lib/objects/participation';
-	import type { PageData } from './$types';
-	import { plainToInstance } from 'class-transformer';
+	import type { PageServerData } from './$types';
 
-	export let data: PageData;
-	$: session = $page.data.session;
+	export let data: PageServerData;
 
-	session.subscribe(async ({ user_password }) => {
-		if (!user_password) {
-			return;
-		}
-
-		const formData = new FormData();
-		formData.set('current_password', user_password);
-		const response = await fetch('/server/participations/user', { method: 'POST', body: formData });
-		const responseJSON = await response.json() as Array<{
-			appointment: number,
-			is_confirmed: boolean,
-			research: number
-		}>;
-
-		const pointMap: Map<string, number> = new Map();
-		const participations = plainToInstance(Participation, responseJSON);
-		for (const participation of participations) {
-			const research = data.researches.get(participation.research);
-			const participant = data.participants.get(participation.token!);
-			if (research != null && participant != null) {
-				const user = data.users.get(participant.user);
-				if (user != null) {
-					const name = user.first_name + ' ' + user.last_name;
-					let currentPoints = pointMap.get(name);
-					currentPoints = (currentPoints != null) ? currentPoints : 0;
-					currentPoints += research.points;
-					pointMap.set(name, currentPoints);
-				}
-			}
-		}
-		points.set(pointMap);
-	});
-
-	let points: Writable<Map<string, number>> = writable();
 </script>
 <UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
@@ -53,11 +14,11 @@
 			<th>{$t('common.name')}</th>
 			<th>{$t('common.points')}</th>
 		</tr>
-		{#if $points != null}
-			{#each $points as point}
+		{#if data.participations}
+			{#each data.participations.values() as participation}
 				<tr>
-					<td>{point[0]}</td>
-					<td style="text-align: center">{point[1]}</td>
+					<td>{participation.name}</td>
+					<td style="text-align: center">{participation.points}</td>
 				</tr>
 			{/each}
 		{/if}

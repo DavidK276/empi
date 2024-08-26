@@ -115,7 +115,6 @@
 								if (submitter != null) {
 									submitter.toggleAttribute('disabled');
 									submitter.innerHTML = $t('common.submit');
-									console.log(result);
 									const submitDiv = formElement.children.namedItem('submit-div');
 									if (submitDiv != null) {
 										new FormResultMessage({target: submitDiv, props: {result}});
