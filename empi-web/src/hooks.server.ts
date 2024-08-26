@@ -47,8 +47,8 @@ const myHandle: Handle = async ({ event, resolve }) => {
 
 	if (!event.locals.session.data.participant) {
 		const user = event.locals.session.data.user;
-		if (!user.is_staff) {
-			const participantResponse = await event.fetch(consts.INT_API_ENDPOINT + `participant/${user.id}/`);
+		if (user.token != null) {
+			const participantResponse = await event.fetch(consts.INT_API_ENDPOINT + `participant/${user.token}/`);
 			if (!participantResponse.ok) {
 				await event.locals.session.update(() => ({ participant: undefined }));
 				return resolve(event);
@@ -56,6 +56,9 @@ const myHandle: Handle = async ({ event, resolve }) => {
 
 			const participant = await participantResponse.json();
 			await event.locals.session.update(async () => ({ participant }));
+		}
+		else {
+			await event.locals.session.update(async () => ({ participant: undefined }));
 		}
 	}
 
