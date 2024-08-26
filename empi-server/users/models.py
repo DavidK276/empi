@@ -48,6 +48,8 @@ class EmpiUserManager(UserManager):
         """
         Create and save a user with the given username, email, and password.
         """
+        if password is not None:
+            extra_fields |= self.init_keys(password)
         if not email:
             raise ValueError("The email must be set")
         email = self.normalize_email(email)
@@ -61,8 +63,6 @@ class EmpiUserManager(UserManager):
         return super().get_queryset().defer("pubkey", "privkey", "backup_privkey")
 
     def create_superuser(self, email=None, password=None, **extra_fields):
-        if password is not None:
-            extra_fields |= self.init_keys(password)
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -74,8 +74,6 @@ class EmpiUserManager(UserManager):
         return self._create_user(email, password, **extra_fields)
 
     def create_user(self, email=None, password=None, **extra_fields):
-        if password is not None:
-            extra_fields |= self.init_keys(password)
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
