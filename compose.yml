@@ -16,6 +16,10 @@ services:
       target: api
     ports:
       - "8000:8000"
+    volumes:
+      - type: bind
+        source: ${PWD}/empi-server/.django_secret
+        target: /app/empi-server/.django-secret
 
   web:
     depends_on:
