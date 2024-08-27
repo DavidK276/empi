@@ -47,6 +47,8 @@ if hosts:
 if os.environ.get("EMPI_DOCKER", ""):
     ALLOWED_HOSTS += ["api"]
 
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip('"').strip("'")
+
 BASE_URI = (os.environ.get("BASE_URI", "").strip("/") + "/").lstrip("/")
 
 CORS_ORIGIN_ALLOW_ALL = True
