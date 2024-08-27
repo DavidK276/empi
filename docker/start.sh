@@ -18,7 +18,7 @@ poetry run ./manage.py migrate
 poetry run ./manage.py createinitialuser --noinput
 
 if [ ${DEBUG:+1} ]; then
-  exec poetry run ./manage.py runserver 0.0.0.0:8000
+  exec poetry run ./manage.py runserver 127.0.0.1:8001
 else
   exec poetry run gunicorn empi_server.wsgi --bind 127.0.0.1:8001 --workers 4 --max-requests 1000
 fi
