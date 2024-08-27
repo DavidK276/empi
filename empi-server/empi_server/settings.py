@@ -24,12 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-bn7i4a#e6&%@jrs!y5%n(et7c!d*f1!%e7i7@9h$p4v)jl&$$^"
-try:
-    with open(BASE_DIR / ".django-secret", "r") as f:
-        SECRET_KEY = f.read().strip()
-except FileNotFoundError:
+
+secret_key_var = os.environ.get("DJANGO_SECRET_KEY", "")
+if secret_key_var:
+    SECRET_KEY = secret_key_var.strip()
+else:
     print(
-        "\033[93m" + f"Unable to open {BASE_DIR / ".django_secret"}, SECRET_KEY will use an insecure value." + "\033[0m"
+        "\033[93m"
+        + "Environment variable DJANGO_SECRET_KEY is not set. SECRET_KEY will use an insecure value."
+        + "\033[0m"
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!

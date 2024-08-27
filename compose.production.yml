@@ -6,6 +6,7 @@ services:
       FROM_EMAIL: "noreply@example.com"
       REPLY_TO_EMAILS: "admin@example.com"
       SENTRY_SDK_DSN: ""
+      DJANGO_SECRET_KEY: ""
   web:
     environment:
       COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long
