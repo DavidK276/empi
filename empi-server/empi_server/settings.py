@@ -47,6 +47,8 @@ if hosts:
 if os.environ.get("EMPI_DOCKER", ""):
     ALLOWED_HOSTS += ["api"]
 
+BASE_URI = (os.environ.get("BASE_URI", "").strip("/") + "/").lstrip("/")
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = ("http://localhost:5173",)
 
@@ -188,7 +190,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = BASE_URI + "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR.parent / "static"
 
@@ -201,7 +203,6 @@ AUTH_USER_MODEL = "users.EmpiUser"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# non-Django settings
 EMPI_PUBLIC_URL = (os.environ.get("WEB_URL") or "http://localhost:5173").strip("/")
 
 EMPI_FROM_EMAIL = os.environ.get("FROM_EMAIL") or "noreply@example.com"

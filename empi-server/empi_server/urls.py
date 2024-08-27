@@ -16,7 +16,8 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.conf import settings
 
 from . import api
 
@@ -28,7 +29,14 @@ def trigger_error(request):
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path("api/", include(api)),
-    path("admin/", admin.site.urls),
-    path("sentry-debug/", trigger_error),
+    re_path(
+        settings.BASE_URI,
+        include(
+            [
+                path("api/", include(api)),
+                path("admin/", admin.site.urls),
+                path("sentry-debug/", trigger_error),
+            ]
+        ),
+    )
 ]
