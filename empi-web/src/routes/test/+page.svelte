@@ -1,3 +1,7 @@
+<script lang="ts">
+import { base } from "$app/paths";
+</script>
+
 <div id="top" role="document">
 	<header>
 		<h1>HTML5 Test Page</h1>
@@ -409,7 +413,7 @@
 			<article id="embedded__iframe">
 				<header><h2>IFrame</h2></header>
 				<div>
-					<iframe src="/" height="300"></iframe>
+					<iframe src="{base}/" height="300"></iframe>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
@@ -547,7 +551,7 @@
 					</p>
 					<p>
 						<label for="idt">Datetime input</label>
-						<input type="datetime" id="idt" value="1970-01-01T00:00:00Z">
+						<input type="datetime-local" id="idt" value="1970-01-01T00:00:00Z">
 					</p>
 					<p>
 						<label for="idtl">Datetime-local input</label>

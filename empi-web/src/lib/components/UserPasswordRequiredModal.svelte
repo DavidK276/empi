@@ -3,6 +3,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import { base } from "$app/paths";
 
 	let password_ok: boolean | null = null;
 	let modal: Modal;
@@ -15,7 +16,7 @@
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
 	</div>
-	<form method="POST" action="/?/checkPassword" use:enhance={() => {
+	<form method="POST" action="{base}/?/checkPassword" use:enhance={() => {
 		password_ok = null;
 		return async ({result}) => {
 			password_ok = result.type === 'success';

@@ -1,6 +1,7 @@
 import * as consts from '$lib/constants';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { handleSession } from 'svelte-kit-cookie-session';
+import { base } from "$app/paths";
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	const urlPath = new URL(request.url).pathname;
@@ -11,7 +12,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 		const password: string | null = session.research_password;
 		const is_staff = session.user?.is_staff || false;
 
-		if (urlPath.includes('/research-admin') && password && !is_staff) {
+		if (urlPath.includes(`${base}/research-admin`) && password && !is_staff) {
 			const bytes = new TextEncoder().encode('x:' + password);
 			const binString = Array.from(bytes, (byte) =>
 					String.fromCodePoint(byte)

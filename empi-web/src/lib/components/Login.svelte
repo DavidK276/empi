@@ -4,6 +4,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import type { ActionResult } from "@sveltejs/kit";
+	import { base } from "$app/paths";
 
 	async function login() {
 		logging_in = true;
@@ -34,7 +35,7 @@
 	let login_message = "";
 </script>
 {#if !is_logged_in}
-	<form method="POST" action="/?/login" style="width: 100%"
+	<form method="POST" action="{base}/?/login" style="width: 100%"
 				use:enhance={login}>
 		<label for="email">Email: </label>
 		<input type="email" id="email" name="email" required>
@@ -49,11 +50,11 @@
 			{:else}
 				<button type="submit" id="submit">{$t('common.login')}</button>
 			{/if}
-			<a href="/account/register" style="margin: 0 var(--sm)">{$t('common.registration')}</a>
+			<a href="{base}/account/register" style="margin: 0 var(--sm)">{$t('common.registration')}</a>
 		</div>
 	</form>
 {:else}
-	<form method="POST" action="/?/logout"
+	<form method="POST" action="{base}/?/logout"
 	      use:enhance={() => {
 									logging_out = true;
 

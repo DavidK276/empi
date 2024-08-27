@@ -6,10 +6,11 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import type { PageServerData } from './$types';
+	import { base } from "$app/paths";
 
 	onMount(() => {
 		if (!$page.data.user?.is_staff) {
-			goto('/', { replaceState: true });
+			goto(`${base}/`, { replaceState: true });
 		}
 	});
 

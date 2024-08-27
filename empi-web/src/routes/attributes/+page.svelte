@@ -8,13 +8,14 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+	import { base } from "$app/paths";
 
 	export let data: PageData;
 
 	$: session = $page.data.session;
 	onMount(() => {
 		if (session?.user.is_staff == null) {
-			goto('/', { replaceState: true });
+			goto(`${base}/`, { replaceState: true });
 		}
 	});
 

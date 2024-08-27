@@ -9,31 +9,32 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	import MaterialSymbolsKeyboardArrowRight from 'virtual:icons/material-symbols/keyboard-arrow-right';
+	import { base } from "$app/paths";
 
 	export let data: LayoutServerData;
 </script>
 
 <header class="row hor-center ver-center m-col">
 	<nav>
-		<a href="/">{$t('common.home')}</a>
-		<a href="/about">{$t('common.about')}</a>
+		<a href="{base}/">{$t('common.home')}</a>
+		<a href="{base}/about">{$t('common.about')}</a>
 		{#if data.user == null}
-			<a href="/research">{$t('common.create_research')}</a>
+			<a href="{base}/research">{$t('common.create_research')}</a>
 		{/if}
 	</nav>
 	<div class="row ver-center">
 		{#if data.user != null}
 			<Dropdown title="{(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}">
 				{#if !data.user.is_staff}
-					<div><a href="/attributes">{$t('common.attributes')}
+					<div><a href="{base}/attributes">{$t('common.attributes')}
 						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 					</a></div>
-					<div><a href="/account/points">{$t('common.my_points')}
+					<div><a href="{base}/account/points">{$t('common.my_points')}
 						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 					</a>
 					</div>
 				{/if}
-				<div><a href="/account">{$t('common.account')}
+				<div><a href="{base}/account">{$t('common.account')}
 						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 				</a>
 				</div>
@@ -46,9 +47,9 @@
 		{/if}
 		{#if data.user?.is_staff}
 			<Dropdown title={$t('common.administration')}>
-				<div><a href="/attributes">{$t('common.attributes')}</a></div>
-				<div><a href="/admin/research-points">{$t('common.research_points')}</a></div>
-				<div><a href="/admin/student-points">{$t('common.student_points')}</a></div>
+				<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
+				<div><a href="{base}/admin/research-points">{$t('common.research_points')}</a></div>
+				<div><a href="{base}/admin/student-points">{$t('common.student_points')}</a></div>
 			</Dropdown>
 		{/if}
 		<div style="border-left: 1px solid var(--text-primary); height: 2rem; display: inline"></div>
