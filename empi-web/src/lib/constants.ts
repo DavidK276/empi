@@ -1,12 +1,7 @@
-import * as process from 'node:process';
+import * as env from '$env/static/public';
 
-let env;
-if (typeof process != 'undefined') {
-	env = process.env;
-}
-
-export const INT_API_ENDPOINT = (env?.INT_API_ENDPOINT || 'http://127.0.0.1:8000/api').replace(/\/$/, '') + '/';
-export const EXT_API_ENDPOINT = (env?.EXT_API_ENDPOINT || 'http://127.0.0.1:8000/api').replace(/\/$/, '') + '/';
+export const INT_API_ENDPOINT = (env.EMPI_INT_API_ENDPOINT || 'http://127.0.0.1:8000/api').replace(/\/$/, '') + '/';
+export const EXT_API_ENDPOINT = (env.EMPI_EXT_API_ENDPOINT || 'http://127.0.0.1:8000/api').replace(/\/$/, '') + '/';
 export const TOKEN_COOKIE = 'sessiontoken';
 export const SUPPORTED_LANGS = ['en', 'sk'];
 export const ALLOW_TEXTENTRY_ATTR = false;

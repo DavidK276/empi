@@ -23,6 +23,9 @@ const config = {
 		},
 		csrf: {
 			checkOrigin: true
+		},
+		env: {
+			publicPrefix: "EMPI_"
 		}
 	}
 };

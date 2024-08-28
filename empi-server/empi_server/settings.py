@@ -47,7 +47,12 @@ if hosts:
 if os.environ.get("EMPI_DOCKER", ""):
     ALLOWED_HOSTS += ["api"]
 
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip('"').strip("'").split(",")
+csrf_trusted_origins = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip('"').strip("'")
+
+if csrf_trusted_origins:
+    CSRF_TRUSTED_ORIGINS = csrf_trusted_origins.split(",")
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
 BASE_URI = (os.environ.get("BASE_URI", "").strip("/") + "/").lstrip("/")
 
