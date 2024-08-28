@@ -2,6 +2,11 @@
 
 FROM node:22-bookworm-slim AS web-build
 
+ARG EMPI_INT_API_ENDPOINT
+ENV EMPI_INT_API_ENDPOINT=$EMPI_INT_API_ENDPOINT
+ARG EMPI_EXT_API_ENDPOINT
+ENV EMPI_EXT_API_ENDPOINT=$EMPI_EXT_API_ENDPOINT
+
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt update \
     && apt install -y patch \
