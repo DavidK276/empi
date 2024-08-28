@@ -1,6 +1,7 @@
 import type { Actions } from './$types';
 import * as consts from '$lib/constants';
 import { error, fail } from '@sveltejs/kit';
+import { base } from "$app/paths";
 
 export const actions = {
 	login: async ({ cookies, request, locals, fetch }) => {
@@ -11,12 +12,12 @@ export const actions = {
 		});
 
 		await locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
-		cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
+		cookies.delete(consts.TOKEN_COOKIE, { path: base });
 
 		const responseJSON = await response.json();
 		if (response.ok) {
 			const expires = new Date(Date.parse(responseJSON.expiry));
-			cookies.set(consts.TOKEN_COOKIE, responseJSON.token, { path: '/', httpOnly: true, expires });
+			cookies.set(consts.TOKEN_COOKIE, responseJSON.token, { path: base, httpOnly: true, expires });
 			await locals.session.update(() => ({ user_password: formData.get('password') }));
 			return { login: true };
 		}
@@ -32,7 +33,7 @@ export const actions = {
 			});
 
 			await locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
-			cookies.delete(consts.TOKEN_COOKIE, { path: '/' });
+			cookies.delete(consts.TOKEN_COOKIE, { path: base });
 		}
 	},
 	checkPassword: async ({ request, fetch, cookies, locals }) => {
