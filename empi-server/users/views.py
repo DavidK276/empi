@@ -1,3 +1,4 @@
+from Crypto.PublicKey import RSA
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -11,7 +12,7 @@ from rest_framework.routers import reverse
 from rest_framework.status import HTTP_200_OK
 
 from emails.types import PasswordResetEmail
-from research.models import Research
+from research.models import Research, Participation
 from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey
 from .permissions import *
 from .serializers import (
@@ -126,6 +127,26 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, name="Get own details", methods=[HTTPMethod.GET], permission_classes=[IsAuthenticated])
     def get_self(self, request):
         return HttpResponseRedirect(reverse("empiuser-detail", [request.user.id], request=request))
+
+    @action(detail=False, name="Create admin", methods=[HTTPMethod.POST], permission_classes=[IsAdminUser])
+    def create_admin(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        current_admin: EmpiUser = request.user
+        passphrase = serializer.validated_data["password"]
+        if current_admin.check_password(passphrase):
+            return Response(status=status.HTTP_200_OK)
+
+        new_admin: EmpiUser = serializer.validated_data["admin"]
+        new_admin.save()
+        new_admin_pubkey = RSA.import_key(new_admin.pubkey)
+
+        current_admin_privkey = RSA.import_key(current_admin.privkey, passphrase)
+        for participation in Participation.objects.all():
+            token = participation.decrypt(current_admin_privkey)
+            participation.add_encrypted_token(token, new_admin_pubkey)
+            participation.save()
 
 
 class ParticipantViewSet(

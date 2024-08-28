@@ -52,6 +52,8 @@ class SeparatedBinaryField(models.BinaryField):
         return self.unstuff_bytes(value)
 
     def get_prep_value(self, value):
+        if value is None:
+            return None
         return bytes((self.__BORDER_BYTE,)).join(self.stuff_bytes(v) for v in value)
 
     def value_to_string(self, obj):

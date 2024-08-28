@@ -6,7 +6,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as t
-from drf_spectacular.utils import extend_schema, OpenApiParameter, PolymorphicProxySerializer
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from knox.auth import TokenAuthentication
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import SessionAuthentication
@@ -19,7 +19,7 @@ from emails.types import PublicSignupEmail, ResearchCreatedEmail, NewSignupEmail
 from users.models import Participant
 from users.serializers import PasswordChangeSerializer, PasswordSerializer
 from .auth import ResearchAuthentication
-from .models import Appointment, Research, Participation, EncryptedToken
+from .models import Appointment, Research, Participation
 from .permissions import *
 from .serializers import (
     AppointmentSerializer,
@@ -154,7 +154,7 @@ class ParticipationViewSet(
     Used for working with :class:`Participation` objects by registered users.
     """
 
-    queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=False)
+    queryset = Participation.objects.get_queryset().filter(encrypted_tokens__isnull=False)
     serializer_class = ParticipationSerializer
     permission_classes = [IsAuthenticated]
 
@@ -174,10 +174,7 @@ class ParticipationViewSet(
         pubkeys = appointment.get_pubkeys(request.user)
 
         with transaction.atomic():
-            encrypted_token = EncryptedToken.new(participant.token, pubkeys)
-            encrypted_token.save()
-
-            participation = Participation(appointment=appointment, encrypted_token=encrypted_token)
+            participation = Participation.new(participant.token, appointment, is_confirmed=False, pubkeys=pubkeys)
             participation.save()
 
             email = NewSignupEmail(appointment)
@@ -196,7 +193,7 @@ class ParticipationViewSet(
 
         _, encrypted_key = request.user.get_keypair()
         private_key = RSA.import_key(encrypted_key, password)
-        if participation_token := participation.encrypted_token.decrypt(private_key):
+        if participation_token := participation.decrypt(private_key):
             if participation_token == request_user_token:
                 email = CancelSignupEmail(participation.appointment)
                 email.send()
@@ -209,7 +206,7 @@ class ParticipationViewSet(
     def get_participations_for_key(private_key: RsaKey, participations: Iterable[Participation], request):
         result = []
         for p in participations:
-            if token := p.encrypted_token.decrypt(private_key):
+            if token := p.decrypt(private_key):
                 data = ParticipationSerializer(p, context={"request": request}).data
                 data |= {"token": token}
                 data |= {"research": p.appointment.research.pk}
@@ -282,7 +279,7 @@ class AnonymousParticipationViewSet(viewsets.ModelViewSet):
     Used for working with :class:`Participation` objects by anonymous users.
     """
 
-    queryset = Participation.objects.get_queryset().filter(encrypted_token__isnull=True)
+    queryset = Participation.objects.get_queryset().filter(encrypted_tokens__isnull=True)
     serializer_class = AnonymousParticipationSerializer
     permission_classes = [AllowAllExceptList | IsAdminUser]
     lookup_field = "nanoid"

@@ -174,66 +174,40 @@ class Appointment(models.Model):
         return d
 
 
-class EncryptedToken(models.Model):
-    __AES_KEY_LENGTH = 16
-    session_keys = SeparatedBinaryField()
-    nonce = models.BinaryField()
-    tag = models.BinaryField()
-    ciphertext = models.BinaryField()
+class Participation(models.Model):
+    nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    is_confirmed = models.BooleanField(default=False, blank=True, null=False)
+    encrypted_tokens = SeparatedBinaryField(blank=True, null=True)
+
+    def __str__(self):
+        return self.appointment.when.isoformat(timespec="minutes") + f" ({self.pk})"
 
     @classmethod
-    def new(cls, token: str, pubkeys: Sequence[RsaKey]) -> Self:
+    def new(
+        cls,
+        token: str,
+        appointment: Appointment,
+        is_confirmed: bool,
+        pubkeys: Sequence[RsaKey],
+    ) -> Self:
         token_bytes = token.encode("UTF-8")
-        enc_keys: list[bytes] = []
+        encrypted_tokens: list[bytes] = []
         for pubkey in pubkeys:
             cipher_rsa = PKCS1_OAEP.new(pubkey)
-            enc_keys.append(cipher_rsa.encrypt(token_bytes))
+            encrypted_tokens.append(cipher_rsa.encrypt(token_bytes))
 
-        return cls(
-            session_keys=enc_keys,
-            nonce=b"",
-            tag=b"",
-            ciphertext=b"",
-        )
+        return cls(appointment=appointment, is_confirmed=is_confirmed, encrypted_tokens=encrypted_tokens)
 
-    def _old_decrypt(self, private_key: RsaKey) -> Optional[str]:
-        cipher_rsa = PKCS1_OAEP.new(private_key)
-        for enc_key in self.session_keys:
-            try:
-                session_key = cipher_rsa.decrypt(enc_key)
-            except ValueError:
-                continue
-            if len(session_key) != self.__AES_KEY_LENGTH:  # anything else means decryption failed
-                continue
-            cipher_aes = AES.new(session_key, AES.MODE_EAX, nonce=self.nonce)
-            try:
-                token_data = cipher_aes.decrypt_and_verify(self.ciphertext, self.tag)
-            except ValueError:
-                continue
-            token = token_data.decode("utf-8")
-
-            del session_key  # the session key is sensitive, so delete it immediately
-            return token
-        return None
+    def add_encrypted_token(self, token: str, pubkey: RsaKey):
+        cipher_rsa = PKCS1_OAEP.new(pubkey)
+        self.encrypted_tokens.append(cipher_rsa.encrypt(token.encode("UTF-8")))
 
     def decrypt(self, private_key: RsaKey) -> Optional[str]:
-        if self.tag:
-            return self._old_decrypt(private_key)
-
         cipher_rsa = PKCS1_OAEP.new(private_key)
-        for enc_token in self.session_keys:
+        for enc_token in self.encrypted_tokens:
             try:
                 token_bytes = cipher_rsa.decrypt(enc_token)
             except ValueError:
                 continue
             return token_bytes.decode("UTF-8")
-
-
-class Participation(models.Model):
-    nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
-    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
-    is_confirmed = models.BooleanField(default=False, blank=True, null=False)
-    encrypted_token = models.OneToOneField(EncryptedToken, on_delete=models.CASCADE, blank=True, null=True)
-
-    def __str__(self):
-        return self.appointment.when.isoformat(timespec="minutes") + f" ({self.pk})"

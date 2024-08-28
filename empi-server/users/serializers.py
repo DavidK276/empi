@@ -54,6 +54,11 @@ class PasswordResetSerializer(serializers.Serializer):
     )
 
 
+class CreateAdminSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
+    admin = UserSerializer(write_only=True)
+
+
 @extend_schema_field({"type": "array", "items": {"type": "string"}})
 class AttributeValueField(serializers.Field):
 
