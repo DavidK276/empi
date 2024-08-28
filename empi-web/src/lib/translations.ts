@@ -1,5 +1,6 @@
 import type { Config } from 'sveltekit-i18n';
 import i18n from 'sveltekit-i18n';
+import { base } from "$app/paths";
 
 const config: Config = {
 	loaders: [
@@ -13,7 +14,7 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'attrs',
-			routes: ['/attributes', /\/research.*/], // you can use regexes as well!
+			routes: [`${base}/attributes`, RegExp(`${base}/research/.*`)], // you can use regexes as well!
 			loader: async () => (
 				await import('./en/attrs.json')
 			).default
@@ -21,7 +22,7 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'account',
-			routes: ['/account'], // you can use regexes as well!
+			routes: [`${base}/account`],
 			loader: async () => (
 				await import('./en/account.json')
 			).default
@@ -29,7 +30,6 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'research',
-			routes: [/\/?/, /\/research.*/, '/account/points'], // you can use regexes as well!
 			loader: async () => (
 				await import('./en/research.json')
 			).default
@@ -44,7 +44,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'attrs',
-			routes: ['/attributes', /\/research.*/], // you can use regexes as well!
+			routes: [`${base}/attributes`, RegExp(`${base}/research/.*`)], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/attrs.json')
 			).default
@@ -52,7 +52,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'account',
-			routes: ['/account'], // you can use regexes as well!
+			routes: [`${base}/account`], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/account.json')
 			).default
@@ -60,7 +60,6 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'research',
-			routes: [/\/?/, /\/research.*/, '/account/points'], // you can use regexes as well!
 			loader: async () => (
 				await import('./sk/research.json')
 			).default
