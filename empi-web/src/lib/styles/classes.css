@@ -80,3 +80,8 @@
 .my-label:has(+ input:user-invalid) {
     color: var(--danger);
 }
+
+.icon {
+    min-width: 24px;
+    min-height: 24px;
+}

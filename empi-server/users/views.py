@@ -1,19 +1,22 @@
+from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from nanoid import generate
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.response import Response
 from rest_framework.routers import reverse
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from emails.types import PasswordResetEmail
 from research.models import Research, Participation
-from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey
+from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey, EncryptedSessionKey
 from .permissions import *
 from .serializers import (
     UserSerializer,
@@ -22,6 +25,8 @@ from .serializers import (
     AttributeSerializer,
     PasswordResetSerializer,
     PasswordSerializer,
+    ActivateUserSerializer,
+    EmailPasswordSerializer,
 )
 
 
@@ -73,15 +78,17 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_200_OK)
 
     @action(
-        detail=True, methods=[HTTPMethod.POST], serializer_class=PasswordSerializer, permission_classes=[IsAdminUser]
+        detail=False,
+        methods=[HTTPMethod.POST],
+        serializer_class=EmailPasswordSerializer,
+        permission_classes=[IsAdminUser],
     )
-    def start_password_reset(self, request, pk=None):
+    def start_password_reset(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        user: EmpiUser = self.get_object()
-        admin: EmpiUser = request.user
-
+        user: EmpiUser = get_object_or_404(EmpiUser, email=serializer.validated_data["email"])
+        admin = request.user
         admin_password = serializer.validated_data["password"]
         passphrase = user.make_reset_key(admin, admin_password)
 
@@ -108,6 +115,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
         user.reset_password(reset_key, passphrase, new_password)
 
+        return Response(status=HTTP_204_NO_CONTENT)
+
     @action(
         detail=False,
         name="Check password",
@@ -128,25 +137,76 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_self(self, request):
         return HttpResponseRedirect(reverse("empiuser-detail", [request.user.id], request=request))
 
-    @action(detail=False, name="Create admin", methods=[HTTPMethod.POST], permission_classes=[IsAdminUser])
+    @action(
+        detail=False,
+        name="Create admin",
+        methods=[HTTPMethod.POST],
+        permission_classes=[IsAdminUser],
+        serializer_class=EmailPasswordSerializer,
+    )
     def create_admin(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         current_admin: EmpiUser = request.user
         passphrase = serializer.validated_data["password"]
-        if current_admin.check_password(passphrase):
-            return Response(status=status.HTTP_200_OK)
+        if not current_admin.check_password(passphrase):
+            raise exceptions.AuthenticationFailed()
 
-        new_admin: EmpiUser = serializer.validated_data["admin"]
-        new_admin.save()
-        new_admin_pubkey = RSA.import_key(new_admin.pubkey)
+        new_admin_email = serializer.validated_data["email"]
+        activation_code = generate(alphabet="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", size=64)
 
-        current_admin_privkey = RSA.import_key(current_admin.privkey, passphrase)
-        for participation in Participation.objects.all():
-            token = participation.decrypt(current_admin_privkey)
-            participation.add_encrypted_token(token, new_admin_pubkey)
-            participation.save()
+        with transaction.atomic():
+            new_admin = EmpiUser.users.create_superuser(
+                email=new_admin_email, password=activation_code, is_active=False
+            )
+            new_admin_pubkey = RSA.import_key(new_admin.pubkey)
+
+            current_admin_privkey = RSA.import_key(current_admin.privkey, passphrase)
+            for participation in Participation.objects.all():
+                token = participation.decrypt(current_admin_privkey)
+                participation.add_encrypted_token(token, new_admin_pubkey)
+                participation.save()
+
+            for user in EmpiUser.users.all().exclude(pk=new_admin.pk):
+                session_key_encrypted_by_current_admin = EncryptedSessionKey.objects.get(
+                    admin=current_admin, backup_key=user.backup_privkey
+                )
+                cipher_rsa = PKCS1_OAEP.new(RSA.import_key(current_admin.privkey, passphrase=passphrase))
+                session_key = cipher_rsa.decrypt(session_key_encrypted_by_current_admin)
+
+                cipher_rsa = PKCS1_OAEP.new(new_admin_pubkey)
+                enc_session_key = EncryptedSessionKey(
+                    admin=new_admin, backup_key=user.backup_privkey, data=cipher_rsa.encrypt(session_key)
+                )
+                enc_session_key.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@action(
+    detail=True,
+    name="Activate account",
+    methods=[HTTPMethod.POST],
+    permission_classes=[AllowAny],
+    serializer_class=ActivateUserSerializer,
+    queryset=EmpiUser.users.get_queryset().filter(is_active=False),
+)
+def activate_account(self, request, pk: int):
+    serializer: ActivateUserSerializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    with transaction.atomic():
+        user: EmpiUser = self.get_object()
+        user.change_password(serializer.validated_data["passphrase"], serializer.validated_data["new_password"])
+
+        user.is_active = True
+        user.email = serializer.validated_data["email"]
+        user.first_name = serializer.validated_data["first_name"]
+        user.last_name = serializer.validated_data["last_name"]
+        user.save()
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ParticipantViewSet(

@@ -1,0 +1,42 @@
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import type { ActionResult } from '@sveltejs/kit';
+	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
+	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
+
+	let submitButton: HTMLButtonElement;
+
+	async function doUpdate() {
+		return async ({ update, result }: {
+			update: (options?: { reset?: boolean, invalidateAll?: boolean }) => Promise<void>,
+			result: ActionResult
+		}) => {
+			if (result.type === 'success') {
+				new FormResultMessage({
+					target: submitButton.parentElement as HTMLElement,
+					props: { result, message: 'Link bol úspešne odoslaný' }
+				});
+			}
+			else {
+				new FormResultMessage({ target: submitButton.parentElement as HTMLElement, props: { result } });
+			}
+			await update();
+		};
+	}
+</script>
+
+<h1>Resetovanie hesla</h1>
+<p class="message">
+	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>
+	Zadajte emailovú adresu používateľa. Pokiaľ používateľ s takou emailovou adresou existuje, bude mu doručený email s
+	linkom na obnovu hesla.
+</p>
+<div class="row" style="padding-top: var(--xl);">
+	<form method="POST" style="width: 50%" class="m-w-full" use:enhance={doUpdate}>
+		<label for="email">Email</label>
+		<input type="email" name="email" id="email">
+		<div class="row ver-center">
+			<button type="submit" bind:this={submitButton}>Poslať link na obnovu hesla</button>
+		</div>
+	</form>
+</div>

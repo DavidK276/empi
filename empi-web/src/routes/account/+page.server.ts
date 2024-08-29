@@ -19,7 +19,7 @@ export const actions = {
 			return fail(response.status, { success: false, errors: await response.json() });
 		}
 		await locals.session.update(() => ({ user: undefined }));
-		return { success: true }
+		return { success: true };
 	},
 	changePassword: async ({ fetch, request, locals }) => {
 		const session = locals.session.data;

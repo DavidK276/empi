@@ -1,5 +1,6 @@
 <script lang="ts">
 	import MaterialSymbolsKeyboardArrowDown from 'virtual:icons/material-symbols/keyboard-arrow-down';
+	import MaterialSymbolsKeyboardArrowUp from 'virtual:icons/material-symbols/keyboard-arrow-up';
 
 	export let title: string;
 	let isOpen = false;
@@ -8,7 +9,11 @@
 <div class="dropdown" class:show={isOpen}>
 	<button on:click={() => (isOpen = !isOpen)}>
 		{title}
-		<MaterialSymbolsKeyboardArrowDown width="24" height="24"></MaterialSymbolsKeyboardArrowDown>
+		{#if isOpen}
+			<MaterialSymbolsKeyboardArrowUp width="24" height="24"></MaterialSymbolsKeyboardArrowUp>
+		{:else}
+			<MaterialSymbolsKeyboardArrowDown width="24" height="24"></MaterialSymbolsKeyboardArrowDown>
+		{/if}
 	</button>
 	<div class="dropdown-content col">
 		<slot></slot>
@@ -19,6 +24,10 @@
     .dropdown {
         display: inline-block;
     }
+
+		button {
+				cursor: pointer;
+		}
 
     .dropdown-content {
         display: none;
@@ -31,6 +40,7 @@
         border-radius: var(--sm);
         padding: var(--lg);
         gap: var(--lg);
+				margin-top: 2px;
     }
 
     @media screen and (min-width: 768px) {
@@ -48,11 +58,7 @@
         }
     }
 
-    :is(.dropdown:hover, .dropdown.show) .dropdown-content {
+    .dropdown.show .dropdown-content {
         display: flex;
-    }
-
-    .dropdown:has(:focus) .dropdown-content {
-		    display: flex;
     }
 </style>

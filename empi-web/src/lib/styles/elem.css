@@ -54,6 +54,10 @@ button {
     }
 }
 
+button[type="submit"] {
+    cursor: pointer;
+}
+
 label {
     display: flex;
     align-items: center;

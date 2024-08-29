@@ -48,15 +48,24 @@ class PasswordSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-    password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
+    new_password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
     passphrase = serializers.CharField(
-        min_length=32, max_length=32, write_only=True, default=None, style={"input_type": "password"}
+        min_length=64, max_length=64, write_only=True, default=None, style={"input_type": "password"}
     )
 
 
-class CreateAdminSerializer(serializers.Serializer):
+class EmailPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
-    admin = UserSerializer(write_only=True)
+    email = serializers.EmailField(write_only=True)
+
+
+class ActivateUserSerializer(serializers.Serializer):
+    new_password = serializers.CharField(max_length=100, write_only=True, style={"input_type": "password"})
+    passphrase = serializers.CharField(min_length=64, max_length=64, write_only=True, style={"input_type": "password"})
+
+    email = serializers.EmailField(write_only=True)
+    first_name = serializers.CharField(max_length=150, write_only=True)
+    last_name = serializers.CharField(max_length=150, write_only=True)
 
 
 @extend_schema_field({"type": "array", "items": {"type": "string"}})

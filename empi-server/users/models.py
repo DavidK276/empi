@@ -10,9 +10,9 @@ from Crypto.Random import get_random_bytes
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager, PermissionsMixin
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.db import models
 from nanoid import generate
 from rest_framework import exceptions
 
@@ -22,10 +22,9 @@ from utils.keys import export_privkey, export_privkey_plaintext
 class EmpiUserManager(UserManager):
 
     @staticmethod
-    def init_keys(password: str):
+    def _init_keys(password: str, **kwargs):
         new_user_privkey = RSA.generate(2048)
-        privkey = export_privkey(new_user_privkey, password)
-        pubkey = new_user_privkey.publickey().export_key(format="PEM")
+        pubkey = new_user_privkey.publickey()
 
         session_key = get_random_bytes(16)
         nonce = get_random_bytes(16)
@@ -42,7 +41,12 @@ class EmpiUserManager(UserManager):
                 admin=admin, backup_key=backup_privkey, data=cipher_rsa.encrypt(session_key)
             )
             enc_session_key.save()
-        return {"privkey": privkey, "pubkey": pubkey, "backup_privkey": backup_privkey}
+
+        return {
+            "privkey": export_privkey(new_user_privkey, password),
+            "pubkey": pubkey.export_key(format="DER"),
+            "backup_privkey": backup_privkey,
+        }, session_key
 
     def _create_user(self, email, password, **extra_fields):
         """
@@ -53,12 +57,20 @@ class EmpiUserManager(UserManager):
         email = self.normalize_email(email)
 
         if password is not None:
-            keydata = self.init_keys(password)
+            keydata, session_key = self._init_keys(password, **extra_fields)
         else:
-            keydata = {}
+            keydata, session_key = {}, None
         user = self.model(email=email, **(extra_fields | keydata))
         user.password = make_password(password)
         user.save(using=self._db)
+
+        if session_key and user.is_staff:
+            pubkey = RSA.import_key(user.pubkey)
+            cipher_rsa = PKCS1_OAEP.new(pubkey)
+            enc_session_key = EncryptedSessionKey(
+                admin=user, backup_key=user.backup_privkey, data=cipher_rsa.encrypt(session_key)
+            )
+            enc_session_key.save()
         return user
 
     def get_queryset(self):

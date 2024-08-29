@@ -1,7 +1,7 @@
 import * as consts from '$lib/constants';
 import { type Actions, error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { Participation } from "$lib/objects/participation";
+import type { Participation } from '$lib/objects/participation';
 
 export const actions = {
 	signup: async ({ request, fetch, cookies }) => {
@@ -60,6 +60,9 @@ export const actions = {
 
 export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 	const { session } = await parent();
+	if (session?.user.is_staff) {
+		return { participations: null };
+	}
 
 	const formData = new FormData();
 	formData.set('password', session?.user_password);
@@ -72,9 +75,9 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 
 		const participations: Map<number, Participation> = new Map();
 		for (const participation of responseJSON) {
-				participations.set(participation.appointment, participation);
+			participations.set(participation.appointment, participation);
 		}
-		return {participations}
+		return { participations };
 	}
-	return {participations: null}
-}
+	return { participations: null };
+};

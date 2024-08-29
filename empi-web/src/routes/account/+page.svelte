@@ -2,7 +2,7 @@
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
-	import MaterialSymbolsHelpOutline from 'virtual:icons/material-symbols/error-outline';
+	import MaterialSymbolsHelpOutline from 'virtual:icons/material-symbols/help-outline';
 	import type { ActionResult } from "@sveltejs/kit";
 	import { addFormErrors } from "$lib/functions";
 	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
