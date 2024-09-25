@@ -54,7 +54,7 @@ if csrf_trusted_origins:
 else:
     CSRF_TRUSTED_ORIGINS = []
 
-BASE_URI = (os.environ.get("BASE_URI", "").strip("/") + "/").lstrip("/")
+BASE_URI = os.environ.get("BASE_URI", "").strip("/") + "/"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = ("http://localhost:5173",)
@@ -176,11 +176,13 @@ if sentry_sdk_dsn:
         dsn=sentry_sdk_dsn,
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for tracing.
-        traces_sample_rate=1.0,
+        traces_sample_rate=0.01,
         # Set profiles_sample_rate to 1.0 to profile 100%
         # of sampled transactions.
         # We recommend adjusting this value in production.
-        profiles_sample_rate=1.0,
+        profiles_sample_rate=0.01,
+        send_default_pii=True,
+        auto_session_tracking=False,
     )
 
 # Internationalization
