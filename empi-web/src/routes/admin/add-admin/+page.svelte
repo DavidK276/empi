@@ -25,11 +25,10 @@
 	}
 </script>
 
-<h1>Resetovanie hesla</h1>
+<h1>Pridanie administrátora</h1>
 <p class="message">
 	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>
-	Zadajte emailovú adresu používateľa. Pokiaľ používateľ s takou emailovou adresou existuje, bude mu doručený email s
-	linkom na obnovu hesla.
+	Zadajte emailovú adresu, na ktorú bude doručený odkaz na aktiváciu nového administrátorského účtu.
 </p>
 <div class="row" style="padding-top: var(--xl);">
 	<form method="POST" style="width: 50%" class="m-w-full" use:enhance={doUpdate}>

@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block body %}
+	<p>Prostredníctvom nasledovného linku si aktivujte svoj nový účet. Platnosť linku je 24 hodín.</p>
+	<a href="{{ activation_url }}">{{ activation_url }}</a>
+{% endblock body %}

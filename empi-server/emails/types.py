@@ -88,3 +88,17 @@ class PasswordResetEmail(BaseEmail):
             "is_finalized": True,
         }
         return super().__new__(cls, {"password_reset_url": password_reset_url}, **kwargs)
+
+
+class AdminCreatedEmail(BaseEmail):
+    template_name = "admin_created.html"
+    subject = "Link na aktiváciu účtu"
+
+    def __new__(cls, user_id: int, passphrase: str, recipients: Sequence[str]):
+        activation_url = settings.EMPI_PUBLIC_URL + f"/account/activate?user={user_id}&key={passphrase}"
+        kwargs = {
+            "recipients": recipients,
+            "send_when": timezone.now(),
+            "is_finalized": True,
+        }
+        return super().__new__(cls, {"activation_url": activation_url}, **kwargs)

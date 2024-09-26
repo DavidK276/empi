@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.routers import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from emails.types import PasswordResetEmail
+from emails.types import PasswordResetEmail, AdminCreatedEmail
 from research.models import Research, Participation
 from .models import EmpiUser, Participant, Attribute, AttributeValue, ResetKey, EncryptedSessionKey
 from .permissions import *
@@ -180,6 +180,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 )
                 enc_session_key.save()
 
+            email = AdminCreatedEmail(new_admin.pk, passphrase=activation_code, recipients=[new_admin_email])
+            email.send()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
