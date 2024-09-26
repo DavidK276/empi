@@ -88,9 +88,8 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         user: EmpiUser = get_object_or_404(EmpiUser, email=serializer.validated_data["email"])
-        admin = request.user
         admin_password = serializer.validated_data["password"]
-        passphrase = user.make_reset_key(admin, admin_password)
+        passphrase = user.make_reset_key(user, admin_password)
 
         email = PasswordResetEmail(passphrase, [user.email])
         email.send()
@@ -172,8 +171,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 session_key_encrypted_by_current_admin = EncryptedSessionKey.objects.get(
                     admin=current_admin, backup_key=user.backup_privkey
                 )
-                cipher_rsa = PKCS1_OAEP.new(RSA.import_key(current_admin.privkey, passphrase=passphrase))
-                session_key = cipher_rsa.decrypt(session_key_encrypted_by_current_admin)
+                cipher_rsa = PKCS1_OAEP.new(current_admin_privkey)
+                session_key = cipher_rsa.decrypt(session_key_encrypted_by_current_admin.data)
 
                 cipher_rsa = PKCS1_OAEP.new(new_admin_pubkey)
                 enc_session_key = EncryptedSessionKey(
@@ -183,30 +182,29 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(
+        detail=True,
+        name="Activate account",
+        methods=[HTTPMethod.POST],
+        permission_classes=[AllowAny],
+        serializer_class=ActivateUserSerializer,
+        queryset=EmpiUser.users.get_queryset().filter(is_active=False),
+    )
+    def activate_account(self, request, pk: int):
+        serializer: ActivateUserSerializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-@action(
-    detail=True,
-    name="Activate account",
-    methods=[HTTPMethod.POST],
-    permission_classes=[AllowAny],
-    serializer_class=ActivateUserSerializer,
-    queryset=EmpiUser.users.get_queryset().filter(is_active=False),
-)
-def activate_account(self, request, pk: int):
-    serializer: ActivateUserSerializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+        with transaction.atomic():
+            user: EmpiUser = self.get_object()
+            user.change_password(serializer.validated_data["passphrase"], serializer.validated_data["new_password"])
 
-    with transaction.atomic():
-        user: EmpiUser = self.get_object()
-        user.change_password(serializer.validated_data["passphrase"], serializer.validated_data["new_password"])
+            user.is_active = True
+            user.email = serializer.validated_data["email"]
+            user.first_name = serializer.validated_data["first_name"]
+            user.last_name = serializer.validated_data["last_name"]
+            user.save()
 
-        user.is_active = True
-        user.email = serializer.validated_data["email"]
-        user.first_name = serializer.validated_data["first_name"]
-        user.last_name = serializer.validated_data["last_name"]
-        user.save()
-
-    return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ParticipantViewSet(

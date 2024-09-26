@@ -196,11 +196,11 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
         self.set_password(new_password)
         self.save()
 
-    def make_reset_key(self, admin: Self, admin_password: str):
-        decrypted_user_privkey = self.use_backup_key(admin, admin_password)
+    def make_reset_key(self, user: Self, admin_password: str):
+        decrypted_user_privkey = self.use_backup_key(user, admin_password)
         passphrase = generate(alphabet="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", size=64)
 
-        reset_key = ResetKey.new(self, export_privkey(decrypted_user_privkey, passphrase))
+        reset_key = ResetKey.new(user, export_privkey(decrypted_user_privkey, passphrase))
         reset_key.save()
 
         return passphrase
