@@ -23,10 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        if request := self.context.get("request"):
-            if not request.user.is_staff and self.data["is_staff"]:
-                raise exceptions.PermissionDenied("Creating admin users from the API is forbidden.")
-
         return self.Meta.model.users.create_user(**validated_data)
 
     def update(self, instance, validated_data):

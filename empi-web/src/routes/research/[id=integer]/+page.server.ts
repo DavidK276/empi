@@ -60,7 +60,7 @@ export const actions = {
 
 export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 	const { session } = await parent();
-	if (session?.user.is_staff) {
+	if (session?.user?.is_staff) {
 		return { participations: null };
 	}
 
