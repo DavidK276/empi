@@ -14,13 +14,34 @@ class ResearchAuthUser:
 
 
 class ResearchAuthentication(authentication.BasicAuthentication):
+    __PATTERN = "^.*([A-Z0-9-]{20}).*$"
+
+    def authenticate(self, request):
+        if request is None:
+            return None
+
+        path = request.get_full_path()
+        pattern = self.__PATTERN
+        match = re.search(pattern, path, re.IGNORECASE)
+        if match is None:
+            return None
+        nanoid = match.group(1)
+
+        try:
+            research = Research.objects.get(nanoid=nanoid)
+        except Research.DoesNotExist:
+            return None
+        if research.is_protected:
+            return super().authenticate(request)
+
+        return ResearchAuthUser(research), None
 
     def authenticate_credentials(self, userid, password, request: Optional[HttpRequest] = None):
         if request is None:
             return None
 
         path = request.get_full_path()
-        pattern = "^.*([A-Z0-9-]{20}).*$"
+        pattern = self.__PATTERN
         match = re.search(pattern, path, re.IGNORECASE)
         if match is None:
             return None
