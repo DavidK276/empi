@@ -71,13 +71,15 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 			body: formData,
 			method: 'POST'
 		});
-		const responseJSON = await response.json();
+		if (response.ok) {
+			const responseJSON = await response.json();
 
-		const participations: Map<number, Participation> = new Map();
-		for (const participation of responseJSON) {
-			participations.set(participation.appointment, participation);
+			const participations: Map<number, Participation> = new Map();
+			for (const participation of responseJSON) {
+				participations.set(participation.appointment, participation);
+			}
+			return { participations };
 		}
-		return { participations };
 	}
 	return { participations: null };
 };
