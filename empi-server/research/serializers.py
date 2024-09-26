@@ -6,13 +6,23 @@ from . import models
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Research
-        fields = ["id", "name", "info_url", "points", "created"]
+        fields = ["id", "name", "comment", "info_url", "points", "created"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Research
-        fields = ["nanoid", "name", "info_url", "points", "created", "is_protected", "is_published", "email_recipients"]
+        fields = [
+            "nanoid",
+            "name",
+            "comment",
+            "info_url",
+            "points",
+            "created",
+            "is_protected",
+            "is_published",
+            "email_recipients",
+        ]
 
 
 class AppointmentSerializer(serializers.ModelSerializer):

@@ -78,32 +78,63 @@
 	<div class="row ver-center m-col" style="margin-bottom: var(--sm)">
 		<h1 style="margin: var(--sm) 0">{data.research.name}</h1>
 		{#if data.research?.is_published === false}
-			<button style="height: 100%; background: var(--danger)">{$t('research.unpublished')}</button>
-			<form method="POST" action="?/publish" use:enhance>
-				<button type="submit">{$t('research.publish')}
-					<MaterialSymbolsVisibilityOutline width="24" height="24"></MaterialSymbolsVisibilityOutline>
-				</button>
-			</form>
+			<div class="row">
+				<button style="height: 100%; background: var(--danger)"><span
+					style="height: 24px; align-content: center">{$t('research.unpublished')}</span></button>
+				<form method="POST" action="?/publish" use:enhance>
+					<button type="submit">{$t('research.publish')}
+						<MaterialSymbolsVisibilityOutline width="24" height="24"></MaterialSymbolsVisibilityOutline>
+					</button>
+				</form>
+			</div>
 		{:else if data.research?.is_published === true}
-			<button style="background: var(--success)">{$t('research.published')}</button>
-			<form method="POST" action="?/unpublish" use:enhance>
-				<button type="submit" style="background: var(--danger)">{$t('research.unpublish')}
-					<MaterialSymbolsVisibilityOffOutline width="24" height="24"></MaterialSymbolsVisibilityOffOutline>
-				</button>
-			</form>
+			<div class="row">
+				<button style="background: var(--success)"><span
+					style="height: 24px; align-content: center">{$t('research.published')}</span></button>
+				<form method="POST" action="?/unpublish" use:enhance>
+					<button type="submit" style="background: var(--danger)">{$t('research.unpublish')}
+						<MaterialSymbolsVisibilityOffOutline width="24" height="24"></MaterialSymbolsVisibilityOffOutline>
+					</button>
+				</form>
+			</div>
 		{/if}
 	</div>
 	<form method="POST" action="?/update"
-	      on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+				use:enhance={({submitter}) => {
+							if (submitter != null) {
+								submitter.toggleAttribute('disabled');
+								submitter.innerHTML = $t('common.submitting');
+							}
+
+							return async ({formElement, result, update}) => {
+								await invalidateAll();
+								await update({ reset: false });
+								if (submitter != null) {
+									submitter.toggleAttribute('disabled');
+									submitter.innerHTML = $t('common.submit');
+									const submitDiv = formElement.children.namedItem('submit-div');
+									if (submitDiv != null) {
+										new FormResultMessage({target: submitDiv, props: {result}});
+									}
+								}
+							};
+					}}
+				on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
+		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
+			href="https://www.markdownguide.org/basic-syntax/" target="_blank">markdown</a>)</label>
+		<textarea id="comment" name="comment"
+							rows="{(data.research.comment.match(/\n/g) || []).length + 1}">{data.research.comment}</textarea>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
-		<button type="submit" style="margin-bottom: var(--lg)">{$t('common.submit')}</button>
+		<div class="row ver-center" style="margin-bottom: var(--lg)" id="submit-div">
+			<button type="submit">{$t('common.submit')}</button>
+		</div>
 	</form>
 	<Accordion>
 		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
-			      use:enhance={({submitter}) => {
+						use:enhance={({submitter}) => {
 							if (submitter != null) {
 								submitter.toggleAttribute('disabled');
 								submitter.innerHTML = $t('common.submitting');
@@ -141,8 +172,8 @@
 		{#if data.attrs?.length > 0}
 			<AccordionTab open={false} title={$t('common.attributes')}>
 				<form method="POST"
-				      action="?/attrs"
-				      use:enhance={() => {
+							action="?/attrs"
+							use:enhance={() => {
 							submitting_attrs = true;
 							submit_success_attrs = null;
 							return async ({ update, result }) => {

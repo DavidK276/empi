@@ -18,6 +18,7 @@
   "when": "Dátum a čas konania",
   "capacity": "Kapacita",
   "comment": "Popis",
+  "supports": "podporuje",
   "appointment_url": "Link na pripojenie pre účastníka",
   "location": "Miesto konania",
   "occupancy": "Počet prihlásených",

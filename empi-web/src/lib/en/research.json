@@ -18,6 +18,7 @@
   "when": "Date and time",
   "capacity": "Capacity",
   "comment": "Description",
+  "supports": "supports",
   "appointment_url": "URL for joining",
   "location": "Location",
   "occupancy": "Signed up",

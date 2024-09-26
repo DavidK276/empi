@@ -1,12 +1,15 @@
 <script lang="ts">
+	import showdown from 'showdown';
+	import DOMPurify from 'dompurify';
 	import type { ActionData, PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { browser } from "$app/environment";
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
-	import { localeDateStringFromUTCString } from "$lib/functions";
+	import { localeDateStringFromUTCString } from '$lib/functions';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -35,6 +38,12 @@
 
 	let can_signup = !$page.data.user?.is_staff;
 	let is_confirmed = false;
+
+	const converter = new showdown.Converter();
+	let sanitizedComment = "";
+	if (browser) {
+		sanitizedComment = DOMPurify.sanitize(converter.makeHtml(data.research?.comment || ''), { USE_PROFILES: { html: true } });
+	}
 </script>
 {#if $page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
@@ -44,9 +53,10 @@
 	{#if is_confirmed}
 		<p class="message">
 			<MaterialSymbolsInfoOutline width="24"
-			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
+																	height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
+{@html sanitizedComment}
 <p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
 </p>
 {#each data.appointments as appointment, i}
@@ -86,7 +96,8 @@
 						<td><a href={appointment.info_url} target="_blank">{$t('research.join_appointment')}</a></td>
 					{/if}
 					<td style="text-align: center">
-						<span style="color: {appointment.free_capacity ? 'var(--text-primary)' : 'red'}">{appointment.free_capacity}</span>
+						<span
+							style="color: {appointment.free_capacity ? 'var(--text-primary)' : 'red'}">{appointment.free_capacity}</span>
 					</td>
 				</tr>
 			</table>
@@ -119,5 +130,5 @@
 {:else}
 	<p class="message">
 		<MaterialSymbolsInfoOutline width="24"
-		                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
+																height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
 {/each}

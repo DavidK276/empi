@@ -3,6 +3,7 @@ export class Research {
 	id?: number;
 	nanoid?: string;
 	name!: string;
+	comment!: string;
 	info_url!: string;
 	points!: number
 	created!: string
