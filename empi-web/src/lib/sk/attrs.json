@@ -7,5 +7,6 @@
   "enter_text": "Zadanie textu",
   "delete": "Zmazať",
   "add": "Pridať novú",
-  "success": "Hodnoty sa uložili"
+  "success": "Hodnoty sa uložili",
+  "no_attrs": "Nie sú definované žiadne atribúty."
 }

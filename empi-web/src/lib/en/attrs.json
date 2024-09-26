@@ -7,5 +7,6 @@
   "enter_text": "Text entry",
   "delete": "Delete",
   "add": "Add new",
-  "success": "Values were saved"
+  "success": "Values were saved",
+  "no_attrs": "No attributes have been defined."
 }
