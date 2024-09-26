@@ -54,7 +54,7 @@ if csrf_trusted_origins:
 else:
     CSRF_TRUSTED_ORIGINS = []
 
-BASE_URI = os.environ.get("BASE_URI", "").strip("/") + "/"
+BASE_URI = (os.environ.get("BASE_URI", "").strip("/") + "/").lstrip("/")
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = ("http://localhost:5173",)
