@@ -115,7 +115,9 @@ class Research(models.Model):
         encrypted_key = export_privkey(private_key, new_raw_password)
 
         self.privkey = encrypted_key
-        self.save(update_fields=["privkey"])
+        if new_raw_password != "unprotected":
+            self.is_protected = True
+        self.save(update_fields=["privkey", "is_protected"])
 
     def get_keypair(self) -> (bytes, bytes):
         """
