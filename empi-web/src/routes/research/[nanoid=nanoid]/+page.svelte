@@ -18,6 +18,7 @@
 	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
 	import MaterialSymbolsVisibilityOutline from 'virtual:icons/material-symbols/visibility-outline';
 	import MaterialSymbolsVisibilityOffOutline from 'virtual:icons/material-symbols/visibility-outline';
+	import { ENABLE_ATTRS } from '$lib/constants';
 
 	export let data: PageServerData;
 	$: appointments = plainToInstance(Appt, data.appointments);
@@ -169,7 +170,7 @@
 				</div>
 			</form>
 		</AccordionTab>
-		{#if data.attrs?.length > 0}
+		{#if ENABLE_ATTRS && data.attrs?.length > 0}
 			<AccordionTab open={false} title={$t('common.attributes')}>
 				<form method="POST"
 							action="?/attrs"

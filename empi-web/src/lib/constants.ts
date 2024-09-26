@@ -5,4 +5,5 @@ export const EXT_API_ENDPOINT = (env.EMPI_EXT_API_ENDPOINT || 'http://127.0.0.1:
 export const TOKEN_COOKIE = 'sessiontoken';
 export const SUPPORTED_LANGS = ['en', 'sk'];
 export const ALLOW_TEXTENTRY_ATTR = false;
+export const ENABLE_ATTRS = false;
 export const PAGE_SIZE = 10;

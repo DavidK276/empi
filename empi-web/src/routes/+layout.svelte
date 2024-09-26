@@ -9,7 +9,8 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	import MaterialSymbolsKeyboardArrowRight from 'virtual:icons/material-symbols/keyboard-arrow-right';
-	import { base } from "$app/paths";
+	import { base } from '$app/paths';
+	import { ENABLE_ATTRS } from '$lib/constants';
 
 	export let data: LayoutServerData;
 </script>
@@ -18,7 +19,7 @@
 	<nav>
 		<a href="{base}/">{$t('common.home')}</a>
 		<a href="{base}/about">{$t('common.about')}</a>
-		{#if data.user == null}
+		{#if data.user?.is_staff}
 			<a href="{base}/research">{$t('common.create_research')}</a>
 		{/if}
 	</nav>
@@ -35,7 +36,7 @@
 					</div>
 				{/if}
 				<div><a href="{base}/account">{$t('common.account')}
-						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
+					<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 				</a>
 				</div>
 				<Login is_logged_in={true}></Login>
@@ -47,7 +48,9 @@
 		{/if}
 		{#if data.user?.is_staff}
 			<Dropdown title={$t('common.administration')}>
-				<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
+				{#if ENABLE_ATTRS}
+					<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
+				{/if}
 				<div><a href="{base}/admin/research-points">{$t('common.research_points')}</a></div>
 				<div><a href="{base}/admin/student-points">{$t('common.student_points')}</a></div>
 			</Dropdown>
