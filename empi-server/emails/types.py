@@ -80,8 +80,8 @@ class PasswordResetEmail(BaseEmail):
     template_name = "password_reset.html"
     subject = "Link na obnovu hesla"
 
-    def __new__(cls, passphrase: str, recipients: Sequence[str]):
-        password_reset_url = settings.EMPI_PUBLIC_URL + f"/account/password-reset/{passphrase}/"
+    def __new__(cls, user_id: int, passphrase: str, recipients: Sequence[str]):
+        password_reset_url = settings.EMPI_PUBLIC_URL + f"/account/password-reset?user={user_id}&key={passphrase}"
         kwargs = {
             "recipients": recipients,
             "send_when": timezone.now(),

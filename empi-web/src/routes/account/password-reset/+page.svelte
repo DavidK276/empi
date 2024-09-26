@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { t } from "$lib/translations";
 	import { enhance } from '$app/forms';
 	import type { ActionResult } from '@sveltejs/kit';
-	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 
 	let submitButton: HTMLButtonElement;
@@ -14,7 +14,7 @@
 			if (result.type === 'success') {
 				new FormResultMessage({
 					target: submitButton.parentElement as HTMLElement,
-					props: { result, message: 'Odkaz bol úspešne odoslaný' }
+					props: { result, message: 'Heslo bolo obnovené. Teraz sa môžete prihlásiť.' }
 				});
 			}
 			else {
@@ -26,17 +26,14 @@
 </script>
 
 <h1>Resetovanie hesla</h1>
-<p class="message">
-	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>
-	Zadajte emailovú adresu používateľa. Pokiaľ používateľ s takou emailovou adresou existuje, bude mu doručený email s
-	linkom na obnovu hesla.
-</p>
 <div class="row" style="padding-top: var(--xl);">
 	<form method="POST" style="width: 50%" class="m-w-full" use:enhance={doUpdate}>
-		<label for="email">Email</label>
-		<input type="email" name="email" id="email">
+		<label for="new_password">Nové heslo</label>
+		<input type="password" name="new_password" id="new_password">
+		<label for="repeat_password">{$t('common.repeat_password')}</label>
+		<input type="password" id="repeat_password">
 		<div class="row ver-center">
-			<button type="submit" bind:this={submitButton}>Poslať link na obnovu hesla</button>
+			<button type="submit" bind:this={submitButton}>{$t('common.submit')}</button>
 		</div>
 	</form>
 </div>

@@ -89,9 +89,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
         user: EmpiUser = get_object_or_404(EmpiUser, email=serializer.validated_data["email"])
         admin_password = serializer.validated_data["password"]
-        passphrase = user.make_reset_key(user, admin_password)
+        passphrase = user.make_reset_key(request.user, admin_password)
 
-        email = PasswordResetEmail(passphrase, [user.email])
+        email = PasswordResetEmail(user.pk, passphrase, [user.email])
         email.send()
 
         return Response(status=HTTP_200_OK)

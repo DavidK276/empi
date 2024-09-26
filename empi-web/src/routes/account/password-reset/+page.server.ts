@@ -3,12 +3,18 @@ import * as consts from '$lib/constants';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
-	default: async ({ fetch, request, cookies, locals }) => {
+	default: async ({ fetch, request, cookies, url }) => {
+		const userId = url.searchParams.get('user');
+		const resetKey = url.searchParams.get('key');
+		if (userId == null || resetKey == null) {
+			return fail(401, {success: false, errors: {detail: 'Neplatný odkaz na obnovu hesla'}})
+		}
+
 		const formData = await request.formData();
+		formData.set("passphrase", resetKey);
 
 		if (cookies.get(consts.TOKEN_COOKIE)) {
-			formData.set("password", locals.session?.data.user_password);
-			const response = await fetch(consts.INT_API_ENDPOINT + 'user/start_password_reset/', {
+			const response = await fetch(consts.INT_API_ENDPOINT + `user/${userId}/complete_password_reset/`, {
 				method: 'POST',
 				body: formData
 			});
