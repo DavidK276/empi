@@ -6,7 +6,7 @@
 	import { page } from '$app/stores';
 	import Appointment from './Appointment.svelte';
 	import { Appointment as Appt } from '$lib/objects/appointment';
-	import { convertFormData } from '$lib/functions';
+	import { convertFormData, textAreaAdjustSize } from '$lib/functions';
 	import { plainToInstance } from 'class-transformer';
 	import Accordion from '$lib/components/Accordion.svelte';
 	import AccordionTab from '$lib/components/AccordionTab.svelte';
@@ -125,8 +125,7 @@
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
 		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
 			href="https://www.markdownguide.org/basic-syntax/" target="_blank">markdown</a>)</label>
-		<textarea id="comment" name="comment"
-							rows="{(data.research.comment.match(/\n/g) || []).length + 1}">{data.research.comment}</textarea>
+		<textarea id="comment" name="comment" on:keyup={textAreaAdjustSize} on:click={textAreaAdjustSize}>{data.research.comment}</textarea>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
 		<div class="row ver-center" style="margin-bottom: var(--lg)" id="submit-div">
 			<button type="submit">{$t('common.submit')}</button>

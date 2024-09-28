@@ -54,7 +54,8 @@ export const actions = {
 			};
 		}
 		return fail(response.status, {
-			success: false
+			success: false,
+			errors: await response.json()
 		});
 	},
 	participations: async ({ fetch, params, request }) => {

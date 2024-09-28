@@ -9,9 +9,11 @@ export class Appointment {
 	info_url!: string;
 
 	getWhenLocal(): string {
+		if (this.when == null) {
+			return "";
+		}
 		const date = new Date(this.when);
-		const timezoneOffset = -date.getTimezoneOffset();
-		date.setMinutes(date.getMinutes() + timezoneOffset);
+		date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 		return date.toISOString().slice(0, -1);
 	}
 }

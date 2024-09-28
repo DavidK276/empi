@@ -9,7 +9,13 @@
 
 	function formData(event: FormDataEvent) {
 		const when = event.formData.get('when') as string;
-		event.formData.set('when', new Date(when).toISOString());
+		if (when) {
+			event.formData.set('when', new Date(when).toISOString());
+		}
+		else {
+			// we neet to set actual null here, but that is not allowed, so we set it to a special string and set actual null later
+			event.formData.set('when', '__NULL__');
+		}
 	}
 </script>
 <form bind:this={thisComponent} on:submit|preventDefault on:formdata={formData} class="appointment-form">
@@ -20,9 +26,8 @@
 				<option selected="{appointment.info_url != null}" value="online">{$t('research.online')}</option>
 				<option selected="{appointment.location != null}" value="in_person">{$t('research.in_person')}</option>
 			</select>
-			<label for="when">{$t('research.when')}</label>
-			<input type="datetime-local" name="when" id="when" required
-						 value={appointment.getWhenLocal()}>
+			<label for="when">{$t('research.when')} ({$t('common.optional')})</label>
+			<input type="datetime-local" name="when" id="when" value={appointment.getWhenLocal()}>
 			<div style="display: flex; width: 100%; gap: var(--sm)">
 				<div style="display: inline-flex; flex-direction: column; width: 50%">
 					<label for="capacity">{$t('research.capacity')}</label>
@@ -64,6 +69,8 @@
 			{/if}
 		{/if}
 		<input type="hidden" name="research" value={nanoid}>
-		<button style="background-color: var(--danger)" on:click={() => thisComponent.parentNode?.removeChild(thisComponent)}>-</button>
+		<button style="background-color: var(--danger)"
+		        on:click={() => thisComponent.parentNode?.removeChild(thisComponent)}>-
+		</button>
 	</div>
 </form>

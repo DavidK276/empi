@@ -131,7 +131,7 @@ class Research(models.Model):
 
 class Appointment(models.Model):
     research = models.ForeignKey(Research, on_delete=models.CASCADE)
-    when = models.DateTimeField(verbose_name="kedy", blank=False)
+    when = models.DateTimeField(verbose_name="kedy", blank=True, null=True)
     capacity = models.IntegerField(verbose_name="kapacita")
     comment = models.TextField(blank=True)
     location = models.TextField(blank=False, null=True)
