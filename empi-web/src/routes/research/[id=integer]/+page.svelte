@@ -53,7 +53,7 @@
 	{#if is_confirmed}
 		<p class="message">
 			<MaterialSymbolsInfoOutline width="24"
-																	height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
+			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
 {@html sanitizedComment}
@@ -62,6 +62,7 @@
 {#each data.appointments as appointment, i}
 	{@const participation = $page.data.participations?.get(appointment.id)}
 	{@const is_confirmed = participation?.is_confirmed === true}
+	{@const signups_lapsed = new Date(appointment.when) < new Date()}
 	<div class="box">
 		<div class="row ver-center">
 			<h2>{$t('research.appointment_number')} {i + 1}</h2>
@@ -72,6 +73,11 @@
 			{/if}
 			{#if participation != null}
 				<button style="background: var(--success)">{$t('research.appointment_signedup')}</button>
+			{/if}
+			{#if signups_lapsed}
+				<p class="message">
+					<MaterialSymbolsInfoOutline width="24"
+					                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.signups_lapsed')}</p>
 			{/if}
 		</div>
 		<p>{appointment.comment}</p>
@@ -97,11 +103,11 @@
 					{/if}
 					<td style="text-align: center">
 						<span
-							style="color: {appointment.free_capacity ? 'var(--text-primary)' : 'red'}">{appointment.free_capacity}</span>
+								style="color: {appointment.free_capacity ? 'var(--text-primary)' : 'red'}">{appointment.free_capacity}</span>
 					</td>
 				</tr>
 			</table>
-			{#if can_signup && appointment.free_capacity}
+			{#if can_signup && appointment.free_capacity > 0 && !signups_lapsed}
 				<form method="POST" action="?/signup">
 					<input type="hidden" name="appointment" value={appointment.id}>
 					{#if $page.data.user == null}
@@ -130,5 +136,5 @@
 {:else}
 	<p class="message">
 		<MaterialSymbolsInfoOutline width="24"
-																height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
+		                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
 {/each}

@@ -31,7 +31,12 @@ export const removeFormError = (element: HTMLElement) => {
 export const convertFormData = (args: { formData: FormData, stringify?: boolean }) => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const object: any = {};
-	args.formData.forEach((value, key) => {
+	args.formData.forEach((formDataEntryValue, key) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let value: any = formDataEntryValue;
+		if (value === '__NULL__') {
+			value = null;
+		}
 		if (key.endsWith('[]')) {
 			key = key.slice(0, -2);
 			if (!Reflect.has(object, key)) {
@@ -103,4 +108,9 @@ export function localeDateStringFromUTCString(utcString: string) {
 				hour: "numeric",
 				minute: "numeric"
 			});
+}
+
+export function textAreaAdjustSize(event: Event) {
+	const element = event.target as HTMLTextAreaElement;
+	element.rows = (element.value.match(/\n/g) || []).length + 1;
 }
