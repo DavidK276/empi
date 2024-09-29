@@ -18,7 +18,7 @@
 <header class="row hor-center ver-center m-col">
 	<nav>
 		<a href="{base}/">{$t('common.home')}</a>
-		<a href="{base}/about">{$t('common.about')}</a>
+		<a href="{base}/guide">{$t('common.guide')}</a>
 		{#if data.user?.is_staff}
 			<a href="{base}/research">{$t('common.create_research')}</a>
 		{/if}
