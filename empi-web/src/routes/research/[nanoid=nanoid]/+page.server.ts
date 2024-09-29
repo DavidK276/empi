@@ -125,11 +125,26 @@ export const actions = {
 			method: 'POST'
 		});
 		if (response.ok) {
-			await locals.session.update(() => ({ research_password: password }));
-			return {success: true};
+			await locals.session.update(() => ({ research_nanoid: params.nanoid, research_password: password }));
+			return { success: true };
 		}
-		await locals.session.update(() => ({ research_password: undefined }));
-		return fail(response.status, {success: false, errors: await response.json()});
+		await locals.session.update(() => ({ research_nanoid: undefined, research_password: undefined }));
+		return fail(response.status, { success: false, errors: await response.json() });
+	},
+	email: async ({ fetch, request, locals }) => {
+		const formData = await request.formData();
+		formData.set("research_nanoid", locals.session.data.research_nanoid);
+		formData.set("research_password", locals.session.data.research_password);
+
+		const response = await fetch(consts.INT_API_ENDPOINT + `email/send_research_info/`, {
+			body: formData,
+			method: 'POST'
+		});
+
+		if (response.ok) {
+			return { success: true };
+		}
+		return fail(response.status, { success: false, errors: await response.json() });
 	}
 } satisfies Actions;
 

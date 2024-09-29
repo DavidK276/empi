@@ -45,5 +45,7 @@
   "unprotected_warning": "No password is set. Everyone with the link will be able to make edits.",
   "join_appointment_url": "Join link",
   "join_appointment": "Join",
-  "signups_lapsed": "Time to sign up for this appointment has ended"
+  "signups_lapsed": "Time to sign up for this appointment has ended",
+  "free_capacity": "Free capacity",
+  "send_email": "Send email"
 }

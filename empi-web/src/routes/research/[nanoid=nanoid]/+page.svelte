@@ -6,7 +6,7 @@
 	import { page } from '$app/stores';
 	import Appointment from './Appointment.svelte';
 	import { Appointment as Appt } from '$lib/objects/appointment';
-	import { convertFormData, textAreaAdjustSize } from '$lib/functions';
+	import { convertFormData, localeDateStringFromUTCString, textAreaAdjustSize } from '$lib/functions';
 	import { plainToInstance } from 'class-transformer';
 	import Accordion from '$lib/components/Accordion.svelte';
 	import AccordionTab from '$lib/components/AccordionTab.svelte';
@@ -81,7 +81,7 @@
 		{#if data.research?.is_published === false}
 			<div class="row">
 				<button style="height: 100%; background: var(--danger)"><span
-					style="height: 24px; align-content: center">{$t('research.unpublished')}</span></button>
+						style="height: 24px; align-content: center">{$t('research.unpublished')}</span></button>
 				<form method="POST" action="?/publish" use:enhance>
 					<button type="submit">{$t('research.publish')}
 						<MaterialSymbolsVisibilityOutline width="24" height="24"></MaterialSymbolsVisibilityOutline>
@@ -91,7 +91,7 @@
 		{:else if data.research?.is_published === true}
 			<div class="row">
 				<button style="background: var(--success)"><span
-					style="height: 24px; align-content: center">{$t('research.published')}</span></button>
+						style="height: 24px; align-content: center">{$t('research.published')}</span></button>
 				<form method="POST" action="?/unpublish" use:enhance>
 					<button type="submit" style="background: var(--danger)">{$t('research.unpublish')}
 						<MaterialSymbolsVisibilityOffOutline width="24" height="24"></MaterialSymbolsVisibilityOffOutline>
@@ -101,7 +101,7 @@
 		{/if}
 	</div>
 	<form method="POST" action="?/update"
-				use:enhance={({submitter}) => {
+	      use:enhance={({submitter}) => {
 							if (submitter != null) {
 								submitter.toggleAttribute('disabled');
 								submitter.innerHTML = $t('common.submitting');
@@ -120,12 +120,13 @@
 								}
 							};
 					}}
-				on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+	      on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
 		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
-			href="https://www.markdownguide.org/basic-syntax/" target="_blank">markdown</a>)</label>
-		<textarea id="comment" name="comment" on:keyup={textAreaAdjustSize} on:click={textAreaAdjustSize}>{data.research.comment}</textarea>
+				href="https://www.markdownguide.org/basic-syntax/" target="_blank">markdown</a>)</label>
+		<textarea id="comment" name="comment" on:keyup={textAreaAdjustSize}
+		          on:click={textAreaAdjustSize}>{data.research.comment}</textarea>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
 		<div class="row ver-center" style="margin-bottom: var(--lg)" id="submit-div">
 			<button type="submit">{$t('common.submit')}</button>
@@ -134,7 +135,7 @@
 	<Accordion>
 		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
-						use:enhance={({submitter}) => {
+			      use:enhance={({submitter}) => {
 							if (submitter != null) {
 								submitter.toggleAttribute('disabled');
 								submitter.innerHTML = $t('common.submitting');
@@ -172,8 +173,8 @@
 		{#if ENABLE_ATTRS && data.attrs?.length > 0}
 			<AccordionTab open={false} title={$t('common.attributes')}>
 				<form method="POST"
-							action="?/attrs"
-							use:enhance={() => {
+				      action="?/attrs"
+				      use:enhance={() => {
 							submitting_attrs = true;
 							submit_success_attrs = null;
 							return async ({ update, result }) => {
@@ -219,6 +220,54 @@
 			{:else if submit_success_appointments === false}
 				<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
 			{/if}
+		</AccordionTab>
+		<AccordionTab open={false} title={$t('research.send_email')}>
+			<form method="POST" action="?/email"
+			      use:enhance={({submitter}) => {
+							if (submitter != null) {
+								submitter.toggleAttribute('disabled');
+								submitter.innerHTML = $t('common.sending');
+							}
+
+							return async ({formElement, result, update}) => {
+								await invalidateAll();
+								await update();
+								if (submitter != null) {
+									submitter.toggleAttribute('disabled');
+									submitter.innerHTML = $t('common.send');
+									const submitDiv = formElement.children.namedItem('submit-div');
+									if (submitDiv != null) {
+										new FormResultMessage({target: submitDiv, props: {result}});
+									}
+								}
+							};
+					}}>
+				<fieldset>
+					<legend>Príjemcovia</legend>
+					<label for="appointment">Používatelia prihlásení na termín</label>
+					<select name="appointment" id="appointment">
+						<option>žiadny</option>
+						{#each appointments as appointment}
+							{#if appointment.info_url != null}
+								<option value={appointment.id}>{localeDateStringFromUTCString(appointment.when)}
+									, {$t('research.online').toLowerCase()}</option>
+							{:else}
+								<option value={appointment.id}>{localeDateStringFromUTCString(appointment.when)}
+									, {$t('research.in_person').toLowerCase()}</option>
+							{/if}
+						{/each}
+					</select>
+					<label for="extra_recipients">Ďalší príjemcovia (oddelení čiarkou)</label>
+					<input type="text" name="extra_recipients" id="extra_recipients">
+				</fieldset>
+				<label for="subject">Predmet</label>
+				<input type="text" name="subject" id="subject" maxlength="78">
+				<label for="body">Text emailu</label>
+				<textarea id="body" name="body" on:keyup={textAreaAdjustSize}></textarea>
+				<div class="row ver-center" id="submit-div">
+					<button type="submit" id="submit">{$t('common.send')}</button>
+				</div>
+			</form>
 		</AccordionTab>
 		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
 			<div class="col">

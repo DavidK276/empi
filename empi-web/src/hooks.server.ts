@@ -10,15 +10,11 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 		const authToken = event.cookies.get(consts.TOKEN_COOKIE);
 
 		const session = event.locals.session.data;
+		const nanoid: string | null = session.research_nanoid;
 		const password: string | null = session.research_password;
-		const is_staff = session.user?.is_staff || false;
 
-		if (urlPath.includes(`${base}/research-admin`) && password && !is_staff) {
-			const bytes = new TextEncoder().encode('x:' + password);
-			const binString = Array.from(bytes, (byte) =>
-					String.fromCodePoint(byte)
-			).join('');
-			request.headers.set('Authorization', `Basic ${btoa(binString)}`);
+		if ((urlPath.includes(`${base}/research-admin`) || urlPath.includes(`${base}/email/send_research_info`)) && nanoid && password) {
+			request.headers.set('Authorization', `Basic ${btoa(`${nanoid}:${password}`)}`);
 		}
 		else if (authToken != null) {
 			request.headers.set('Authorization', `Bearer ${authToken}`);

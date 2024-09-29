@@ -90,7 +90,7 @@
 					{:else if participation != null && !is_confirmed}
 						<th>{$t('research.join_appointment_url')}</th>
 					{/if}
-					<th>{$t('research.capacity')}</th>
+					<th>{$t('research.free_capacity')}</th>
 				</tr>
 				<tr>
 					<td>

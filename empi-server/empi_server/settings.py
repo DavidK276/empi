@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     "research",
     "emails",
     "drf_spectacular",
+    "markdownify.apps.MarkdownifyConfig",
 ]
 
 MIDDLEWARE = [

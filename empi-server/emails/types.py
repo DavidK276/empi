@@ -14,7 +14,9 @@ class BaseEmail:
     def __new__(cls, context, **kwargs):
         if cls.template_name is None:
             raise NotImplementedError()
-        return Email(template_name=cls.template_name, subject=cls.subject, context=context, **kwargs)
+        return Email(
+            template_name=cls.template_name, subject=kwargs.pop("subject", cls.subject), context=context, **kwargs
+        )
 
 
 class PublicSignupEmail(BaseEmail):
@@ -102,3 +104,15 @@ class AdminCreatedEmail(BaseEmail):
             "is_finalized": True,
         }
         return super().__new__(cls, {"activation_url": activation_url}, **kwargs)
+
+
+class ResearchInfoEmail(BaseEmail):
+    template_name = "research_info.html"
+    subject = "Informácia od organizátora výskumu"
+
+    def __new__(cls, **kwargs):
+        kwargs |= {
+            "send_when": timezone.now(),
+            "is_finalized": True,
+        }
+        return super().__new__(cls, {"email_body": kwargs.pop("body")}, **kwargs)
