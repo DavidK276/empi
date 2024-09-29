@@ -19,6 +19,7 @@
 	import MaterialSymbolsVisibilityOutline from 'virtual:icons/material-symbols/visibility-outline';
 	import MaterialSymbolsVisibilityOffOutline from 'virtual:icons/material-symbols/visibility-outline';
 	import { ENABLE_ATTRS } from '$lib/constants';
+	import MarkdownGuideModal from "$lib/components/MarkdownGuideModal.svelte";
 
 	export let data: PageServerData;
 	$: appointments = plainToInstance(Appt, data.appointments);
@@ -73,8 +74,11 @@
 		submitting_participations = false;
 		submit_success_participations = response.ok;
 	}
+
+	let showMarkdownGuide: boolean = true;
 </script>
 <ResearchPasswordRequiredModal></ResearchPasswordRequiredModal>
+<MarkdownGuideModal bind:show={showMarkdownGuide}></MarkdownGuideModal>
 {#if data.research != null}
 	<div class="row ver-center m-col" style="margin-bottom: var(--sm)">
 		<h1 style="margin: var(--sm) 0">{data.research.name}</h1>
@@ -124,7 +128,7 @@
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
 		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
-				href="https://www.markdownguide.org/basic-syntax/" target="_blank">markdown</a>)</label>
+				href="/" target="_blank" on:click|preventDefault={() => {showMarkdownGuide = true}}>markdown</a>)</label>
 		<textarea id="comment" name="comment" on:keyup={textAreaAdjustSize}
 		          on:click={textAreaAdjustSize}>{data.research.comment}</textarea>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
@@ -260,9 +264,10 @@
 					<label for="extra_recipients">Ďalší príjemcovia (oddelení čiarkou)</label>
 					<input type="text" name="extra_recipients" id="extra_recipients">
 				</fieldset>
-				<label for="subject">Predmet</label>
+				<label for="subject">Predmet&nbsp;({$t('common.optional')})</label>
 				<input type="text" name="subject" id="subject" maxlength="78">
-				<label for="body">Text emailu</label>
+				<label for="body">Text emailu&nbsp;({$t('research.supports')}&nbsp;<a
+						href="/" target="_blank" on:click|preventDefault={() => {showMarkdownGuide = true}}>markdown</a>)</label>
 				<textarea id="body" name="body" on:keyup={textAreaAdjustSize}></textarea>
 				<div class="row ver-center" id="submit-div">
 					<button type="submit" id="submit">{$t('common.send')}</button>

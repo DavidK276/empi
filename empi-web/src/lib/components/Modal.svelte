@@ -2,6 +2,7 @@
 	import { t } from '$lib/translations';
 
 	export let show: boolean;
+	export let hasCloseButton: boolean = true;
 	export let dismissible = true;
 
 	let dialog: HTMLDialogElement;
@@ -29,7 +30,7 @@
 		<slot></slot>
 
 		<!-- svelte-ignore a11y-autofocus -->
-		{#if dismissible}
+		{#if dismissible && hasCloseButton}
 			<hr>
 			<button autofocus on:click={() => dialog.close()}>{$t('common.close')}</button>
 		{/if}
