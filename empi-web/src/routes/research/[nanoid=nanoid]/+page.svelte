@@ -30,6 +30,7 @@
 	let submit_success_appointments: boolean | null = null;
 	let submitting_participations = false;
 	let submit_success_participations: boolean | null = null;
+	let showMarkdownGuide: boolean = false;
 
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
@@ -74,8 +75,6 @@
 		submitting_participations = false;
 		submit_success_participations = response.ok;
 	}
-
-	let showMarkdownGuide: boolean = true;
 </script>
 <ResearchPasswordRequiredModal></ResearchPasswordRequiredModal>
 <MarkdownGuideModal bind:show={showMarkdownGuide}></MarkdownGuideModal>
