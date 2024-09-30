@@ -3,7 +3,6 @@
 	import { addFormError, addFormErrors, removeFormError } from '$lib/functions';
 	import type { ActionData } from './$types';
 	import { applyAction, enhance } from '$app/forms';
-	import MyLabel from "$lib/components/MyLabel.svelte";
 
 	export let form: ActionData;
 
@@ -40,7 +39,7 @@
 				}
 			}}>
 	<label for="email">Email</label>
-	<input type="email" name="email" id="email" required>
+	<input type="email" name="email" id="email" required style="width: 50%" class="m-w-full">
 	<p class="error-msg">{$t('common.username_wrong')}</p>
 	<div class="row">
 		<div class="col" style="width: 50%; gap: 0">
@@ -54,8 +53,7 @@
 	</div>
 	<div class="row m-col ver-bottom">
 		<div class="col m-w-full" style="width: 50%; gap: 0">
-			<MyLabel forId="password" labelText={$t('common.password')} hintText={$t('common.password_hint')}
-			         icon="warning"></MyLabel>
+			<label for="password">{$t('common.password')}</label>
 			<input type="password" name="password" id="password" required minlength="4" bind:this={passwordInput}>
 		</div>
 		<div class="col m-w-full" style="width: 50%; gap: 0">

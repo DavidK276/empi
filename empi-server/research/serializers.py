@@ -23,6 +23,7 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
             "created",
             "is_protected",
             "is_published",
+            "has_open_appointments",
             "email_recipients",
         ]
 

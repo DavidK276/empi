@@ -8,7 +8,7 @@ const config: Config = {
 			locale: 'en',
 			key: 'common',
 			loader: async () => (
-				await import('./en/common.json')
+				await import('./translations/en/common.json')
 			).default
 		},
 		{
@@ -16,7 +16,7 @@ const config: Config = {
 			key: 'attrs',
 			routes: [`${base}/attributes`, RegExp(`${base}/research/.*`)], // you can use regexes as well!
 			loader: async () => (
-				await import('./en/attrs.json')
+				await import('./translations/en/attrs.json')
 			).default
 		},
 		{
@@ -24,21 +24,21 @@ const config: Config = {
 			key: 'account',
 			routes: [`${base}/account`],
 			loader: async () => (
-				await import('./en/account.json')
+				await import('./translations/en/account.json')
 			).default
 		},
 		{
 			locale: 'en',
 			key: 'research',
 			loader: async () => (
-				await import('./en/research.json')
+				await import('./translations/en/research.json')
 			).default
 		},
 		{
 			locale: 'sk',
 			key: 'common',
 			loader: async () => (
-				await import('./sk/common.json')
+				await import('./translations/sk/common.json')
 			).default
 		},
 		{
@@ -46,7 +46,7 @@ const config: Config = {
 			key: 'attrs',
 			routes: [`${base}/attributes`, RegExp(`${base}/research/.*`)], // you can use regexes as well!
 			loader: async () => (
-				await import('./sk/attrs.json')
+				await import('./translations/sk/attrs.json')
 			).default
 		},
 		{
@@ -54,14 +54,14 @@ const config: Config = {
 			key: 'account',
 			routes: [`${base}/account`], // you can use regexes as well!
 			loader: async () => (
-				await import('./sk/account.json')
+				await import('./translations/sk/account.json')
 			).default
 		},
 		{
 			locale: 'sk',
 			key: 'research',
 			loader: async () => (
-				await import('./sk/research.json')
+				await import('./translations/sk/research.json')
 			).default
 		}
 	]
