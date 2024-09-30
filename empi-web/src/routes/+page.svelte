@@ -15,15 +15,18 @@
 			<th>{$t('common.details')}</th>
 		</tr>
 		{#each data.researches as research}
-			<tr>
-				<td>{research.name}</td>
-				<td style="text-align: center"><a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a></td>
-				<td style="text-align: center">
-					<button>
-						<a href="research/{research.id}/">{$t('common.details')}</a>
-					</button>
-				</td>
-			</tr>
+			{#if research.has_open_appointments}
+				<tr>
+					<td>{research.name}</td>
+					<td style="text-align: center"><a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>
+					</td>
+					<td style="text-align: center">
+						<button>
+							<a href="research/{research.id}/">{$t('common.details')}</a>
+						</button>
+					</td>
+				</tr>
+			{/if}
 		{/each}
 	</table>
 </div>

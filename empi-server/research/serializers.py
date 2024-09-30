@@ -10,6 +10,8 @@ class ResearchUserSerializer(serializers.ModelSerializer):
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
+    has_open_appointments = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Research
         fields = [

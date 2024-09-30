@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from collections.abc import Sequence, Mapping
 from django.utils import timezone
 from typing import Self, Optional
@@ -127,6 +127,10 @@ class Research(models.Model):
         """
 
         return self.pubkey, self.privkey
+
+    @property
+    def has_open_appointments(self) -> bool:
+        return Appointment.objects.all().filter(Q(research=self) & Q(when__gt=datetime.now())).exists()
 
 
 class Appointment(models.Model):
