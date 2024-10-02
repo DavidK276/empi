@@ -1,4 +1,5 @@
 <script lang="ts">
+	import MaterialSymbolsArrowForward from 'virtual:icons/material-symbols/arrow-forward';
 	import { t } from '$lib/translations';
 </script>
 
@@ -21,13 +22,20 @@
 
 <p style="text-align: end">(úryvok z informačného listu predmetu Účasť na empirickom výskume)</p>
 
-<h2>Na čo mi slúži táto stránka?</h2>
+<h2>Na čo slúži táto stránka?</h2>
 <ul>
 	<li>Prihlasovanie na výskumy, odhlasovanie z výskumov</li>
-	<li>Sledovanie výskumov, na ktoré sa prihlásil</li>
+	<li>Sledovanie výskumov, na ktoré som sa prihlásil</li>
 	<li>Zistenie aktuálneho počtu absolvovaných hodín</li>
 	<li>Overenie, či bola účasť na termíne potvrdená</li>
 </ul>
+
+<h2>Ako sa zaznamenáva moja účasť?</h2>
+<p>Po registrácii do systému ti bude pridelený anonymný identifikátor (tzv. token). Svoj token môžeš zistiť kedykoľvek na stránke detailov účtu. <a
+	href="/account">Zoberte ma tam!
+	<MaterialSymbolsArrowForward width="24px" height="24px"></MaterialSymbolsArrowForward>
+</a></p>
+<p>Po zúčastnení na výskume svoj anonymný identifikátor odovzdaj organizátorovi výskumu a on ti potvrdí tvoju účasť.</p>
 
 <h2>Zvoľte scenár</h2>
 <div class="grid-container">

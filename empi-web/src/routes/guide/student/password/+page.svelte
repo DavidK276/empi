@@ -1,5 +1,5 @@
-<h2>Zabudnuté heslo</h2>
-<p>V prípade zabudnutého hesla kontaktujte vyučujúceho. Oznámte mu, že potrebujete reset hesla a emailovú adresu,
-	ktorú používate v systéme.</p>
+<h1>Zabudnuté heslo</h1>
+<p>Heslo sa používa na šifrovanie dát a preto si ho nemôžeš obnoviť sám. Kontaktuj vyučujúceho a informuj ho, že
+	potrebuješ reset hesla. Napíš mu aj emailovú adresu, ktorú používaš na prihlásenie do systému.</p>
 
-<p>Vyučujúci Vám vygeneruje odkaz na resetovanie hesla, ktorý pošle na Váš email.</p>
+<p>Vyučujúci ti vygeneruje odkaz na resetovanie hesla, ktorý pošle na tvoj systémový email.</p>

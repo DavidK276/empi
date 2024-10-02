@@ -27,9 +27,11 @@
 		{#if data.user != null}
 			<Dropdown title="{(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}">
 				{#if !data.user.is_staff}
-					<div><a href="{base}/attributes">{$t('common.attributes')}
-						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
-					</a></div>
+					{#if ENABLE_ATTRS}
+						<div><a href="{base}/attributes">{$t('common.attributes')}
+							<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
+						</a></div>
+					{/if}
 					<div><a href="{base}/account/points">{$t('common.my_points')}
 						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 					</a>

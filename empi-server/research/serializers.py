@@ -6,11 +6,10 @@ from .models import Appointment, Participation, Research
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Research
-        fields = ["id", "name", "comment", "info_url", "points", "created"]
+        fields = ["id", "name", "comment", "info_url", "points", "created", "has_open_appointments"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
-    has_open_appointments = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Research
