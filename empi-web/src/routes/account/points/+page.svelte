@@ -2,9 +2,6 @@
 
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
-	import type { PageData } from './$types';
-
-	export let data: PageData;
 
 	const participations = $page.data.participations;
 </script>
@@ -19,7 +16,7 @@
 				<th>{$t('research.participation')}</th>
 			</tr>
 			{#each participations as participation}
-				{@const research = data.researches.get(participation.research)}
+				{@const research = participation.research}
 				<tr>
 					<td><a href="/research/{research?.id}">{research?.name}</a></td>
 					{#if research?.points != null}

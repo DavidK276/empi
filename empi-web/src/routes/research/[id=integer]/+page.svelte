@@ -27,7 +27,7 @@
 			}
 
 			for (const participation of participations.values()) {
-				if (participation.research === research.id) {
+				if (participation.research.id === research.id) {
 					can_signup = false;
 					is_confirmed ||= participation.is_confirmed;
 					break;

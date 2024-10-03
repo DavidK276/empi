@@ -282,7 +282,7 @@
 							{#each p_row as participation}
 								<div class="box" style="min-width: calc({width} - var(--md) / {p_row.length}">
 									<form style="display: flex; justify-content: center;" class="participation-form">
-										<button style="font-weight: 700; text-align: center">{participation.token}</button>
+										<button style="font-weight: 700; text-align: center">{participation.participant.token}</button>
 										<input type="hidden" name="id" value={participation.id}>
 										{#if participation.is_confirmed}
 											<input type="checkbox" name="is_confirmed" checked style="margin: 0 var(--sm)" value="true">
