@@ -2,37 +2,33 @@ import type { PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
 
 
-export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
-	const { session } = await parent();
-
+export const load: PageServerLoad = async ({ cookies, fetch, locals, request }) => {
 	const formData = new FormData();
-	formData.set('password', session?.user_password);
+	formData.set('password', locals.session.data.user_password);
+
+	const searchParams = new URL(request.url).searchParams;
+	const currentDate = new Date();
+
+	const year = searchParams.get('year') || currentDate.getFullYear().toString();
+	const semester = searchParams.get('semester') || (currentDate.getMonth() >= 7 ? 'z' : 'l');
+
 	if (cookies.get(consts.TOKEN_COOKIE)) {
-		const response = await fetch(consts.INT_API_ENDPOINT + `participation/user/`, {
+		const response = await fetch(consts.INT_API_ENDPOINT + `participation/user/?year=${year}`, {
 			body: formData,
 			method: 'POST'
 		});
 		const responseJSON = await response.json();
-		const participations: Map<string, {name: string, points: number}> = new Map();
-		const researches: Map<number, number> = new Map<number, number>();
+		const participations: Map<string, { name: string, points: number }> = new Map();
 		for (const participation of responseJSON) {
-			const token = participation.token;
-			const researchId = participation.research;
+			if (participation.participant.year == year && participation.participant.semester == semester) {
+				const token = participation.participant.token;
+				const name = participation.participant.user_detail.first_name + ' ' + participation.participant.user_detail.last_name;
 
-			const participantResponse = await fetch(consts.INT_API_ENDPOINT + `participant/${token}/`);
-			const participantDetail = await participantResponse.json();
-			const name = participantDetail.user_detail.first_name + ' ' + participantDetail.user_detail.last_name;
-
-			if (!researches.has(researchId)) {
-				const researchResponse = await fetch(consts.INT_API_ENDPOINT + `research-user/${researchId}/`);
-				const researchDetail = await researchResponse.json();
-				researches.set(researchId, researchDetail.points);
+				const currentPoints = participations.get(token)?.points || 0;
+				participations.set(token, { name, points: participation.research.points + currentPoints });
 			}
-
-			const currentPoints = participations.get(token)?.points || 0;
-			participations.set(token, {name, points: researches.get(researchId)! + currentPoints})
 		}
-		return {participations}
+		return { participations };
 	}
-	return {participations: null}
-}
+	return { participations: null };
+};

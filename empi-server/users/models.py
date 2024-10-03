@@ -1,6 +1,6 @@
-import datetime
 import random
 from collections.abc import Mapping, Sequence, Iterable
+from datetime import timedelta, datetime
 from typing import Self
 
 from Crypto.Cipher import PKCS1_OAEP, AES
@@ -117,7 +117,7 @@ class ResetKey(models.Model):
             ResetKey.objects.get(user=user.pk).delete()
         except ResetKey.DoesNotExist:
             pass
-        valid_until = timezone.now() + datetime.timedelta(hours=24)
+        valid_until = timezone.now() + timedelta(hours=24)
         return cls(user=user, valid_until=valid_until, backup_key=backup_key)
 
 
@@ -289,8 +289,24 @@ def generate_acad_year():
     return f"{year}/{(year + 1) % 100}"
 
 
+def current_year():
+    return datetime.now().year
+
+
+def current_semester():
+    return "z" if datetime.now().month >= 7 else "l"
+
+
 class Participant(models.Model):
+    SEMESTER_CHOICES = (("z", "zimný"), ("l", "letný"))
+
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
-    acad_year = models.CharField(verbose_name="akademický rok", default=generate_acad_year, max_length=7)
+    year = models.IntegerField(verbose_name="rok štúdia", default=current_year)
+    semester = models.CharField(
+        verbose_name="semester", choices=SEMESTER_CHOICES, max_length=1, default=current_semester
+    )
     chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)
+
+    def __str__(self):
+        return f"{self.token} ({self.user.first_name} {self.user.last_name}) / {self.year}{self.semester}"

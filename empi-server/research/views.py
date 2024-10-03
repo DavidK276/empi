@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from datetime import datetime
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
@@ -17,7 +18,7 @@ from rest_framework.response import Response
 
 from emails.types import PublicSignupEmail, ResearchCreatedEmail, NewSignupEmail, CancelSignupEmail
 from users.models import Participant
-from users.serializers import PasswordChangeSerializer, PasswordSerializer
+from users.serializers import PasswordChangeSerializer, PasswordSerializer, ParticipantSerializer
 from .auth import ResearchAuthentication
 from .models import Appointment, Research, Participation
 from .permissions import *
@@ -158,6 +159,19 @@ class ParticipationViewSet(
     serializer_class = ParticipationSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        year = self.request.query_params.get("year")
+
+        if year is not None and year.isnumeric():
+            year = int(year)
+            queryset = queryset.filter(
+                appointment__when__gte=datetime(year=year - 1, month=1, day=1),
+                appointment__when__lte=datetime(year=year, month=12, day=31),
+            )
+
+        return queryset
+
     def create(self, request, *args, **kwargs):
         """
         Creates the :class:`Participation` if there is free space in the specified appointment.
@@ -208,8 +222,10 @@ class ParticipationViewSet(
         for p in participations:
             if token := p.decrypt(private_key):
                 data = ParticipationSerializer(p, context={"request": request}).data
-                data |= {"token": token}
-                data |= {"research": p.appointment.research.pk}
+                data |= {"participant": ParticipantSerializer(instance=Participant.objects.get(token=token)).data}
+                data |= {
+                    "research": ResearchUserSerializer(instance=Research.objects.get(pk=p.appointment.research.pk)).data
+                }
                 result.append(data)
         return result
 

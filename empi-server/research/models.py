@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections.abc import Sequence, Mapping
 from django.utils import timezone
 from typing import Self, Optional
@@ -67,6 +67,9 @@ class BackupKey(models.Model):
     tag = models.BinaryField(max_length=16)
     backup_key = models.BinaryField(max_length=4096)
 
+    def __str__(self):
+        return "%s BackupKey"
+
 
 class ResetKey(models.Model):
     user = models.OneToOneField("Research", on_delete=models.CASCADE)
@@ -79,7 +82,7 @@ class ResetKey(models.Model):
             ResetKey.objects.get(user=user.pk).delete()
         except ResetKey.DoesNotExist:
             pass
-        valid_until = timezone.now() + datetime.timedelta(hours=24)
+        valid_until = timezone.now() + timedelta(hours=24)
         return cls(valid_until=valid_until, backup_key=backup_key)
 
 
@@ -150,7 +153,7 @@ class Appointment(models.Model):
         ]
 
     def __str__(self):
-        return " / ".join((self.research.name, self.when.isoformat(timespec="minutes")))
+        return f"{self.research.name} / {self.when.strftime('%d. %m. %Y, %H:%M')} ({self.pk})"
 
     def get_type(self):
         if self.location is None:
@@ -188,7 +191,7 @@ class Participation(models.Model):
     encrypted_tokens = SeparatedBinaryField(blank=True, null=True)
 
     def __str__(self):
-        return self.appointment.when.isoformat(timespec="minutes") + f" ({self.pk})"
+        return f"{self.appointment.research.name} / {self.appointment.when.strftime('%d. %m. %Y, %H:%M')} ({self.pk})"
 
     @classmethod
     def new(

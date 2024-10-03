@@ -48,5 +48,6 @@
   "optional": "voliteľné",
   "send": "Odoslať",
   "sending": "Odosielam…",
-  "guide": "Návod na použitie"
+  "guide": "Návod na použitie",
+  "no_students": "Nenašli sa žiadni študenti."
 }

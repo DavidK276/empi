@@ -71,11 +71,11 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "knox",
+    "drf_spectacular",
+    "markdownify.apps.MarkdownifyConfig",
     "users",
     "research",
     "emails",
-    "drf_spectacular",
-    "markdownify.apps.MarkdownifyConfig",
 ]
 
 MIDDLEWARE = [

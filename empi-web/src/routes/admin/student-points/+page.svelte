@@ -2,25 +2,60 @@
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
 	import type { PageServerData } from './$types';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let data: PageServerData;
 
+	function getCurrentSemester() {
+		const month = new Date().getMonth();
+		return month >= 7 ? 'z' : 'l';
+	}
+
+	function setSearchParams() {
+		let query = new URLSearchParams($page.url.searchParams.toString());
+		query.set('year', selectedYear.toString());
+		query.set('semester', selectedSemester);
+
+		goto(`?${query.toString()}`, { invalidateAll: true });
+	}
+
+	let selectedSemester = $page.url.searchParams.get('semester') || getCurrentSemester();
+	let selectedYear = $page.url.searchParams.get('year') || new Date().getFullYear();
 </script>
 <UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
 <div style="overflow-x: auto">
-	<table style="width: 100%; max-width: 100vw">
-		<tr>
-			<th>{$t('common.name')}</th>
-			<th>{$t('common.points')}</th>
-		</tr>
-		{#if data.participations}
+	<div class="row" style="padding: var(--xs)">
+		<label for="year">Rok</label>
+		<input type="number" step="1" min="2024" id="year" bind:value={selectedYear} on:change={setSearchParams}>
+		<label for="semester">Semester</label>
+		<select id="semester" bind:value={selectedSemester} on:change={setSearchParams}>
+			<option value="z">zimný</option>
+			<option value="l">letný</option>
+		</select>
+	</div>
+	{#if data.participations && data.participations.size > 0}
+		<table style="width: 100%; max-width: 100vw">
+			<tr>
+				<th>{$t('common.name')}</th>
+				<th>{$t('common.points')}</th>
+			</tr>
 			{#each data.participations.values() as participation}
 				<tr>
 					<td>{participation.name}</td>
 					<td style="text-align: center">{participation.points}</td>
 				</tr>
 			{/each}
-		{/if}
-	</table>
+		</table>
+	{:else}
+		<p>{$t('common.no_students')}</p>
+	{/if}
 </div>
+
+<style>
+    input, select {
+        margin: var(--sm) 0;
+        width: fit-content;
+    }
+</style>
