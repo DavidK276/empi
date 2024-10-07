@@ -60,7 +60,7 @@
 
 									return async ({ update }) => {
 										await update();
-										await goto("/");
+										await goto(`${base}/`);
 										logging_out = false;
 										is_logged_in = false;
 									};
