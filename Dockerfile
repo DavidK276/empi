@@ -37,10 +37,10 @@ ENV PATH=/home/appuser/.local/bin:$PATH
 ENV EMPI_DOCKER 1
 
 RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt update \
-    && apt install -y caddy xz-utils libmagic1 \
-    && apt -y upgrade \
-    && apt -y clean \
+    && apt-get update \
+    && apt-get install -y caddy xz-utils libmagic1 \
+    && apt-get -y upgrade \
+    && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/*
 
 ARG MULTIRUN_VERSION=1.1.3
