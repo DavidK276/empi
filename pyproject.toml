@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "empi"
-version = "0.3.0"
+version = "2024.10.7"
 description = "Backend for the Empirical research CMS"
 authors = ["David Krchňavý <krchnavy11@uniba.sk>"]
 readme = "README.md"
@@ -14,15 +14,15 @@ python = "^3.11"
 django = "^5.1.1"
 django-cors-headers = "^4.3.1"
 djangorestframework = "^3.15.1"
-pycryptodome = "^3.20.0"
+pycryptodome = "^3.21.0"
 python-magic = "^0.4.27"
 django-rest-knox = "^5.0.1"
-psycopg = {extras = ["binary"], version = "^3.2.2"}
+psycopg = {extras = ["binary"], version = "^3.2.3"}
 gunicorn = "^23.0.0"
 nanoid = "^2.0.0"
 html2text = "^2024.2.26"
 drf-spectacular = "^0.27.2"
-sentry-sdk = {extras = ["django"], version = "^2.14.0"}
+sentry-sdk = {extras = ["django"], version = "^2.15.0"}
 django-markdownify = "^0.9.5"
 
 

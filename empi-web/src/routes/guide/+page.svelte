@@ -9,7 +9,7 @@
 	</button>
 	<button type="button" class="m-w-full"><a href="/guide/expert">Vykonávam výskum a chcem ho pridať do systému</a>
 	</button>
-	<button type="button" class="m-w-full"><a href="/guide/public">Som návštevník</a></button>
+<!--	<button type="button" class="m-w-full"><a href="/guide/public">Som návštevník</a></button>-->
 </div>
 
 <style>
@@ -19,7 +19,7 @@
     .grid-container {
 				display: grid;
 				gap: var(--sm);
-				grid-template-columns: repeat(4, 33%);
+				grid-template-columns: repeat(4, 50%);
 		}
 		@media screen and (max-width: 768px) {
 				.grid-container {

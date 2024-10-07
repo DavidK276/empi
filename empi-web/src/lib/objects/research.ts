@@ -4,7 +4,7 @@ export class Research {
 	nanoid?: string;
 	name!: string;
 	comment!: string;
-	info_url!: string;
+	info_url: string | undefined;
 	points!: number
 	created!: string
 	is_protected!: boolean;

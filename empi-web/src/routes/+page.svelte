@@ -2,8 +2,16 @@
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
 	import Pagination from '$lib/components/Pagination.svelte';
+	import { onMount } from "svelte";
 
 	export let data: PageData;
+	$: showInfoUrlColumn = false;
+
+	onMount(() => {
+		for (const research of data.researches) {
+			showInfoUrlColumn ||= research.info_url != null;
+		}
+	});
 </script>
 
 <h1>EMPI</h1>
@@ -11,15 +19,19 @@
 	<table style="width: 100%; max-width: 100vw">
 		<tr>
 			<th>{$t('research.name')}</th>
-			<th>{$t('common.more_info')}</th>
+			{#if showInfoUrlColumn}
+				<th>{$t('common.more_info')}</th>
+			{/if}
 			<th>{$t('common.details')}</th>
 		</tr>
 		{#each data.researches as research}
 			{#if research.has_open_appointments}
 				<tr>
 					<td>{research.name}</td>
-					<td style="text-align: center"><a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>
-					</td>
+					{#if showInfoUrlColumn}
+						<td style="text-align: center"><a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>
+						</td>
+					{/if}
 					<td style="text-align: center">
 						<button>
 							<a href="research/{research.id}/">{$t('common.details')}</a>

@@ -56,9 +56,13 @@
 			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
+
+<!-- eslint-disable-next-line svelte/no-at-html-tags The html in this variable IS sanitized. -->
 {@html sanitizedComment}
-<p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
-</p>
+{#if data.research?.info_url != null}
+	<p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
+	</p>
+{/if}
 {#each data.appointments as appointment, i}
 	{@const participation = $page.data.participations?.get(appointment.id)}
 	{@const is_confirmed = participation?.is_confirmed === true}
