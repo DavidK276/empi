@@ -47,5 +47,6 @@
   "join_appointment": "Join",
   "signups_lapsed": "Time to sign up for this appointment has ended",
   "free_capacity": "Free capacity",
-  "send_email": "Send email"
+  "send_email": "Send email",
+  "page_url": "URL of this page"
 }

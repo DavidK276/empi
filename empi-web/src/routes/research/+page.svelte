@@ -33,8 +33,6 @@
 			}}>
 	<label for="name">{$t('research.name')}</label>
 	<input type="text" name="name" id="name" required>
-	<label for="info_url">{$t('research.info_url')}</label>
-	<input type="url" name="info_url" id="info_url" required>
 	<EmailInput bind:this={emails}></EmailInput>
 	<input type="hidden" name="is_published" value="false">
 	<div class="row ver-center">

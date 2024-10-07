@@ -92,7 +92,7 @@ class Research(models.Model):
     nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
     name = models.CharField(max_length=120, verbose_name="meno", unique=True)
     comment = models.TextField(blank=True)
-    info_url = models.URLField()
+    info_url = models.URLField(blank=True, null=True)
     points = models.PositiveIntegerField(verbose_name="body", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     chosen_attribute_values = models.ManyToManyField(AttributeValue, blank=True)

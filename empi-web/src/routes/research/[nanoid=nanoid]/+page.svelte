@@ -103,6 +103,8 @@
 			</div>
 		{/if}
 	</div>
+	<label for="page-url">{$t('research.page_url')}</label>
+	<input type="url" id="page-url" readonly value="{$page.url}">
 	<form method="POST" action="?/update"
 	      use:enhance={({submitter}) => {
 							if (submitter != null) {

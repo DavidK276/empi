@@ -42,10 +42,11 @@
   "creating": "Pridávam výskum…",
   "no_points": "Zatiaľ ste sa nezúčastnili na žiadnom výskume",
   "protection": "Ochrana heslom",
-  "unprotected_warning": "Žiadne heslo nie je nastavené. Každý s linkom môže vykonávať úpravy.",
+  "unprotected_warning": "Žiadne heslo nie je nastavené. Každý s URL tejto stránky môže vykonávať úpravy.",
   "join_appointment_url": "Link na pripojenie",
   "join_appointment": "Pripojiť",
   "signups_lapsed": "Čas prihlasovania na tento termín vypršal",
   "free_capacity": "Voľná kapacita",
-  "send_email": "Poslať email"
+  "send_email": "Poslať email",
+  "page_url": "URL tejto stránky, uložte si ju pre neskorší návrat na túto stránku."
 }
