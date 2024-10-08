@@ -53,6 +53,8 @@
 				{#if ENABLE_ATTRS}
 					<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
 				{/if}
+				<div><a href="{base}/admin/add-admin">{$t('common.add_admin')}</a></div>
+				<div><a href="{base}/admin/password-reset">{$t('common.password_reset')}</a></div>
 				<div><a href="{base}/admin/research-points">{$t('common.research_points')}</a></div>
 				<div><a href="{base}/admin/student-points">{$t('common.student_points')}</a></div>
 			</Dropdown>

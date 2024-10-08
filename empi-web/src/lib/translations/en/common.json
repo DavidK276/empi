@@ -49,5 +49,7 @@
   "send": "Send",
   "sending": "Sending…",
   "guide": "How to use",
-  "no_students": "No students found."
+  "no_students": "No students found.",
+  "add_admin": "Add admin",
+  "password_reset": "Password reset"
 }

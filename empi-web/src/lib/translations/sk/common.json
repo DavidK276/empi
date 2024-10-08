@@ -49,5 +49,7 @@
   "send": "Odoslať",
   "sending": "Odosielam…",
   "guide": "Návod na použitie",
-  "no_students": "Nenašli sa žiadni študenti."
+  "no_students": "Nenašli sa žiadni študenti.",
+  "add_admin": "Pridať superusera",
+  "password_reset": "Resetovanie hesla"
 }
