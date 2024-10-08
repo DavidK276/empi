@@ -146,6 +146,11 @@ class UserViewSet(viewsets.ModelViewSet):
     def create_admin(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        try:
+            _ = EmpiUser.users.get(email=serializer.validated_data["email"])
+            raise exceptions.ValidationError(detail={"detail": "Tento email sa už používa"})
+        except EmpiUser.DoesNotExist:
+            pass
 
         current_admin: EmpiUser = request.user
         passphrase = serializer.validated_data["password"]

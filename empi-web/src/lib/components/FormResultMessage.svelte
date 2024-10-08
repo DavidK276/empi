@@ -6,8 +6,9 @@
 	export let message: string = '';
 	export let result: ActionResult;
 
+	console.log(result.data);
 	if (!message) {
-		if (result.status === 500) {
+		if (result.type === 'error') {
 			message = $t('common.unknown_error');
 		}
 		else if (result.type === 'success') {
