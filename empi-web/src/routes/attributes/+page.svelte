@@ -43,9 +43,7 @@
 					submitting = true;
 					submit_success = null;
 					return async ({ update, result }) => {
-						submit_success = false;
-						if (result.status != null)
-							submit_success = 200 <= result.status && result.status <= 399;
+						submit_success = result.type === "success";
 						submitting = false;
 						update({ reset: false });
 					};

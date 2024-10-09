@@ -37,9 +37,22 @@ export const load: PageLoad = async ({ fetch, params, data }) => {
 		throw error(response.status);
 	}
 
+	let canSignup = true;
+	let isConfirmed = false;
+
+	for (const participation of data.participations?.values() || []) {
+		if (participation.research.id === research?.id) {
+			canSignup = false;
+			isConfirmed ||= participation.is_confirmed;
+			break;
+		}
+	}
+
 	return {
 		research,
 		appointments,
-		participations: data.participations
+		participations: data.participations,
+		canSignup,
+		isConfirmed
 	};
 };

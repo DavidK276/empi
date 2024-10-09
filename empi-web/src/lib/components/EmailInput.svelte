@@ -27,9 +27,6 @@
 		const firstEmail = separatedEmails.shift();
 		firstEmailInput.value = firstEmail!;
 
-		if (addEmailButton == null) {
-			return;
-		}
 		for (const email of separatedEmails) {
 			new AdditionalEmail({ target: addEmailButton.parentElement!, anchor: addEmailButton, props: { email } });
 		}

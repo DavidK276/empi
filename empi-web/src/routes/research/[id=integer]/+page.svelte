@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from "$app/environment";
+	import {enhance} from '$app/forms';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { localeDateStringFromUTCString } from '$lib/functions';
 
@@ -18,26 +19,7 @@
 		if (form?.success && form.participation != null) {
 			goto(`/participation/${form.participation.nanoid}/`);
 		}
-
-		page.subscribe(async ({ data }) => {
-			const { session, participations, research } = data;
-
-			if (!session?.user_password || session?.user.is_staff) {
-				return;
-			}
-
-			for (const participation of participations.values()) {
-				if (participation.research.id === research.id) {
-					can_signup = false;
-					is_confirmed ||= participation.is_confirmed;
-					break;
-				}
-			}
-		});
 	});
-
-	let can_signup = !$page.data.user?.is_staff;
-	let is_confirmed = false;
 
 	const converter = new showdown.Converter();
 	let sanitizedComment = "";
@@ -50,7 +32,7 @@
 {/if}
 <div class="row m-col">
 	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
-	{#if is_confirmed}
+	{#if data.isConfirmed}
 		<p class="message">
 			<MaterialSymbolsInfoOutline width="24"
 			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
@@ -111,8 +93,8 @@
 					</td>
 				</tr>
 			</table>
-			{#if can_signup && appointment.free_capacity > 0 && !signups_lapsed}
-				<form method="POST" action="?/signup">
+			{#if data.canSignup && appointment.free_capacity > 0 && !signups_lapsed}
+				<form method="POST" action="?/signup" use:enhance>
 					<input type="hidden" name="appointment" value={appointment.id}>
 					{#if $page.data.user == null}
 						<label for="recipient">Email</label>
@@ -130,7 +112,7 @@
 				</form>
 			{/if}
 			{#if participation != null && !is_confirmed}
-				<form method="POST" action="?/cancel">
+				<form method="POST" action="?/cancel" use:enhance>
 					<input type="hidden" name="participation-id" value={participation?.id}>
 					<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
 				</form>
