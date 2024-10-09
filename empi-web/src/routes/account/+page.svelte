@@ -72,11 +72,11 @@
 		<div class="row">
 			<div style="width: 50%">
 				<label for="current_password">{$t('common.current_password')}</label>
-				<input type="password" id="current_password" name="current_password" minlength="4">
+				<input type="password" id="current_password" name="current_password" minlength="8">
 			</div>
 			<div style="width: 50%">
 				<label for="new_password">{$t('common.new_password')}</label>
-				<input type="password" id="new_password" name="new_password" minlength="4">
+				<input type="password" id="new_password" name="new_password" minlength="8">
 			</div>
 		</div>
 		<div class="row ver-center" id="submit-div">

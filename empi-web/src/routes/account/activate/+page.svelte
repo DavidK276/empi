@@ -45,11 +45,11 @@
 			<div class="col m-w-full" style="width: 50%; gap: 0">
 				<MyLabel forId="new_password" labelText={$t('common.password')} hintText={$t('common.password_hint')}
 				         icon="warning"></MyLabel>
-				<input type="password" name="new_password" id="new_password" required minlength="4">
+				<input type="password" name="new_password" id="new_password" required minlength="8">
 			</div>
 			<div class="col m-w-full" style="width: 50%; gap: 0">
 				<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>
-				<input type="password" id="repeat_password" required minlength="4">
+				<input type="password" id="repeat_password" required minlength="8">
 			</div>
 		</div>
 		<div class="row ver-center">

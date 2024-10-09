@@ -54,7 +54,7 @@
 	<div class="row m-col ver-bottom">
 		<div class="col m-w-full" style="width: 50%; gap: 0">
 			<label for="password">{$t('common.password')}</label>
-			<input type="password" name="password" id="password" required minlength="4" bind:this={passwordInput}>
+			<input type="password" name="password" id="password" required minlength="8" bind:this={passwordInput}>
 		</div>
 		<div class="col m-w-full" style="width: 50%; gap: 0">
 			<label for="repeat_password" title={$t('common.password_hint')}>{$t('common.repeat_password')}</label>

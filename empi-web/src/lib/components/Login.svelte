@@ -40,7 +40,7 @@
 		<label for="email">Email: </label>
 		<input type="email" id="email" name="email" required>
 		<label for="password">{$t('common.password')}: </label>
-		<input type="password" id="password" name="password" required minlength="4">
+		<input type="password" id="password" name="password" required>
 		{#if $page.form?.login === false}
 			<p class="error-msg" style="display: block">{login_message}</p>
 		{/if}

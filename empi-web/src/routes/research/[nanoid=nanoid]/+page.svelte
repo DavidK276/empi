@@ -169,7 +169,7 @@
 					<input type="password" name="current_password" id="current_password">
 				{/if}
 				<label for="new_password">{$t('common.new_password')}</label>
-				<input type="password" name="new_password" id="new_password">
+				<input type="password" name="new_password" id="new_password" required minlength="8">
 				<div class="row ver-center" id="submit-div">
 					<button type="submit" id="submit">{$t('common.submit')}</button>
 				</div>
