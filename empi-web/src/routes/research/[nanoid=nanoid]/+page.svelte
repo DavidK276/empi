@@ -3,6 +3,7 @@
 	import { t } from '$lib/translations';
 	import Setting from '$lib/components/Setting.svelte';
 	import { enhance } from '$app/forms';
+	import { universalEnhance } from '$lib/enhanceFunctions';
 	import { page } from '$app/stores';
 	import Appointment from './Appointment.svelte';
 	import { Appointment as Appt } from '$lib/objects/appointment';
@@ -12,8 +13,6 @@
 	import AccordionTab from '$lib/components/AccordionTab.svelte';
 	import { Participation } from '$lib/objects/participation';
 	import EmailInput from '$lib/components/EmailInput.svelte';
-	import { invalidateAll } from '$app/navigation';
-	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 	import ResearchPasswordRequiredModal from '$lib/components/ResearchPasswordRequiredModal.svelte';
 	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
 	import MaterialSymbolsVisibilityOutline from 'virtual:icons/material-symbols/visibility-outline';
@@ -24,8 +23,6 @@
 	export let data: PageServerData;
 	$: appointments = plainToInstance(Appt, data.appointments);
 	let emails: EmailInput;
-	let submitting_attrs = false;
-	let submit_success_attrs: boolean | null = null;
 	let submitting_appointments = false;
 	let submit_success_appointments: boolean | null = null;
 	let submitting_participations = false;
@@ -106,25 +103,14 @@
 	<label for="page-url">{$t('research.page_url')}</label>
 	<input type="url" id="page-url" readonly value="{$page.url}">
 	<form method="POST" action="?/update"
-	      use:enhance={({submitter}) => {
-							if (submitter != null) {
-								submitter.toggleAttribute('disabled');
-								submitter.innerHTML = $t('common.submitting');
-							}
-
-							return async ({formElement, result, update}) => {
-								await invalidateAll();
-								await update({ reset: false });
-								if (submitter != null) {
-									submitter.toggleAttribute('disabled');
-									submitter.innerHTML = $t('common.submit');
-									const submitDiv = formElement.children.namedItem('submit-div');
-									if (submitDiv != null) {
-										new FormResultMessage({target: submitDiv, props: {result}});
-									}
-								}
-							};
-					}}
+	      use:enhance={({formElement, submitter}) => {
+					return universalEnhance({formElement, submitter}, {
+						idleMessage: $t('common.submit'),
+						runningMessage: $t('common.submitting'),
+						reset: false,
+						invalidateAll: true
+					});
+				}}
 	      on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
@@ -140,25 +126,14 @@
 	<Accordion>
 		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
 			<form method="POST" action="?/setPassword"
-			      use:enhance={({submitter}) => {
-							if (submitter != null) {
-								submitter.toggleAttribute('disabled');
-								submitter.innerHTML = $t('common.submitting');
-							}
-
-							return async ({formElement, result, update}) => {
-								await invalidateAll();
-								await update();
-								if (submitter != null) {
-									submitter.toggleAttribute('disabled');
-									submitter.innerHTML = $t('common.submit');
-									const submitDiv = formElement.children.namedItem('submit-div');
-									if (submitDiv != null) {
-										new FormResultMessage({target: submitDiv, props: {result}});
-									}
-								}
-							};
-					}}>
+			      use:enhance={({formElement, submitter}) => {
+							return universalEnhance({formElement, submitter}, {
+								idleMessage: $t('common.submit'),
+								runningMessage: $t('common.submitting'),
+								reset: true,
+								invalidateAll: true
+							});
+						}}>
 				{#if !data.research.is_protected}
 					<p class="error-msg message">
 						<MaterialSymbolsWarningOutline></MaterialSymbolsWarningOutline>&nbsp;{$t('research.unprotected_warning')}
@@ -177,19 +152,15 @@
 		</AccordionTab>
 		{#if ENABLE_ATTRS && data.attrs?.length > 0}
 			<AccordionTab open={false} title={$t('common.attributes')}>
-				<form method="POST"
-				      action="?/attrs"
-				      use:enhance={() => {
-							submitting_attrs = true;
-							submit_success_attrs = null;
-							return async ({ update, result }) => {
-								submit_success_attrs = false;
-								if (result.status != null)
-									submit_success_attrs = 200 <= result.status && result.status <= 399;
-								submitting_attrs = false;
-								update({ reset: false });
-							};
-						}}>
+				<form method="POST" action="?/attrs"
+				      use:enhance={({formElement, submitter}) => {
+								return universalEnhance({formElement, submitter}, {
+									idleMessage: $t('common.submit'),
+									runningMessage: $t('common.submitting'),
+									reset: false,
+									invalidateAll: true
+								});
+							}}>
 					{#each data.attrs as attr}
 						{#if Reflect.has(data.research_attrs, attr.name)}
 							<Setting {attr} values={data.research_attrs[attr.name]}></Setting>
@@ -197,16 +168,9 @@
 							<Setting {attr}></Setting>
 						{/if}
 					{/each}
-					{#if submitting_attrs}
-						<button type="submit" style="margin-top: 0" disabled>{$t('common.submitting')}</button>
-					{:else}
-						<button type="submit" style="margin-top: 0">{$t('common.submit')}</button>
-					{/if}
-					{#if submit_success_attrs === true}
-						<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>
-					{:else if submit_success_attrs === false}
-						<span style="margin: 0 var(--sm); color: var(--danger)">{$t('common.unknown_error')}</span>
-					{/if}
+					<div class="row ver-center" id="submit-div">
+						<button type="submit" id="submit">{$t('common.submit')}</button>
+					</div>
 				</form>
 			</AccordionTab>
 		{/if}
@@ -228,25 +192,14 @@
 		</AccordionTab>
 		<AccordionTab open={false} title={$t('research.send_email')}>
 			<form method="POST" action="?/email"
-			      use:enhance={({submitter}) => {
-							if (submitter != null) {
-								submitter.toggleAttribute('disabled');
-								submitter.innerHTML = $t('common.sending');
-							}
-
-							return async ({formElement, result, update}) => {
-								await invalidateAll();
-								await update();
-								if (submitter != null) {
-									submitter.toggleAttribute('disabled');
-									submitter.innerHTML = $t('common.send');
-									const submitDiv = formElement.children.namedItem('submit-div');
-									if (submitDiv != null) {
-										new FormResultMessage({target: submitDiv, props: {result}});
-									}
-								}
-							};
-					}}>
+			      use:enhance={({formElement, submitter}) => {
+							return universalEnhance({formElement, submitter}, {
+								idleMessage: $t('common.send'),
+								runningMessage: $t('common.sending'),
+								reset: true,
+								invalidateAll: true
+							});
+						}}>
 				<fieldset>
 					<legend>Príjemcovia</legend>
 					<label for="appointment">Používatelia prihlásení na termín</label>

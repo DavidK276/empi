@@ -36,6 +36,7 @@ export const actions = {
 		if (!response.ok) {
 			return fail(response.status, { success: false, errors: await response.json() });
 		}
+		await locals.session.update(() => ({ user_password: formData.get('new_password') }));
 		return { success: true }
 	}
 } satisfies Actions;

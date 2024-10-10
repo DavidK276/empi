@@ -2,29 +2,11 @@
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+	import { universalEnhance } from '$lib/enhanceFunctions';
 	import MaterialSymbolsHelpOutline from 'virtual:icons/material-symbols/help-outline';
-	import type { ActionResult } from "@sveltejs/kit";
-	import { addFormErrors } from "$lib/functions";
-	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
 
 	let user = $page.data.user;
 	let participant = $page.data.participant;
-
-	async function doUpdate({ formElement }: { formElement: HTMLFormElement }) {
-		return async ({ update, result }: {
-			update: (options?: { reset?: boolean, invalidateAll?: boolean }) => Promise<void>,
-			result: ActionResult
-		}) => {
-			const submitDiv = formElement.children.namedItem('submit-div');
-			if (submitDiv != null) {
-				new FormResultMessage({target: submitDiv, props: {result}});
-			}
-			if (result.type === 'failure') {
-				addFormErrors(result.data?.errors, formElement);
-			}
-			await update({ reset: false });
-		};
-	}
 </script>
 <div class="row ver-center">
 	<h1>{$t('account.my_account')}</h1>
@@ -44,7 +26,14 @@
 			<button id="token" style="font-size: 18px">{participant.token}</button>
 		</div>
 	{/if}
-	<form method="POST" action="?/updateInfo" use:enhance={doUpdate}>
+	<form method="POST" action="?/updateInfo" use:enhance={({formElement, submitter}) => {
+		return universalEnhance({formElement, submitter}, {
+			idleMessage: $t('common.submit'),
+			runningMessage: $t('common.submitting'),
+			reset: false,
+			invalidateAll: true
+		});
+	}}>
 		<div class="row">
 			<div style="width: 50%">
 				<label for="first_name">{$t('common.first_name')}</label>
@@ -68,11 +57,18 @@
 </div>
 <h2>{$t('account.password_change')}</h2>
 <div class="col">
-	<form method="POST" action="?/changePassword" use:enhance={doUpdate}>
+	<form method="POST" action="?/changePassword" use:enhance={({formElement, submitter}) => {
+		return universalEnhance({formElement, submitter}, {
+			idleMessage: $t('common.submit'),
+			runningMessage: $t('common.submitting'),
+			reset: false,
+			invalidateAll: false
+		});
+	}}>
 		<div class="row">
 			<div style="width: 50%">
 				<label for="current_password">{$t('common.current_password')}</label>
-				<input type="password" id="current_password" name="current_password" minlength="8">
+				<input type="password" id="current_password" name="current_password">
 			</div>
 			<div style="width: 50%">
 				<label for="new_password">{$t('common.new_password')}</label>

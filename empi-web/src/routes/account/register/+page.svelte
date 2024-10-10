@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
-	import { addFormError, addFormErrors, removeFormError } from '$lib/functions';
+	import { addFormError, removeFormError } from '$lib/functions';
 	import type { ActionData } from './$types';
-	import { applyAction, enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
+	import { universalEnhance } from "$lib/enhanceFunctions";
 
 	export let form: ActionData;
 
@@ -20,23 +21,19 @@
 		}
 	};
 
-	let submitting = false;
 	let passwordInput: HTMLInputElement;
 	let repeatPasswordInput: HTMLInputElement;
 </script>
 
 <h1>{$t('common.registration')}</h1>
-<form method="POST" id="register_form"
-      on:submit={submit}
-      use:enhance={() => {
-				submitting = true;
-				return async ({result, formElement}) => {
-					await applyAction(result);
-					if (form != null && !form.success) {
-							addFormErrors(form.errors, formElement);
-					}
-					submitting = false;
-				}
+<form method="POST" id="register_form" on:submit={submit}
+      use:enhance={({formElement, submitter}) => {
+				return universalEnhance({formElement, submitter}, {
+					idleMessage: $t('common.register'),
+					runningMessage: $t('common.registering'),
+					reset: true,
+					invalidateAll: false
+				});
 			}}>
 	<label for="email">Email</label>
 	<input type="email" name="email" id="email" required style="width: 50%" class="m-w-full">
@@ -61,11 +58,9 @@
 			<input type="password" id="repeat_password" required minlength="8" bind:this={repeatPasswordInput}>
 		</div>
 	</div>
-	{#if !submitting}
-		<button type="submit" name="submit">{$t('common.register')}</button>
-	{:else}
-		<button type="submit" disabled>{$t('common.registering')}</button>
-	{/if}
+	<div class="row ver-center" id="submit-div">
+		<button type="submit">{$t('common.register')}</button>
+	</div>
 	{#if form?.success}
 		<span style="color: var(--success)">{$t('common.registration_ok')}</span>
 	{/if}
