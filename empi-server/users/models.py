@@ -9,7 +9,7 @@ from Crypto.PublicKey.RSA import RsaKey
 from Crypto.Random import get_random_bytes
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractUser, UserManager, PermissionsMixin
+from django.contrib.auth.models import UserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -20,7 +20,6 @@ from utils.keys import export_privkey, export_privkey_plaintext
 
 
 class EmpiUserManager(UserManager):
-
     @staticmethod
     def _init_keys(password: str, **kwargs):
         new_user_privkey = RSA.generate(2048)

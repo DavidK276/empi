@@ -24,7 +24,6 @@ from .utils.misc import generate_nanoid
 
 
 class ResearchManager(Manager):
-
     @staticmethod
     def init_keys(password: str):
         new_user_privkey = RSA.generate(2048)

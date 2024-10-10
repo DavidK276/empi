@@ -66,7 +66,6 @@ class ActivateUserSerializer(serializers.Serializer):
 
 @extend_schema_field({"type": "array", "items": {"type": "string"}})
 class AttributeValueField(serializers.Field):
-
     def run_validation(self, data=empty):
         if not isinstance(data, Iterable):
             raise exceptions.ValidationError("values must be an array of strings")

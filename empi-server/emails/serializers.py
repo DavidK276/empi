@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from research.models import Appointment, Research
+from research.models import Appointment
 from . import models
 
 

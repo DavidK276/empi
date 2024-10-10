@@ -7,25 +7,21 @@ from users.models import EmpiUser
 
 
 class ReadOnly(BasePermission):
-
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS
 
 
 class CreateOnly(BasePermission):
-
     def has_permission(self, request, view):
         return request.method == HTTPMethod.POST
 
 
 class AllowAllExceptList(BasePermission):
-
     def has_permission(self, request, view):
         return view.action != "list"
 
 
 class ResearchPermission(BasePermission):
-
     def has_permission(self, request, view):
         if isinstance(request.user, EmpiUser) and request.user.is_staff:
             return True

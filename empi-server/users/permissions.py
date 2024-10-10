@@ -9,12 +9,10 @@ class IsSelf(BasePermission):
 
 
 class ReadOnly(BasePermission):
-
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS
 
 
 class CreateOnly(BasePermission):
-
     def has_permission(self, request, view):
         return request.method == HTTPMethod.POST

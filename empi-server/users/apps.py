@@ -7,4 +7,4 @@ class UsersConfig(AppConfig):
 
     def ready(self):
         super().ready()
-        import users.schema
+        import users.schema  # noqa: F401

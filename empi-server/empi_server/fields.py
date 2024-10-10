@@ -2,7 +2,6 @@ from django.db import models
 
 
 class SeparatedValuesField(models.Field):
-
     def __init__(self, *args, field=models.Field, token=",", **kwargs):
         assert field is not None
         self.token = token

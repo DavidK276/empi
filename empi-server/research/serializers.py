@@ -1,8 +1,5 @@
-from django.contrib.admin.utils import lookup_field
 from rest_framework import serializers
 
-from users.models import Participant
-from users.serializers import ParticipantSerializer
 from .models import Appointment, Participation, Research
 
 
@@ -13,7 +10,6 @@ class ResearchUserSerializer(serializers.ModelSerializer):
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Research
         fields = [
