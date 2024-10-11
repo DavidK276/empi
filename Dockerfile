@@ -21,7 +21,6 @@ COPY --chown=appuser docker/patches/svelte.config.js.patch ./
 RUN patch svelte.config.js svelte.config.js.patch
 
 RUN npm ci
-RUN npm audit fix
 RUN npm run build
 
 FROM python:3.12-slim-bookworm AS api
@@ -78,7 +77,6 @@ WORKDIR /app/empi-web
 COPY --from=web-build /build/package*.json ./
 
 RUN npm ci --production --ignore-scripts
-RUN npm audit fix
 
 COPY --from=web-build --chown=appuser /build/build ./
 
