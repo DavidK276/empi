@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "drf_spectacular",
-    "markdownify.apps.MarkdownifyConfig",
     "users",
     "research",
     "emails",

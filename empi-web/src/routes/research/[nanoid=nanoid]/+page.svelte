@@ -204,7 +204,7 @@
 					<legend>Príjemcovia</legend>
 					<label for="appointment">Používatelia prihlásení na termín</label>
 					<select name="appointment" id="appointment">
-						<option>žiadny</option>
+						<option value="">žiadny</option>
 						{#each appointments as appointment}
 							{#if appointment.info_url != null}
 								<option value={appointment.id}>{localeDateStringFromUTCString(appointment.when)}
