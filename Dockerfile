@@ -8,10 +8,10 @@ ARG EMPI_EXT_API_ENDPOINT
 ENV EMPI_EXT_API_ENDPOINT=$EMPI_EXT_API_ENDPOINT
 
 RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt update \
-    && apt install -y patch \
-    && apt -y upgrade \
-    && apt -y clean \
+    && apt-get update \
+    && apt-get install -y patch \
+    && apt-get -y upgrade \
+    && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
@@ -38,7 +38,7 @@ ENV EMPI_DOCKER 1
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
-    && apt-get install -y caddy xz-utils libmagic1 \
+    && apt-get install -y caddy xz-utils libmagic1 nano \
     && apt-get -y upgrade \
     && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/*
