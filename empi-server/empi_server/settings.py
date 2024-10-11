@@ -211,7 +211,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.EmpiUser"
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST", None).strip('"').strip("'")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", None).strip('"').strip("'")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER").strip('"').strip("'")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD").strip('"').strip("'")
+
+if EMAIL_HOST and EMAIL_PORT:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 EMPI_PUBLIC_URL = (os.environ.get("WEB_URL") or "http://localhost:5173").strip("/")
 
