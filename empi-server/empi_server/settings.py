@@ -215,7 +215,7 @@ AUTH_USER_MODEL = "users.EmpiUser"
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "").strip('"').strip("'")
 email_port = os.environ.get("EMAIL_PORT", "").strip('"').strip("'")
 EMAIL_PORT = int(email_port) if email_port.isnumeric() else 0
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER").strip('"').strip("'")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "").strip('"').strip("'")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD").strip('"').strip("'")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "0") == "1" or EMAIL_PORT == 587
 EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "0") == "1" or EMAIL_PORT == 465
