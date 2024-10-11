@@ -21,6 +21,8 @@ class ResearchEmailSerializer(serializers.Serializer):
     subject = serializers.CharField()
     body = serializers.CharField()
 
-    appointment = serializers.PrimaryKeyRelatedField(queryset=Appointment.objects.get_queryset(), required=False)
+    appointment = serializers.PrimaryKeyRelatedField(
+        queryset=Appointment.objects.get_queryset(), required=False, allow_null=True, default=None
+    )
     research_nanoid = serializers.CharField()
     research_password = serializers.CharField(style={"input_type": "password"})

@@ -59,16 +59,18 @@ class EmailViewSet(viewsets.ModelViewSet):
         _, encrypted_privkey = research.get_keypair()
         private_key = RSA.import_key(encrypted_privkey, passphrase=serializer.validated_data.pop("research_password"))
 
-        interesting_participations = Participation.objects.all().filter(
-            appointment=serializer.validated_data.pop("appointment")
-        )
+        appointment = serializer.validated_data.pop("appointment", None)
+        tokens, recipients = [], []
+        if appointment:
+            interesting_participations = Participation.objects.all().filter(appointment=appointment)
 
-        tokens = []
-        for p in interesting_participations:
-            if token := p.decrypt(private_key):
-                tokens.append(token)
+            for p in interesting_participations:
+                if token := p.decrypt(private_key):
+                    tokens.append(token)
 
-        recipients = list(EmpiUser.users.all().filter(participant__token__in=tokens).values_list("email", flat=True))
+            recipients.extend(
+                EmpiUser.users.all().filter(participant__token__in=tokens).values_list("email", flat=True)
+            )
 
         recipients.extend(serializer.validated_data.pop("extra_recipients").replace(" ", "").split(","))
 
