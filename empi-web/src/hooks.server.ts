@@ -13,7 +13,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 		const nanoid: string | null = session.research_nanoid;
 		const password: string | null = session.research_password;
 
-		if ((urlPath.includes(`${base}/research-admin`) || urlPath.includes(`${base}/email/send_research_info`)) && nanoid && password) {
+		if ((urlPath.includes(`/research-admin`) || urlPath.includes(`/email/send_research_info`)) && nanoid && password) {
 			request.headers.set('Authorization', `Basic ${btoa(`${nanoid}:${password}`)}`);
 		}
 		else if (authToken != null) {
