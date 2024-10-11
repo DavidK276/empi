@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-	<p>Váš výskum {{ research.name }} úspešne pridaný.</p>
-	<p>Svoju výskum môžete spravovať kliknutím <a href="{{ research_admin_url }}">sem.</a></p>
+	<p>Váš výskum "{{ research.name }}" bol úspešne pridaný.</p>
+	<p>Svoj výskum môžete spravovať kliknutím <a href="{{ research_admin_url }}">sem.</a></p>
 	<p>V prípade, že sa email nezobrazuje správne môžete výskum spravovať prostredníctvom tohto odkazu: <a
 			href="{{ research_admin_url }}">{{ research_admin_url }}</a></p>
 {% endblock body %}
