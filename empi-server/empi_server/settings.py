@@ -212,8 +212,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.EmpiUser"
 
 
-EMAIL_HOST = os.environ.get("EMAIL_HOST", None).strip('"').strip("'")
-email_port = os.environ.get("EMAIL_PORT", None).strip('"').strip("'")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "").strip('"').strip("'")
+email_port = os.environ.get("EMAIL_PORT", "").strip('"').strip("'")
 EMAIL_PORT = int(email_port) if email_port.isnumeric() else 0
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER").strip('"').strip("'")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD").strip('"').strip("'")
