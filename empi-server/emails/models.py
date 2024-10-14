@@ -1,6 +1,5 @@
 import os
 from collections.abc import Sequence
-from datetime import datetime
 from email.mime.application import MIMEApplication
 from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
@@ -35,7 +34,7 @@ class Email(models.Model):
     @classmethod
     def get_emails_to_send(cls):
         return cls.objects.filter(is_sent=False).filter(
-            (Q(send_when__isnull=True) | Q(send_when__lte=datetime.now())) & Q(is_finalized=True)
+            (Q(send_when__isnull=True) | Q(send_when__lte=timezone.now())) & Q(is_finalized=True)
         )
 
     def _get_context(self):

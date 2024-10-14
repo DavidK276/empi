@@ -1,6 +1,6 @@
 import random
 from collections.abc import Mapping, Sequence, Iterable
-from datetime import timedelta, datetime
+from datetime import timedelta
 from typing import Self
 
 from Crypto.Cipher import PKCS1_OAEP, AES
@@ -289,11 +289,11 @@ def generate_acad_year():
 
 
 def current_year():
-    return datetime.now().year
+    return timezone.now().year
 
 
 def current_semester():
-    return "z" if datetime.now().month >= 7 else "l"
+    return "z" if timezone.now().month >= 7 else "l"
 
 
 class Participant(models.Model):
