@@ -61,7 +61,7 @@ export const actions = {
 export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 	const { session } = await parent();
 	if (session?.user?.is_staff) {
-		return { participations: null };
+		return { participations: null, canSignup: false };
 	}
 
 	const formData = new FormData();
@@ -78,8 +78,8 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 			for (const participation of responseJSON) {
 				participations.set(participation.appointment, participation);
 			}
-			return { participations };
+			return { participations, canSignup: true};
 		}
 	}
-	return { participations: null };
+	return { participations: null, canSignup: true };
 };

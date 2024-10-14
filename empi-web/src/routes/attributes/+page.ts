@@ -6,7 +6,7 @@ import { browser } from '$app/environment';
 const API_ENDPOINT = (browser) ? consts.EXT_API_ENDPOINT : consts.INT_API_ENDPOINT;
 
 
-export const load: PageLoad = async ({ fetch, parent, data }) => {
+export const load: PageLoad = async ({ fetch, data }) => {
 	let response = await fetch(API_ENDPOINT + 'attr/');
 
 	const attrs: Attribute[] = [];
@@ -23,7 +23,6 @@ export const load: PageLoad = async ({ fetch, parent, data }) => {
 			}
 		}
 	}
-	await parent();
 	return {
 		attrs: attrs,
 		user_attrs: data.user_attrs

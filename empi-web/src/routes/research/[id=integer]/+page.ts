@@ -8,6 +8,8 @@ import { browser } from '$app/environment';
 const API_ENDPOINT = (browser) ? consts.EXT_API_ENDPOINT : consts.INT_API_ENDPOINT;
 
 export const load: PageLoad = async ({ fetch, params, data }) => {
+	// eslint-disable-next-line prefer-const
+	let { participations, canSignup } = data;
 	let response = await fetch(API_ENDPOINT + `research-user/${params.id}/`);
 
 	let research: Research | null = null;
@@ -37,7 +39,6 @@ export const load: PageLoad = async ({ fetch, params, data }) => {
 		throw error(response.status);
 	}
 
-	let canSignup = true;
 	let isConfirmed = false;
 
 	for (const participation of data.participations?.values() || []) {
@@ -51,7 +52,7 @@ export const load: PageLoad = async ({ fetch, params, data }) => {
 	return {
 		research,
 		appointments,
-		participations: data.participations,
+		participations,
 		canSignup,
 		isConfirmed
 	};

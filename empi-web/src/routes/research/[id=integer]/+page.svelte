@@ -8,7 +8,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from "$app/environment";
-	import {enhance} from '$app/forms';
+	import { enhance } from '$app/forms';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { localeDateStringFromUTCString } from '$lib/functions';
 
