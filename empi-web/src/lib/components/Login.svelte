@@ -10,6 +10,7 @@
 		logging_in = true;
 
 		return async ({ update, result }: {update: () => Promise<void>, result: ActionResult}) => {
+			await update();
 			logging_in = false;
 			if (result.type === 'success') {
 				is_logged_in = true;
@@ -24,7 +25,6 @@
 					login_message = $t('common.wrong_login');
 				}
 			}
-			await update();
 		};
 	}
 
@@ -59,8 +59,8 @@
 									logging_out = true;
 
 									return async ({ update }) => {
-										await update();
 										await goto(`${base}/`);
+										await update();
 										logging_out = false;
 										is_logged_in = false;
 									};
