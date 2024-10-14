@@ -51,5 +51,8 @@
   "guide": "How to use",
   "no_students": "No students found.",
   "add_admin": "Add admin",
-  "password_reset": "Password reset"
+  "password_reset": "Password reset",
+  "unconfirmed_points": "Unconfirmed points",
+  "confirmed_points": "Confirmed points",
+  "sum": "Sum"
 }

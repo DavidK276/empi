@@ -39,12 +39,16 @@
 		<table style="width: 100%; max-width: 100vw">
 			<tr>
 				<th>{$t('common.name')}</th>
-				<th>{$t('common.points')}</th>
+				<th>{$t('common.unconfirmed_points')}</th>
+				<th>{$t('common.confirmed_points')}</th>
+				<th>{$t('common.sum')}</th>
 			</tr>
 			{#each data.participations.values() as participation}
 				<tr>
 					<td>{participation.name}</td>
-					<td style="text-align: center">{participation.points}</td>
+					<td style="text-align: center">{participation.unconfirmedPoints}</td>
+					<td style="text-align: center">{participation.confirmedPoints}</td>
+					<td style="text-align: center">{participation.unconfirmedPoints + participation.confirmedPoints}</td>
 				</tr>
 			{/each}
 		</table>

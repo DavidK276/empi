@@ -51,5 +51,8 @@
   "guide": "Návod na použitie",
   "no_students": "Nenašli sa žiadni študenti.",
   "add_admin": "Pridať superusera",
-  "password_reset": "Resetovanie hesla"
+  "password_reset": "Resetovanie hesla",
+  "unconfirmed_points": "Nepotvrdené body",
+  "confirmed_points": "Potvrdené body",
+  "sum": "Súčet"
 }
