@@ -1,29 +1,28 @@
 <script lang="ts">
 	import { t } from '$lib/translations.js';
-	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import type { ActionResult } from "@sveltejs/kit";
 	import { base } from "$app/paths";
+	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
 
 	async function login() {
 		logging_in = true;
 
-		return async ({ update, result }: {update: () => Promise<void>, result: ActionResult}) => {
+		return async ({ update, result }: { update: () => Promise<void>, result: ActionResult }) => {
 			await update();
 			logging_in = false;
+			console.log(result);
 			if (result.type === 'success') {
 				is_logged_in = true;
+				login_message = "";
+			}
+			if (result.status === 401) {
+				is_logged_in = false;
+				login_message = $t('common.wrong_login');
 			}
 			else if (result.type === 'failure') {
-				const message = result.data?.errors;
-
-				if (message.non_field_errors != null) {
-					login_message = message.non_field_errors[0];
-				}
-				else {
-					login_message = $t('common.wrong_login');
-				}
+				new FormResultMessage({ target: document.getElementById('submitBtn')!, props: { result } })
 			}
 		};
 	}
@@ -36,19 +35,19 @@
 </script>
 {#if !is_logged_in}
 	<form method="POST" action="{base}/?/login" style="width: 100%"
-				use:enhance={login}>
+	      use:enhance={login}>
 		<label for="email">Email: </label>
 		<input type="email" id="email" name="email" required>
 		<label for="password">{$t('common.password')}: </label>
 		<input type="password" id="password" name="password" required>
-		{#if $page.form?.login === false}
-			<p class="error-msg" style="display: block">{login_message}</p>
+		{#if login_message}
+			<p class="error-msg" style="display: block; margin-top: 0">{login_message}</p>
 		{/if}
 		<div style="display: flex; flex-wrap: nowrap">
 			{#if logging_in}
 				<button type="submit" disabled>{$t('common.logging_in')}</button>
 			{:else}
-				<button type="submit" id="submit">{$t('common.login')}</button>
+				<button type="submit" id="loginBtn">{$t('common.login')}</button>
 			{/if}
 			<a href="{base}/account/register" style="margin: 0 var(--sm)">{$t('common.registration')}</a>
 		</div>
@@ -68,7 +67,7 @@
 		{#if logging_out}
 			<button type="submit" disabled>{$t('common.logging_out')}</button>
 		{:else}
-			<button type="submit" name="submit">{$t('common.logout')}</button>
+			<button type="submit">{$t('common.logout')}</button>
 		{/if}
 	</form>
 {/if}
