@@ -7,6 +7,15 @@
 
 	let user = $page.data.user;
 	let participant = $page.data.participant;
+
+	const onTokenButtonClick = (event: MouseEvent) => {
+		navigator.clipboard.writeText(participant.token);
+		const target = event.target as HTMLButtonElement;
+		target.innerText = "Skopírovaný!"
+		setTimeout(() => {
+			target.innerText = participant.token
+		}, 1000);
+	};
 </script>
 <div class="row ver-center">
 	<h1>{$t('account.my_account')}</h1>
@@ -20,10 +29,11 @@
 <div class="col">
 	{#if participant != null}
 		<div class="col">
-			<label for="token" title={$t('common.token_hint')}>Token&nbsp;
+			<label for="token" title={$t('common.token_hint')}>Token&nbsp;({$t('common.click_to_copy')})&nbsp;
 				<MaterialSymbolsHelpOutline width="24" height="24"></MaterialSymbolsHelpOutline>
 			</label>
-			<button id="token" style="font-size: 18px">{participant.token}</button>
+			<button id="token" style="font-size: 18px; cursor: pointer" title="{$t('common.click_to_copy')}"
+			        on:click={onTokenButtonClick}>{participant.token}</button>
 		</div>
 	{/if}
 	<form method="POST" action="?/updateInfo" use:enhance={({formElement, submitter}) => {
