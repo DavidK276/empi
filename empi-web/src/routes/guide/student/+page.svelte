@@ -1,6 +1,7 @@
 <script lang="ts">
 	import MaterialSymbolsArrowForward from 'virtual:icons/material-symbols/arrow-forward';
 	import { t } from '$lib/translations';
+	import { base } from "$app/paths";
 </script>
 
 <h1>{$t('common.guide')}</h1>
@@ -40,12 +41,14 @@
 
 <h2>Zvoľte scenár</h2>
 <div class="grid-container">
-	<button type="button" class="m-w-full"><a href="/guide/student/register">Chcem sa registrovať do systému</a></button>
-	<button type="button" class="m-w-full"><a href="/guide/student/password">Zabudol som svoje heslo</a></button>
-	<button type="button" class="m-w-full"><a href="/guide/student/signup">Chcem sa prihlásiť na výskum</a></button>
-	<button type="button" class="m-w-full"><a href="/guide/student/cancel">Chcem zrušiť svoju prihlášku na výskum</a>
+	<button type="button" class="m-w-full"><a href="{base}/guide/student/register">Chcem sa registrovať do systému</a>
 	</button>
-	<button type="button" class="m-w-full"><a href="/guide/student/points">Chcem zistiť moju účasť</a></button>
+	<button type="button" class="m-w-full"><a href="{base}/guide/student/password">Zabudol som svoje heslo</a></button>
+	<button type="button" class="m-w-full"><a href="{base}/guide/student/signup">Chcem sa prihlásiť na výskum</a></button>
+	<button type="button" class="m-w-full"><a href="{base}/guide/student/cancel">Chcem zrušiť svoju prihlášku na
+		výskum</a>
+	</button>
+	<button type="button" class="m-w-full"><a href="{base}/guide/student/points">Chcem zistiť moju účasť</a></button>
 </div>
 
 <style>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
+	import { base } from "$app/paths";
 </script>
 
 <h1>{$t('common.guide')}</h1>
@@ -14,8 +15,10 @@
 
 <h2>Zvoľte scenár</h2>
 <div class="grid-container">
-	<button type="button" class="m-w-full"><a href="/guide/expert/create-research">Chcem pridať do systému nový výskum</a></button>
-	<button type="button" class="m-w-full"><a href="/guide/expert/edit-research">Chcem spravovať svoj výskum</a></button>
+	<button type="button" class="m-w-full"><a href="{base}/guide/expert/create-research">Chcem pridať do systému nový
+		výskum</a></button>
+	<button type="button" class="m-w-full"><a href="{base}/guide/expert/edit-research">Chcem spravovať svoj výskum</a>
+	</button>
 </div>
 
 <style>
