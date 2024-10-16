@@ -22,6 +22,12 @@
 
 	let selectedSemester = $page.url.searchParams.get('semester') || getCurrentSemester();
 	let selectedYear = $page.url.searchParams.get('year') || new Date().getFullYear();
+
+	data.participations?.sort((a, b) => {
+		const textA = a.name.toUpperCase().split(' ', 2)[1];
+		const textB = b.name.toUpperCase().split(' ', 2)[1];
+		return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+	})
 </script>
 <UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
@@ -35,7 +41,7 @@
 			<option value="l">letný</option>
 		</select>
 	</div>
-	{#if data.participations && data.participations.size > 0}
+	{#if data.participations && data.participations.length > 0}
 		<table style="width: 100%; max-width: 100vw">
 			<tr>
 				<th>{$t('common.name')}</th>
@@ -43,7 +49,7 @@
 				<th>{$t('common.confirmed_points')}</th>
 				<th>{$t('common.sum')}</th>
 			</tr>
-			{#each data.participations.values() as participation}
+			{#each data.participations as participation}
 				<tr>
 					<td>{participation.name}</td>
 					<td style="text-align: center">{participation.unconfirmedPoints}</td>

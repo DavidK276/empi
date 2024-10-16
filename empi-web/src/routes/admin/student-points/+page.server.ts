@@ -18,21 +18,25 @@ export const load: PageServerLoad = async ({ cookies, fetch, locals, request }) 
 			method: 'POST'
 		});
 		const responseJSON = await response.json();
-		const participations: Map<string, { name: string, unconfirmedPoints: number, confirmedPoints: number }> = new Map();
+		const participationMap: Map<string, {
+			name: string,
+			unconfirmedPoints: number,
+			confirmedPoints: number
+		}> = new Map();
 		for (const participation of responseJSON) {
 			if (participation.participant.year == year && participation.participant.semester == semester) {
 				const token = participation.participant.token;
 				const name = participation.participant.user_detail.first_name + ' ' + participation.participant.user_detail.last_name;
-				const currentParticipation = participations.get(token) || { name, unconfirmedPoints: 0, confirmedPoints: 0 };
+				const currentParticipation = participationMap.get(token) || { name, unconfirmedPoints: 0, confirmedPoints: 0 };
 				if (participation.is_confirmed) {
-					participations.set(token, {
+					participationMap.set(token, {
 						name,
 						unconfirmedPoints: currentParticipation.unconfirmedPoints,
 						confirmedPoints: currentParticipation.confirmedPoints + participation.research.points
 					});
 				}
 				else {
-					participations.set(token, {
+					participationMap.set(token, {
 						name,
 						unconfirmedPoints: currentParticipation.unconfirmedPoints + participation.research.points,
 						confirmedPoints: currentParticipation.confirmedPoints
@@ -41,7 +45,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, locals, request }) 
 
 			}
 		}
-		return { participations };
+		return { participations: Array.from(participationMap.values()) };
 	}
 	return { participations: null };
 };
