@@ -29,7 +29,8 @@
 <div class="col">
 	{#if participant != null}
 		<div class="col">
-			<label for="token" title={$t('common.token_hint')}>Token&nbsp;({$t('common.click_to_copy')})&nbsp;
+			<label for="token" title={$t('common.token_hint')}>{$t('common.token')}&nbsp;({$t('common.click_to_copy')}
+				)&nbsp;
 				<MaterialSymbolsHelpOutline width="24" height="24"></MaterialSymbolsHelpOutline>
 			</label>
 			<button id="token" style="font-size: 18px; cursor: pointer" title="{$t('common.click_to_copy')}"

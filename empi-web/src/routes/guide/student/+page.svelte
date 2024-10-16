@@ -31,9 +31,9 @@
 </ul>
 
 <h2>Ako sa zaznamenáva moja účasť?</h2>
-<p>Po registrácii do systému ti bude pridelený anonymný identifikátor (tzv. token). Svoj token môžeš zistiť kedykoľvek
+<p>Po registrácii do systému ti bude pridelený anonymný identifikátor. Svoj token môžeš zistiť kedykoľvek
 	na stránke detailov účtu. <a
-		href="/account">Zoberte ma tam!
+			href="/account">Zoberte ma tam!
 		<MaterialSymbolsArrowForward width="24px" height="24px"></MaterialSymbolsArrowForward>
 	</a></p>
 <p>Po zúčastnení na výskume svoj anonymný identifikátor odovzdaj organizátorovi výskumu a on ti potvrdí tvoju účasť.</p>
@@ -43,7 +43,8 @@
 	<button type="button" class="m-w-full"><a href="/guide/student/register">Chcem sa registrovať do systému</a></button>
 	<button type="button" class="m-w-full"><a href="/guide/student/password">Zabudol som svoje heslo</a></button>
 	<button type="button" class="m-w-full"><a href="/guide/student/signup">Chcem sa prihlásiť na výskum</a></button>
-	<button type="button" class="m-w-full"><a href="/guide/student/cancel">Chcem zrušiť svoju prihlášku na výskum</a></button>
+	<button type="button" class="m-w-full"><a href="/guide/student/cancel">Chcem zrušiť svoju prihlášku na výskum</a>
+	</button>
 	<button type="button" class="m-w-full"><a href="/guide/student/points">Chcem zistiť moju účasť</a></button>
 </div>
 
