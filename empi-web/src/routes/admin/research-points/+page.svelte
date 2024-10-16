@@ -27,9 +27,10 @@
 	export let data: PageServerData;
 </script>
 <h1>{$t('common.points')}</h1>
-{#each data.researches as research}
-	<div class="box">
-		<form method="POST" use:enhance={({submitter}) => {
+{#if data.researches != null}
+	{#each data.researches as research}
+		<div class="box">
+			<form method="POST" use:enhance={({submitter}) => {
 			return async ({result, update}) => {
 				if (result.type === 'success' && submitter != null) {
 					submitter.innerText = $t('common.saved');
@@ -38,14 +39,15 @@
 				await update({reset: false});
 			};
 		}}>
-			<label for="points">{research.name}</label>
-			<div class="content row ver-center">
-				<input type="hidden" name="nanoid" value={research.nanoid}>
-				<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
-							 on:input={resetTheButton}>
-				<button type="submit" id="submit">{$t('common.submit')}</button>
-			</div>
-		</form>
-	</div>
-{/each}
+				<label for="points">{research.name}</label>
+				<div class="content row ver-center">
+					<input type="hidden" name="nanoid" value={research.nanoid}>
+					<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
+					       on:input={resetTheButton}>
+					<button type="submit" id="submit">{$t('common.submit')}</button>
+				</div>
+			</form>
+		</div>
+	{/each}
+{/if}
 <Pagination count={data.count}></Pagination>

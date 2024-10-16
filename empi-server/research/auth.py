@@ -87,7 +87,7 @@ class ResearchAuthentication(authentication.BasicAuthentication):
         if research.is_protected:
             _, privkey = research.get_keypair()
             try:
-                RSA.import_key(privkey, password)
+                _ = RSA.import_key(privkey, password)
             except (ValueError, IndexError, TypeError):
                 raise exceptions.AuthenticationFailed()
 
