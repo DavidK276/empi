@@ -4,10 +4,24 @@
 
 	export let title: string;
 	let isOpen = false;
+	let listenersExist = false;
+
+	const addListeners = (event: Event) => {
+		if (listenersExist) {
+			return;
+		}
+		const target = event.target as HTMLDivElement;
+		for (let aElement of target.parentElement!.getElementsByTagName('a')) {
+			aElement.onclick = () => {
+				isOpen = false;
+			};
+		}
+		listenersExist = true;
+	}
 </script>
 
 <div class="dropdown" class:show={isOpen}>
-	<button on:click={() => (isOpen = !isOpen)}>
+	<button on:click={(event) => {addListeners(event); isOpen = !isOpen}}>
 		{title}
 		{#if isOpen}
 			<MaterialSymbolsKeyboardArrowUp width="24" height="24"></MaterialSymbolsKeyboardArrowUp>
