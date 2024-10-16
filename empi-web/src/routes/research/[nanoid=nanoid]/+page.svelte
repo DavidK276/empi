@@ -55,6 +55,7 @@
 	}
 
 	async function submitParticipations() {
+		submitting_participations = true;
 		const forms = document.getElementsByClassName('participation-form');
 		const participations: Participation[] = [];
 		for (const element of forms) {
@@ -64,7 +65,6 @@
 			participations.push(participation);
 		}
 
-		submitting_participations = true;
 		const response = await fetch('?/participations', {
 			body: JSON.stringify(participations),
 			method: 'POST'
@@ -231,24 +231,18 @@
 		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
 			<div class="col">
 				{#if data.participations}
-					{#each data.participations as p_row}
-						{@const width = 100 / p_row.length + '%'}
-						<div class="row m-col">
-							{#each p_row as participation}
-								<div class="box" style="min-width: calc({width} - var(--md) / {p_row.length}">
-									<form style="display: flex; justify-content: center;" class="participation-form">
-										<button style="font-weight: 700; text-align: center">{participation.participant.token}</button>
-										<input type="hidden" name="id" value={participation.id}>
-										{#if participation.is_confirmed}
-											<input type="checkbox" name="is_confirmed" checked style="margin: 0 var(--sm)" value="true">
-										{:else}
-											<input type="checkbox" name="is_confirmed" style="margin: 0 var(--sm)" value="true">
-										{/if}
-									</form>
-								</div>
-							{/each}
-						</div>
-					{/each}
+					<div style="display: flex; gap: var(--md); flex-wrap: wrap">
+						{#each data.participations as participation}
+							<div class="box" style="flex: 1 1 calc(33% - 1rem)">
+								<form style="display: flex; justify-content: center;" class="participation-form">
+									<button style="font-weight: 700; text-align: center">{participation.participant.token}</button>
+									<input type="hidden" name="id" value={participation.id}>
+									<input type="checkbox" name="is_confirmed" bind:checked={participation.is_confirmed}
+									       style="margin: 0 0 0 var(--sm)" value="true">
+								</form>
+							</div>
+						{/each}
+					</div>
 				{:else}
 					<p>{$t('research.no_participations')}</p>
 				{/if}

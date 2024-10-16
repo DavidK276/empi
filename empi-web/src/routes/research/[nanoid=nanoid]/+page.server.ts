@@ -183,7 +183,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 		appointments = await response.json();
 	}
 
-	let participations: Participation[][] = [];
+	let participations = null;
 	const password = locals.session.data.research_password;
 	if (password != null) {
 		const formData = new FormData();
@@ -192,9 +192,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			body: formData,
 			method: 'POST'
 		});
-		if (response.ok) {
-			participations = columnify(await response.json(), 3) as Participation[][];
-		}
+		participations = await response.json();
 	}
 	return {
 		research,
