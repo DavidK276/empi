@@ -15,6 +15,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
 
 from emails.types import PublicSignupEmail, ResearchCreatedEmail, NewSignupEmail, CancelSignupEmail
 from users.models import Participant
@@ -29,6 +30,7 @@ from .serializers import (
     ParticipationSerializer,
     ParticipationUpdateSerializer,
     AnonymousParticipationSerializer,
+    ParticipationCreateSerializer,
 )
 
 
@@ -172,7 +174,9 @@ class ParticipationViewSet(
 
         return queryset
 
-    def create(self, request, *args, **kwargs):
+    def _create(self): ...
+
+    def create(self, request: Request, *args, **kwargs):
         """
         Creates the :class:`Participation` if there is free space in the specified appointment.
         Also sends an info email to the specified address.
@@ -185,9 +189,9 @@ class ParticipationViewSet(
         appointment: Appointment = serializer.validated_data["appointment"]
         if appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
-        pubkeys = appointment.get_pubkeys(request.user)
 
         with transaction.atomic():
+            pubkeys = appointment.get_pubkeys(request.user)
             participation = Participation.new(participant.token, appointment, is_confirmed=False, pubkeys=pubkeys)
             participation.save()
 
@@ -195,6 +199,22 @@ class ParticipationViewSet(
             email.send()
 
         return Response(status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=[HTTPMethod.POST], serializer_class=ParticipationCreateSerializer)
+    def signup(self, request: Request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        interesting_participations = Participation.objects.all().filter(
+            appointment=serializer.validated_data["appointment"]
+        )
+
+        _, encrypted_privkey = request.user.get_keypair()
+        private_key = RSA.import_key(encrypted_privkey, passphrase=serializer.validated_data["password"])
+        for p in interesting_participations:
+            if p.decrypt(private_key) is not None:
+                return Response(status=HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
     @extend_schema(parameters=[OpenApiParameter("password", str)])
     def destroy(self, request: Request, *args, **kwargs):

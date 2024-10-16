@@ -11,6 +11,7 @@
 	import { enhance } from '$app/forms';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { localeDateStringFromUTCString } from '$lib/functions';
+	import { universalEnhance } from "$lib/enhanceFunctions";
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -94,13 +95,20 @@
 				</tr>
 			</table>
 			{#if data.canSignup && appointment.free_capacity > 0 && !signups_lapsed}
-				<form method="POST" action="?/signup" use:enhance>
+				<form method="POST" action="?/signup" use:enhance={({formElement, submitter}) => {
+					return universalEnhance({formElement, submitter}, {
+						idleMessage: $t('common.login'),
+						runningMessage: $t('common.logging_in'),
+						reset: false,
+						invalidateAll: true
+					});
+				}}>
 					<input type="hidden" name="appointment" value={appointment.id}>
 					{#if $page.data.user == null}
 						<label for="recipient">Email</label>
 						<input type="email" name="recipient" id="recipient" class="m-w-full">
 					{/if}
-					<div class="row ver-center">
+					<div class="row ver-center" id="submit-div">
 						<button type="submit">{$t('research.signup')}</button>
 						{#if $page.data.user == null}
 							<p class="message">
@@ -112,7 +120,14 @@
 				</form>
 			{/if}
 			{#if participation != null && !is_confirmed}
-				<form method="POST" action="?/cancel" use:enhance>
+				<form method="POST" action="?/cancel" use:enhance={({formElement, submitter}) => {
+					return universalEnhance({formElement, submitter}, {
+						idleMessage: $t('common.logout'),
+						runningMessage: $t('common.logging_out'),
+						reset: false,
+						invalidateAll: true
+					});
+				}}>
 					<input type="hidden" name="participation-id" value={participation?.id}>
 					<button type="submit" style="background: var(--danger)">{$t('research.cancel')}</button>
 				</form>

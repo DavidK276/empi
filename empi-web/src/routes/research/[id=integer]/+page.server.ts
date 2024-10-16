@@ -4,10 +4,13 @@ import type { PageServerLoad } from './$types';
 import type { Participation } from '$lib/objects/participation';
 
 export const actions = {
-	signup: async ({ request, fetch, cookies }) => {
+	signup: async ({ request, fetch, cookies, locals }) => {
+		const session = locals.session.data;
 		const formData = await request.formData();
+
 		if (cookies.get(consts.TOKEN_COOKIE)) {
-			const response = await fetch(consts.INT_API_ENDPOINT + `participation/`, {
+			formData.set('password', session.user_password);
+			const response = await fetch(consts.INT_API_ENDPOINT + `participation/signup/`, {
 				method: 'POST',
 				body: formData
 			});

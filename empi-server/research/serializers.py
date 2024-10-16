@@ -45,6 +45,14 @@ class ParticipationUpdateSerializer(serializers.Serializer):
     is_confirmed = serializers.BooleanField(default=False)
 
 
+class ParticipationCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = Participation
+        fields = ["id", "appointment", "is_confirmed", "password"]
+
+
 class AnonymousParticipationSerializer(serializers.Serializer):
     recipient = serializers.CharField(write_only=True)
     nanoid = serializers.CharField(read_only=True)

@@ -45,7 +45,7 @@ button {
     }
 
     &[disabled] {
-        background-color: var(--button-disabled);
+        background-color: var(--button-disabled) !important;
     }
 
     a {
