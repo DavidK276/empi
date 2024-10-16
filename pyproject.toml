@@ -10,7 +10,7 @@ readme = "README.md"
 "Bug Tracker" = "https://gitlab.matfyz.sk/znamafirma/empi/-/issues"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.13"
 django = "^5.1.1"
 django-cors-headers = "^4.3.1"
 djangorestframework = "^3.15.1"

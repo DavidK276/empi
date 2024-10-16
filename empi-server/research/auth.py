@@ -4,7 +4,6 @@ import re
 from typing import Optional
 
 from rest_framework.authentication import get_authorization_header
-from typing_extensions import override
 
 from Crypto.PublicKey import RSA
 from django.http import HttpRequest
@@ -47,7 +46,6 @@ class ResearchAuthentication(authentication.BasicAuthentication):
 
         return ResearchAuthUser(research), None
 
-    @override
     def authenticate(self, request):
         """
         Returns a `User` if a correct username and password have been supplied
@@ -78,7 +76,6 @@ class ResearchAuthentication(authentication.BasicAuthentication):
 
         return self.authenticate_credentials(nanoid, password, request)
 
-    @override
     def authenticate_credentials(self, nanoid, password, request: Optional[HttpRequest] = None):
         if request is None:
             return None
