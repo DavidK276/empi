@@ -23,7 +23,7 @@ RUN patch svelte.config.js svelte.config.js.patch
 RUN npm ci
 RUN npm run build
 
-FROM python:3.12-slim-bookworm AS api
+FROM python:3.13-slim-bookworm AS api
 
 ARG POETRY_INSTALL_ARGS=""
 
