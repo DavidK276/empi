@@ -233,7 +233,7 @@
 				{#if data.participations}
 					<div style="display: flex; gap: var(--md); flex-wrap: wrap">
 						{#each data.participations as participation}
-							<div class="box" style="flex: 1 1 calc(33% - 1rem)">
+							<div class="box" style="margin: 0; flex: 1 1 calc(33% - 1rem)">
 								<form style="display: flex; justify-content: center;" class="participation-form">
 									<button style="font-weight: 700; text-align: center">{participation.participant.token}</button>
 									<input type="hidden" name="id" value={participation.id}>
