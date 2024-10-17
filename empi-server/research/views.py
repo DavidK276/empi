@@ -48,7 +48,7 @@ class ResearchUserViewSet(
         methods=[HTTPMethod.GET],
         serializer_class=AppointmentSerializer,
     )
-    def appointments(self, request, id=None):
+    def appointments(self, request, id=None):  # noqa: F841 the id parameter is needed by DRF
         research: Research = self.get_object()
 
         appointments = Appointment.objects.filter(research=research).order_by("when")
@@ -82,7 +82,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer_class=PasswordChangeSerializer,
         url_path="password/set",
     )
-    def change_password(self, request, nanoid=None):
+    def change_password(self, request, nanoid=None):  # noqa: F841 the nanoid parameter is needed by DRF
         research: Research = self.get_object()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -100,7 +100,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer_class=PasswordSerializer,
         url_path="password/check",
     )
-    def check_password(self, request, nanoid=None):
+    def check_password(self, request, nanoid=None):  # noqa: F841 the nanoid parameter is needed by DRF
         research: Research = self.get_object()
         if research.is_protected:
             serializer = self.get_serializer(data=request.data)
@@ -120,7 +120,7 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
         serializer_class=AppointmentSerializer,
     )
     @transaction.atomic
-    def appointments(self, request, nanoid=None):
+    def appointments(self, request, nanoid=None):  # noqa: F841 the nanoid parameter is needed by DRF
         research: Research = self.get_object()
 
         if request.method == HTTPMethod.PUT:
