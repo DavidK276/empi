@@ -1,5 +1,5 @@
 :8000 {
-	handle_path /static/* {
+	handle_path {$BASE_URI}/static/* {
 		root * /app/static
 		file_server
 	}
