@@ -31,7 +31,7 @@
 		</tr>
 		<tr>
 			<td><time datetime="{appointment.when}">{localeDateStringFromUTCString(appointment.when)}</time></td>
-			<td><span style="color: {appointment.free_capacity ? 'initial' : 'red'}">{appointment.free_capacity}</span></td>
+			<td><span class:danger={appointment.free_capacity === 0}>{appointment.free_capacity}</span></td>
 			{#if appointment.location}
 				<td>{appointment.location}</td>
 			{:else}
