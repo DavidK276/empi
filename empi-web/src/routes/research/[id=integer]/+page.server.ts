@@ -1,5 +1,5 @@
 import * as consts from '$lib/constants';
-import { type Actions, error, fail } from '@sveltejs/kit';
+import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { Participation } from '$lib/objects/participation';
 
@@ -28,11 +28,9 @@ export const actions = {
 			method: 'POST',
 			body: formData
 		});
+		const participation = await response.json();
 		if (response.ok) {
-			return {
-				success: true,
-				participation: await response.json()
-			};
+			return redirect(300, `/participation/${participation.nanoid}`);
 		}
 		return fail(response.status, {
 			success: false
