@@ -1,3 +1,4 @@
+import warnings
 from datetime import timedelta
 from collections.abc import Sequence, Mapping
 from django.utils import timezone
@@ -213,6 +214,9 @@ class Participation(models.Model):
         self.encrypted_tokens.append(cipher_rsa.encrypt(token.encode("UTF-8")))
 
     def decrypt(self, private_key: RsaKey) -> Optional[str]:
+        if not self.encrypted_tokens:
+            warnings.warn(f"Participation {{{self}}} seems to have no participants? This is not right.")
+            return None
         cipher_rsa = PKCS1_OAEP.new(private_key)
         for enc_token in self.encrypted_tokens:
             try:
