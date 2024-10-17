@@ -206,9 +206,7 @@ class ParticipationViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        interesting_participations = Participation.objects.all().filter(
-            appointment=serializer.validated_data["appointment"]
-        )
+        interesting_participations = self.get_queryset().filter(appointment=serializer.validated_data["appointment"])
 
         _, encrypted_privkey = request.user.get_keypair()
         private_key = RSA.import_key(encrypted_privkey, passphrase=serializer.validated_data["password"])
