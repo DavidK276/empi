@@ -11,8 +11,9 @@
 	import MaterialSymbolsKeyboardArrowRight from 'virtual:icons/material-symbols/keyboard-arrow-right';
 	import { base } from '$app/paths';
 	import { ENABLE_ATTRS } from '$lib/constants';
+	import type { Snippet } from "svelte";
 
-	export let data: LayoutServerData;
+	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
 </script>
 
 <header class="row hor-center ver-center m-col">
@@ -25,7 +26,7 @@
 	</nav>
 	<div class="row ver-center">
 		{#if data.user != null}
-			<Dropdown title="{(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}">
+			<Dropdown title={(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}>
 				{#if !data.user.is_staff}
 					{#if ENABLE_ATTRS}
 						<div><a href="{base}/attributes">{$t('common.attributes')}
@@ -65,7 +66,7 @@
 </header>
 <div class="row ver-top hor-center">
 	<div class="content">
-		<slot></slot>
+		{@render children?.()}
 	</div>
 </div>
 <footer class="row ver-center hor-center">

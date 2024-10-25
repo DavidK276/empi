@@ -5,15 +5,15 @@
 	import Attribute from './Attribute.svelte';
 	import Setting from '$lib/components/Setting.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { mount } from 'svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { base } from "$app/paths";
 
-	export let data: PageData;
+	let { data }: { data: PageData } = $props();
 
-	$: session = $page.data.session;
-	onMount(() => {
+	let session = $page.data.session;
+	$effect(() => {
 		if (session?.user.is_staff == null) {
 			goto(`${base}/`, { replaceState: true });
 		}
@@ -22,11 +22,11 @@
 	function addAttr(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		new Attribute({ target: parent!, anchor: target });
+		mount(Attribute, { target: parent!, anchor: target, props: {} });
 	}
 
-	let submitting = false;
-	let submit_success: boolean | null = null;
+	let submitting = $state(false);
+	let submit_success: boolean | null = $state(null);
 </script>
 <h1>{$t('common.attributes')}</h1>
 {#if session?.user.is_staff === true}
@@ -35,11 +35,11 @@
 	{:else}
 		<p>{$t('attrs.no_attrs')}</p>
 	{/each}
-	<button on:click={addAttr}>{$t('attrs.add')}</button>
+	<button onclick={addAttr}>{$t('attrs.add')}</button>
 {:else if session?.user.is_staff === false}
 	<form method="POST"
-				action="?/user"
-				use:enhance={() => {
+	      action="?/user"
+	      use:enhance={() => {
 					submitting = true;
 					submit_success = null;
 					return async ({ update, result }) => {

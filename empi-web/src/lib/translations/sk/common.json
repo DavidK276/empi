@@ -9,7 +9,7 @@
   "login": "Prihlásiť sa",
   "logging_in": "Prihlasujem sa…",
   "logging_out": "Odhlasujem sa…",
-  "wrong_login": "Prihlásenie sa nepodarilo.",
+  "wrong_login": "Nesprávne prihlasovacie údaje.",
   "username": "Prihlasovacie meno",
   "password": "Heslo",
   "current_password": "Aktuálne heslo",

@@ -10,11 +10,14 @@
 {#if participations != null && participations.length > 0}
 	<div style="overflow-x: auto">
 		<table style="width: 100%; max-width: 100vw">
+			<thead>
 			<tr>
 				<th>{$t('common.research')}</th>
 				<th>{$t('common.points')}</th>
 				<th>{$t('research.participation')}</th>
 			</tr>
+			</thead>
+			<tbody>
 			{#each participations as participation}
 				{@const research = participation.research}
 				<tr>
@@ -31,6 +34,7 @@
 					{/if}
 				</tr>
 			{/each}
+			</tbody>
 		</table>
 	</div>
 {:else if participations != null && participations.length === 0}

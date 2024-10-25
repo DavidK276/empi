@@ -9,7 +9,7 @@
   "login": "Log in",
   "logging_in": "Logging in…",
   "logging_out": "Logging out…",
-  "wrong_login": "Login was not successful.",
+  "wrong_login": "Incorrect credentials.",
   "username": "Username",
   "password": "Password",
   "current_password": "Current password",

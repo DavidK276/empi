@@ -2,8 +2,7 @@
 	import { t } from '$lib/translations';
 	import type { Attribute } from '$lib/objects/attribute';
 
-	export let attr: Attribute;
-	export let values: string[] = [];
+	let { attr, values = [] }: { attr: Attribute, values: string[] } = $props();
 </script>
 <div class="box">
 	<h2 style="margin: var(--sm) 0">{attr.name}</h2>
@@ -29,11 +28,11 @@
 			{/each}
 		{/if}
 	</fieldset>
-	<input type="hidden" name={attr.name} value="__blank__">
+	<input name={attr.name} type="hidden" value="__blank__">
 </div>
 
 <style>
-	label {
-			display: inline;
-	}
+    label {
+        display: inline;
+    }
 </style>

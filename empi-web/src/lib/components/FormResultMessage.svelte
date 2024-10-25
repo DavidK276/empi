@@ -2,9 +2,9 @@
 	import { t } from '$lib/translations';
 	import MaterialSymbolsErrorOutline from 'virtual:icons/material-symbols/error-outline';
 	import type { ActionResult } from "@sveltejs/kit";
+	import { browser } from "$app/environment";
 
-	export let message: string = '';
-	export let result: ActionResult;
+	let { message = '', result }: { message: string, result: ActionResult } = $props();
 
 	if (!message) {
 		if (result.type === 'error') {
@@ -28,13 +28,16 @@
 	message = message.charAt(0).toUpperCase() + message.slice(1);
 
 	// destroys all previous messages before adding new one
-	document.querySelectorAll('.form-result').forEach(element => element.remove());
+	if (browser) {
+		document.querySelectorAll('.form-result').forEach(element => element.remove());
+	}
 </script>
 
 <div class="form-result">
-	{#if result.type  === 'error' || result.type  === 'failure'}
-		<p style="color: var(--danger)"><MaterialSymbolsErrorOutline width="24" height="24"></MaterialSymbolsErrorOutline>&nbsp;{message}</p>
-	{:else if result.type  === 'success'}
+	{#if result.type === 'error' || result.type === 'failure'}
+		<p style="color: var(--danger)">
+			<MaterialSymbolsErrorOutline width="24" height="24"></MaterialSymbolsErrorOutline>&nbsp;{message}</p>
+	{:else if result.type === 'success'}
 		<p style="color: var(--success)">{message}</p>
 	{/if}
 </div>
@@ -42,11 +45,11 @@
 <style>
     p {
         display: inline-flex;
-		    align-items: center;
+        align-items: center;
         margin: 0;
     }
 
-		div {
-				display: inline-flex;
-		}
+    div {
+        display: inline-flex;
+    }
 </style>

@@ -5,6 +5,7 @@
 	import type { ActionResult } from "@sveltejs/kit";
 	import { base } from "$app/paths";
 	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
+	import { mount } from "svelte";
 
 	async function login() {
 		logging_in = true;
@@ -12,7 +13,6 @@
 		return async ({ update, result }: { update: () => Promise<void>, result: ActionResult }) => {
 			await update();
 			logging_in = false;
-			console.log(result);
 			if (result.type === 'success') {
 				is_logged_in = true;
 				login_message = "";
@@ -22,16 +22,16 @@
 				login_message = $t('common.wrong_login');
 			}
 			else if (result.type === 'failure') {
-				new FormResultMessage({ target: document.getElementById('submitBtn')!, props: { result } })
+				mount(FormResultMessage, { target: document.getElementById('submitBtn')!, props: { result } })
 			}
 		};
 	}
 
-	export let is_logged_in: boolean;
-	let logging_in = false;
-	let logging_out = false;
+	let { is_logged_in }: { is_logged_in: boolean } = $props();
+	let logging_in = $state(false);
+	let logging_out = $state(false);
 
-	let login_message = "";
+	let login_message = $state("");
 </script>
 {#if !is_logged_in}
 	<form method="POST" action="{base}/?/login" style="width: 100%"

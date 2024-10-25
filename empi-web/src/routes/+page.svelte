@@ -4,8 +4,8 @@
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { onMount } from "svelte";
 
-	export let data: PageData;
-	$: showInfoUrlColumn = false;
+	let { data }: { data: PageData } = $props();
+	let showInfoUrlColumn = $state(false);
 
 	onMount(() => {
 		for (const research of data.researches) {
@@ -17,6 +17,7 @@
 <h1>EMPI</h1>
 <div style="overflow-x: auto">
 	<table style="width: 100%; max-width: 100vw">
+		<thead>
 		<tr>
 			<th>{$t('research.name')}</th>
 			{#if showInfoUrlColumn}
@@ -24,6 +25,8 @@
 			{/if}
 			<th>{$t('common.details')}</th>
 		</tr>
+		</thead>
+		<tbody>
 		{#each data.researches as research}
 			{#if research.has_open_appointments}
 				<tr>
@@ -40,6 +43,7 @@
 				</tr>
 			{/if}
 		{/each}
+		</tbody>
 	</table>
 </div>
 <div class="row" style="margin-top: var(--sm)">

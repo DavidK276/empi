@@ -7,16 +7,16 @@
 	import { addFormErrors } from '$lib/functions';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 
-	export let form: ActionData;
+	let { form }: { form: ActionData } = $props();
 
-	let submitting = false;
+	let submitting = $state(false);
 	let emails: EmailInput;
 </script>
 
 <h1>{$t('research.create_research')}</h1>
-<form method="POST" action="?/new"
-			on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}
-			use:enhance={() => {
+<form action="?/new" method="POST"
+      onformdata={(event) => event.formData.set('email_recipients', emails.getEmails())}
+      use:enhance={() => {
 				submitting = true;
 				return async ({result, formElement}) => {
 					if (result.type === 'redirect') {
@@ -32,9 +32,9 @@
 				}
 			}}>
 	<label for="name">{$t('research.name')}</label>
-	<input type="text" name="name" id="name" required>
+	<input id="name" name="name" required type="text">
 	<EmailInput bind:this={emails}></EmailInput>
-	<input type="hidden" name="is_published" value="false">
+	<input name="is_published" type="hidden" value="false">
 	<div class="row ver-center">
 		{#if !submitting}
 			<button type="submit">{$t('research.create')}</button>
@@ -42,7 +42,7 @@
 			<button type="submit" disabled>{$t('research.creating')}</button>
 		{/if}
 		<p class="message">
-			<MaterialSymbolsInfoOutline width="24" height="24"></MaterialSymbolsInfoOutline>&nbsp;
+			<MaterialSymbolsInfoOutline height="24" width="24"></MaterialSymbolsInfoOutline>&nbsp;
 			{$t('research.creation_info')}
 		</p>
 	</div>

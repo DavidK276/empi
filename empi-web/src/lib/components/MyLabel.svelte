@@ -2,19 +2,20 @@
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
 
+	let { forId, labelText, hintText, icon }: {
+		forId: string,
+		labelText: string,
+		hintText: string,
+		icon: 'info' | 'warning'
+	} = $props();
 
-	export let forId: string;
-	export let labelText: string;
-	export let hintText: string;
-	export let icon: 'info' | 'warning';
-
-	let hintVisible: boolean = false;
+	let hintVisible: boolean = $state(false);
 </script>
 
-<div style="display: flex;" class="my-label">
-	<label for={forId} style="display: inline-flex; min-width: fit-content"
-	       on:mouseenter={() => hintVisible = true}
-	       on:mouseleave={() => hintVisible = false}>
+<div class="my-label" style="display: flex;">
+	<label for={forId} onmouseenter={() => hintVisible = true}
+	       onmouseleave={() => hintVisible = false}
+	       style="display: inline-flex; min-width: fit-content">
 		{labelText}
 		{#if icon === 'info'}
 			<MaterialSymbolsInfoOutline width="24px" height="24px"></MaterialSymbolsInfoOutline>

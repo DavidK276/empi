@@ -5,9 +5,9 @@
 	import { invalidateAll } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	let password_ok: boolean | null = null;
-	let modal: Modal;
-	let show = false;
+	let password_ok: boolean | null = $state(null);
+	let modal;
+	let show = $state(false);
 
 	onMount(async () => {
 		const response = await fetch('?/checkPassword', { method: 'POST', body: new FormData() });
@@ -16,12 +16,12 @@
 	});
 </script>
 
-<svelte:component this={Modal} bind:this={modal} show={show} dismissible={false}>
-	<div slot="header">
+<Modal bind:this={modal} dismissible={false} hasCloseButton={false} show={show}>
+	{#snippet header()}
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
-	</div>
-	<form method="POST" action="?/checkPassword"
+	{/snippet}
+	<form action="?/checkPassword" method="POST"
 	      use:enhance={() => {
 					password_ok = null;
 					return async ({result}) => {
@@ -33,7 +33,7 @@
 					};
 				}}>
 		<label for="password">{$t('common.password')}</label>
-		<input type="password" name="password" id="password">
+		<input id="password" name="password" type="password">
 		<div style="width: 100%">
 			<button type="submit">{$t('common.check')}</button>
 			{#if password_ok === false}
@@ -41,4 +41,4 @@
 			{/if}
 		</div>
 	</form>
-</svelte:component>
+</Modal>

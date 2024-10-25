@@ -1,15 +1,16 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal.svelte';
 
-	export let show = false;
+	let { show = $bindable(false) }: { show: boolean } = $props();
 </script>
 
-<Modal bind:show={show} hasCloseButton={false}>
-	<div slot="header">
+<Modal bind:show={show} dismissible={true} hasCloseButton={false}>
+	{#snippet header()}
 		<h2>Markdown návod</h2>
 		<p>Vybrané prvky jazyka Markdown</p>
-	</div>
+	{/snippet}
 	<table>
+		<tbody>
 		<tr>
 			<th>Markdown</th>
 			<th>Výsledok</th>
@@ -38,18 +39,21 @@
 			<td>[odkaz](https://www.example.com)</td>
 			<td><a href="https://example.com">odkaz</a></td>
 		</tr>
+		</tbody>
 	</table>
 </Modal>
 
 <style>
-	table {
-			width: 100%;
-	}
-	td {
-			text-align: center;
-	}
-	h2 {
-			margin-top: 10px;
-			margin-bottom: 10px;
-	}
+    table {
+        width: 100%;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 </style>

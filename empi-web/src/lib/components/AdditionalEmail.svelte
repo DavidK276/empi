@@ -1,21 +1,21 @@
 <script lang="ts">
-	export let email: string | null = null;
+	let { email = null }: { email: string | null } = $props();
 	let nodeRef: HTMLElement;
 </script>
 
-<div class="row ver-center" style="margin: var(--sm) 0" bind:this={nodeRef}>
+<div bind:this={nodeRef} class="row ver-center" style="margin: var(--sm) 0">
 	{#if email == null}
 		<input type="email" class="email-input">
 	{:else}
 		<input type="email" class="email-input" value={email}>
 	{/if}
-	<button type="button" style="background-color: var(--danger)"
-					on:click={() => nodeRef.parentNode?.removeChild(nodeRef)}>-
+	<button onclick={() => nodeRef.parentNode?.removeChild(nodeRef)} style="background-color: var(--danger)"
+	        type="button">-
 	</button>
 </div>
 
 <style>
-	input {
-			margin: 0;
-	}
+    input {
+        margin: 0;
+    }
 </style>
