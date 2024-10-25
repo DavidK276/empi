@@ -1,27 +1,23 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
 	import MaterialSymbolsKeyboardArrowDown from 'virtual:icons/material-symbols/keyboard-arrow-down';
 	import MaterialSymbolsKeyboardArrowUp from 'virtual:icons/material-symbols/keyboard-arrow-up';
 
 	export let title: string;
 	let isOpen = false;
-	let listenersExist = false;
 
 	const addListeners = (event: Event) => {
-		if (listenersExist) {
-			return;
-		}
 		const target = event.target as HTMLDivElement;
 		for (let aElement of target.parentElement!.getElementsByTagName('a')) {
 			aElement.onclick = () => {
 				isOpen = false;
 			};
 		}
-		listenersExist = true;
 	}
 </script>
 
 <div class="dropdown" class:show={isOpen}>
-	<button on:click={(event) => {addListeners(event); isOpen = !isOpen}}>
+	<button on:click={() => {isOpen = !isOpen}}>
 		{title}
 		{#if isOpen}
 			<MaterialSymbolsKeyboardArrowUp width="24" height="24"></MaterialSymbolsKeyboardArrowUp>
@@ -29,9 +25,11 @@
 			<MaterialSymbolsKeyboardArrowDown width="24" height="24"></MaterialSymbolsKeyboardArrowDown>
 		{/if}
 	</button>
-	<div class="dropdown-content col">
-		<slot></slot>
-	</div>
+	{#if isOpen}
+		<div class="dropdown-content col" transition:slide={{duration: 100}} on:introend={addListeners}>
+			<slot></slot>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -39,12 +37,12 @@
         display: inline-block;
     }
 
-		button {
-				cursor: pointer;
-		}
+    button {
+        cursor: pointer;
+    }
 
     .dropdown-content {
-        display: none;
+        display: flex;
         position: absolute;
         margin-inline: auto;
         width: fit-content;
@@ -54,7 +52,7 @@
         border-radius: var(--sm);
         padding: var(--lg);
         gap: var(--lg);
-				margin-top: 2px;
+        margin-top: 2px;
     }
 
     @media screen and (min-width: 768px) {
@@ -70,9 +68,5 @@
             left: 0;
             right: 0;
         }
-    }
-
-    .dropdown.show .dropdown-content {
-        display: flex;
     }
 </style>

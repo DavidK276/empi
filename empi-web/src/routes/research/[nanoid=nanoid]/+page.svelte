@@ -229,7 +229,7 @@
 			</form>
 		</AccordionTab>
 		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
-			<div class="col">
+			<div class="col" style="margin-bottom: var(--sm)">
 				{#if data.participations}
 					<div style="display: flex; gap: var(--md); flex-wrap: wrap">
 						{#each data.participations as participation}
