@@ -18,7 +18,7 @@ const config = {
 			directives: {
 				'default-src': ['self'].concat(...origin).concat('http://localhost:8000/', 'http://127.0.0.1:8000/'),
 				'img-src': ['self', 'data:'],
-				'style-src-attr': ['unsafe-inline']
+				'style-src': ['self', 'unsafe-inline']
 			}
 		},
 		csrf: {
