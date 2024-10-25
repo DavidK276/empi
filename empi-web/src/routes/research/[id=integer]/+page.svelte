@@ -42,7 +42,7 @@
 
 <!-- eslint-disable-next-line svelte/no-at-html-tags The html in this variable IS sanitized. -->
 {@html sanitizedComment}
-{#if data.research?.info_url != null}
+{#if data.research?.info_url}
 	<p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
 	</p>
 {/if}
