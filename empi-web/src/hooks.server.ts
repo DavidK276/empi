@@ -67,6 +67,7 @@ export const handle: Handle = handleSession({
 			secret: [
 				{
 					id: 1,
+					// @ts-expect-error TypeScript fails to realize how env works
 					secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 				}
 			]

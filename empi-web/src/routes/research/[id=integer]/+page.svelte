@@ -1,12 +1,10 @@
 <script lang="ts">
 	import showdown from 'showdown';
 	import DOMPurify from 'dompurify';
-	import type { ActionData, PageData } from './$types';
+	import type { PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { browser } from "$app/environment";
 	import { enhance } from '$app/forms';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
@@ -14,13 +12,6 @@
 	import { universalEnhance } from "$lib/enhanceFunctions";
 
 	export let data: PageData;
-	export let form: ActionData;
-
-	onMount(() => {
-		if (form?.success && form.participation != null) {
-			goto(`/participation/${form.participation.nanoid}/`);
-		}
-	});
 
 	const converter = new showdown.Converter();
 	let sanitizedComment = "";

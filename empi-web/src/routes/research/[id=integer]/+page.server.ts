@@ -17,7 +17,6 @@ export const actions = {
 			if (response.ok) {
 				return {
 					success: true,
-					participation: null
 				};
 			}
 			return fail(response.status, {
@@ -79,7 +78,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 			for (const participation of responseJSON) {
 				participations.set(participation.appointment, participation);
 			}
-			return { participations, canSignup: true};
+			return { participations, canSignup: true };
 		}
 	}
 	return { participations: null, canSignup: true };
