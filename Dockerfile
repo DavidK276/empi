@@ -6,6 +6,8 @@ ARG EMPI_INT_API_ENDPOINT
 ENV EMPI_INT_API_ENDPOINT=$EMPI_INT_API_ENDPOINT
 ARG EMPI_EXT_API_ENDPOINT
 ENV EMPI_EXT_API_ENDPOINT=$EMPI_EXT_API_ENDPOINT
+ARG ORIGIN
+ENV ORIGIN=$ORIGIN
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
@@ -68,6 +70,9 @@ RUN poetry run ./empi-server/manage.py collectstatic --no-input
 CMD ["/bin/multirun", "caddy run --adapter caddyfile --config /app/Caddyfile", "/app/start.sh"]
 
 FROM node:22-alpine AS web
+
+ARG ORIGIN
+ENV ORIGIN=$ORIGIN
 
 RUN mkdir /app
 RUN mkdir /app/empi-web
