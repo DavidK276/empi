@@ -27,7 +27,7 @@
 		{/if}
 	</button>
 	{#if isOpen}
-		<div class="dropdown-content col" transition:slide={{duration: 100}} onintroend={addListeners}>
+		<div class="dropdown-content col" transition:slide={{duration: 200}} onintroend={addListeners}>
 			{@render children?.()}
 		</div>
 	{/if}
