@@ -5,13 +5,13 @@
 	import { page } from '$app/stores';
 	import { base } from "$app/paths";
 
-	let password_ok: boolean | null = $state(null);
-	let modal;
-
 	let session = $page.data.session;
+	
+	let password_ok: boolean | null = $state(null);
+	let show = $state(!session?.user_password);
 </script>
 
-<Modal bind:this={modal} dismissible={false} hasCloseButton={false} show={!session?.user_password}>
+<Modal bind:show={show} dismissible={false} hasCloseButton={false}>
 	{#snippet header()}
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
@@ -21,7 +21,7 @@
 		return async ({result}) => {
 			password_ok = result.type === 'success';
 			if (password_ok) {
-				modal.dismiss();
+				show = false;
 			}
 		};
 	}}>

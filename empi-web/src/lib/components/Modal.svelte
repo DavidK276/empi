@@ -16,6 +16,9 @@
 		if (dialog && show) {
 			dialog.showModal();
 		}
+		else if (!show) {
+			dialog.close();
+		}
 	});
 </script>
 

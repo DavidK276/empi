@@ -6,7 +6,6 @@
 	import { onMount } from 'svelte';
 
 	let password_ok: boolean | null = $state(null);
-	let modal;
 	let show = $state(false);
 
 	onMount(async () => {
@@ -16,7 +15,7 @@
 	});
 </script>
 
-<Modal bind:this={modal} dismissible={false} hasCloseButton={false} show={show}>
+<Modal bind:show={show} dismissible={false} hasCloseButton={false}>
 	{#snippet header()}
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
@@ -27,7 +26,7 @@
 					return async ({result}) => {
 						password_ok = result.type === 'success';
 						if (password_ok) {
-							modal.dismiss()
+							show = false;
 							await invalidateAll();
 						}
 					};
