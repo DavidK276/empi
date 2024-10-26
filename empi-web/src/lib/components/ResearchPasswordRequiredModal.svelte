@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from '$lib/translations.js';
+	import { t } from '$lib/translations';
 	import Modal from '$lib/components/Modal.svelte';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';

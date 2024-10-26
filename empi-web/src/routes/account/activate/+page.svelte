@@ -27,6 +27,7 @@
 	}
 </script>
 
+<svelte:options runes={true}></svelte:options>
 <h1>Aktivácia účtu</h1>
 <div class="row" style="padding-top: var(--xl);">
 	<form method="POST" style="width: 100%" use:enhance={doUpdate}>

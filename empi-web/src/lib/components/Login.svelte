@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from '$lib/translations.js';
+	import { t } from '$lib/translations';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import type { ActionResult } from "@sveltejs/kit";

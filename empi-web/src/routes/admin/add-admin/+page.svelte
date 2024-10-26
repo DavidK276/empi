@@ -26,6 +26,7 @@
 	}
 </script>
 
+<svelte:options runes={true}></svelte:options>
 <h1>Pridanie administrátora</h1>
 <p class="message">
 	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>

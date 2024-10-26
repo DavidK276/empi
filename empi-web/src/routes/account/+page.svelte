@@ -8,7 +8,7 @@
 	const user = $page.data.user;
 	const participant = $page.data.participant;
 
-	const onTokenButtonClick = (event: MouseEvent) => {
+	const copyToken = (event: MouseEvent) => {
 		navigator.clipboard.writeText(participant.token);
 		const target = event.target as HTMLButtonElement;
 		target.innerText = "Skopírovaný!"
@@ -17,6 +17,7 @@
 		}, 1000);
 	};
 </script>
+<svelte:options runes={true}></svelte:options>
 <div class="row ver-center">
 	<h1>{$t('account.my_account')}</h1>
 	{#if user?.is_staff}
@@ -34,7 +35,7 @@
 				<MaterialSymbolsHelpOutline width="24" height="24"></MaterialSymbolsHelpOutline>
 			</label>
 			<button id="token" style="font-size: 18px; cursor: pointer" title="{$t('common.click_to_copy')}"
-			        on:click={onTokenButtonClick}>{participant.token}</button>
+			        onclick={copyToken}>{participant.token}</button>
 		</div>
 	{/if}
 	<form action="?/updateInfo" method="POST" use:enhance={({formElement, submitter}) => {

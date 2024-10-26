@@ -2,10 +2,9 @@
 	import type { Appointment } from '$lib/objects/appointment';
 	import { t } from '$lib/translations';
 
-	export let appointment: Appointment | null = null;
-	export let nanoid: string;
+	let { appointment = null, nanoid }: { appointment: Appointment | null, nanoid: string } = $props();
 	let thisComponent: HTMLFormElement;
-	let type: string;
+	let type: string = $state("");
 
 	function formData(event: FormDataEvent) {
 		const when = event.formData.get('when') as string;
@@ -18,7 +17,7 @@
 		}
 	}
 </script>
-<form bind:this={thisComponent} on:submit|preventDefault on:formdata={formData} class="appointment-form">
+<form bind:this={thisComponent} class="appointment-form" onformdata={formData} onsubmit={(e) => e.preventDefault()}>
 	<div class="box">
 		{#if appointment != null}
 			<label for="type">{$t('research.appointment_type')}</label>
@@ -68,9 +67,9 @@
 				<input type="text" name="location" id="location">
 			{/if}
 		{/if}
-		<input type="hidden" name="research" value={nanoid}>
-		<button style="background-color: var(--danger)"
-		        on:click={() => thisComponent.parentNode?.removeChild(thisComponent)}>-
+		<input name="research" type="hidden" value={nanoid}>
+		<button onclick={() => thisComponent.parentNode?.removeChild(thisComponent)}
+		        style="background-color: var(--danger)">-
 		</button>
 	</div>
 </form>
