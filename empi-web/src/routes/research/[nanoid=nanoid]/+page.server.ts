@@ -1,10 +1,9 @@
 import * as consts from '$lib/constants';
-import { columnify, convertFormData } from '$lib/functions';
+import { convertFormData } from '$lib/functions';
 import { type Actions, fail } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
 import type { Appointment } from '$lib/objects/appointment';
 import type { PageServerLoad } from './$types';
-import type { Participation } from '$lib/objects/participation';
 
 export const actions = {
 	update: async ({ request, fetch, params }) => {

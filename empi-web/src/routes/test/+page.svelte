@@ -341,21 +341,21 @@
 				<header><h2>Images</h2></header>
 				<div>
 					<h3>Plain <code>&lt;img&gt;</code> element</h3>
-					<p><img src="https://placekitten.com/480/480" alt="Kitten"></p>
+					<p><img alt="Kitten" src="https://placekitten.com/480/480"></p>
 					<h3><code>&lt;figure&gt;</code> element with <code>&lt;img&gt;</code> element</h3>
-					<figure><img src="https://placekitten.com/420/420" alt="Kitten"></figure>
+					<figure><img alt="Kitten" src="https://placekitten.com/420/420"></figure>
 					<h3><code>&lt;figure&gt;</code> element with <code>&lt;img&gt;</code> and <code>&lt;figcaption&gt;</code>
 						elements</h3>
 					<figure>
-						<img src="https://placekitten.com/420/420" alt="Kitten">
+						<img alt="Kitten" src="https://placekitten.com/420/420">
 						<figcaption>Here is a caption for this image.</figcaption>
 					</figure>
 					<h3><code>&lt;figure&gt;</code> element with a <code>&lt;picture&gt;</code> element</h3>
 					<figure>
 						<picture>
-							<source srcset="https://placekitten.com/800/800"
-							        media="(min-width: 800px)">
-							<img src="https://placekitten.com/420/420" alt="Kitten">
+							<source media="(min-width: 800px)"
+							        srcset="https://placekitten.com/800/800">
+							<img alt="Kitten" src="https://placekitten.com/420/420">
 						</picture>
 					</figure>
 				</div>
@@ -369,14 +369,7 @@
 			<article id="embedded__audio">
 				<header><h2>Audio</h2></header>
 				<div>
-					<audio controls="">audio</audio>
-				</div>
-				<footer><p><a href="#top">[Top]</a></p></footer>
-			</article>
-			<article id="embedded__video">
-				<header><h2>Video</h2></header>
-				<div>
-					<video controls="">video</video>
+					<audio controls>audio</audio>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
@@ -390,7 +383,7 @@
 			<article id="embedded__meter">
 				<header><h2>Meter</h2></header>
 				<div>
-					<meter value="2" min="0" max="10">2 out of 10</meter>
+					<meter max="10" min="0" value="2">2 out of 10</meter>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
@@ -404,8 +397,8 @@
 			<article id="embedded__svg">
 				<header><h2>Inline SVG</h2></header>
 				<div>
-					<svg width="100px" height="100px">
-						<circle cx="100" cy="100" r="100" fill="#1fa3ec"></circle>
+					<svg height="100px" width="100px">
+						<circle cx="100" cy="100" fill="#1fa3ec" r="100"></circle>
 					</svg>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
@@ -413,21 +406,21 @@
 			<article id="embedded__iframe">
 				<header><h2>IFrame</h2></header>
 				<div>
-					<iframe src="{base}/" height="300"></iframe>
+					<iframe height="300" src="{base}/" title="Embedded iframe"></iframe>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
 			<article id="embedded__embed">
 				<header><h2>Embed</h2></header>
 				<div>
-					<embed src="/" height="300">
+					<embed height="300" src="{base}/">
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
 			<article id="embedded__object">
 				<header><h2>Object</h2></header>
 				<div>
-					<object data="index.html" height="300"></object>
+					<object data="index.html" height="300" title="Embedded object"></object>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
@@ -439,31 +432,31 @@
 					<legend>Input fields</legend>
 					<p>
 						<label for="input__text">Text Input</label>
-						<input id="input__text" type="text" placeholder="Text Input">
+						<input id="input__text" placeholder="Text Input" type="text">
 					</p>
 					<p>
 						<label for="input__password">Password</label>
-						<input id="input__password" type="password" placeholder="Type your Password">
+						<input id="input__password" placeholder="Type your Password" type="password">
 					</p>
 					<p>
 						<label for="input__webaddress">Web Address</label>
-						<input id="input__webaddress" type="url" placeholder="https://yoursite.com">
+						<input id="input__webaddress" placeholder="https://yoursite.com" type="url">
 					</p>
 					<p>
 						<label for="input__emailaddress">Email Address</label>
-						<input id="input__emailaddress" type="email" placeholder="name@email.com">
+						<input id="input__emailaddress" placeholder="name@email.com" type="email">
 					</p>
 					<p>
 						<label for="input__phone">Phone Number</label>
-						<input id="input__phone" type="tel" placeholder="(999) 999-9999">
+						<input id="input__phone" placeholder="(999) 999-9999" type="tel">
 					</p>
 					<p>
 						<label for="input__search">Search</label>
-						<input id="input__search" type="search" placeholder="Enter Search Term">
+						<input id="input__search" placeholder="Enter Search Term" type="search">
 					</p>
 					<p>
 						<label for="input__text2">Number Input</label>
-						<input id="input__text2" type="number" placeholder="Enter a Number">
+						<input id="input__text2" placeholder="Enter a Number" type="number">
 					</p>
 					<p>
 						<label for="input__file">File Input</label>
@@ -485,7 +478,7 @@
 					</p>
 					<p>
 						<label for="select_multiple">Select (multiple)</label>
-						<select id="select_multiple" multiple="multiple">
+						<select id="select_multiple" multiple>
 							<optgroup label="Option Group">
 								<option>Option One</option>
 								<option>Option Two</option>
@@ -498,7 +491,7 @@
 				<fieldset id="forms__checkbox">
 					<legend>Checkboxes</legend>
 					<ul>
-						<li><label for="checkbox1"><input id="checkbox1" name="checkbox" type="checkbox" checked="checked"> Choice A</label>
+						<li><label for="checkbox1"><input checked id="checkbox1" name="checkbox" type="checkbox"> Choice A</label>
 						</li>
 						<li><label for="checkbox2"><input id="checkbox2" name="checkbox" type="checkbox"> Choice B</label></li>
 						<li><label for="checkbox3"><input id="checkbox3" name="checkbox" type="checkbox"> Choice C</label></li>
@@ -508,7 +501,7 @@
 				<fieldset id="forms__radio">
 					<legend>Radio buttons</legend>
 					<ul>
-						<li><label for="radio1"><input id="radio1" name="radio" type="radio" checked="checked"> Option 1</label>
+						<li><label for="radio1"><input checked id="radio1" name="radio" type="radio"> Option 1</label>
 						</li>
 						<li><label for="radio2"><input id="radio2" name="radio" type="radio"> Option 2</label></li>
 						<li><label for="radio3"><input id="radio3" name="radio" type="radio"> Option 3</label></li>
@@ -519,7 +512,7 @@
 					<legend>Textareas</legend>
 					<p>
 						<label for="textarea">Textarea</label>
-						<textarea id="textarea" rows="8" cols="48" placeholder="Enter your message here"></textarea>
+						<textarea cols="48" id="textarea" placeholder="Enter your message here" rows="8"></textarea>
 					</p>
 				</fieldset>
 				<p><a href="#top">[Top]</a></p>
@@ -527,39 +520,39 @@
 					<legend>HTML5 inputs</legend>
 					<p>
 						<label for="ic">Color input</label>
-						<input type="color" id="ic" value="#000000">
+						<input id="ic" type="color" value="#000000">
 					</p>
 					<p>
 						<label for="in">Number input</label>
-						<input type="number" id="in" min="0" max="10" value="5">
+						<input id="in" max="10" min="0" type="number" value="5">
 					</p>
 					<p>
 						<label for="ir">Range input</label>
-						<input type="range" id="ir" value="10">
+						<input id="ir" type="range" value="10">
 					</p>
 					<p>
 						<label for="idd">Date input</label>
-						<input type="date" id="idd" value="1970-01-01">
+						<input id="idd" type="date" value="1970-01-01">
 					</p>
 					<p>
 						<label for="idm">Month input</label>
-						<input type="month" id="idm" value="1970-01">
+						<input id="idm" type="month" value="1970-01">
 					</p>
 					<p>
 						<label for="idw">Week input</label>
-						<input type="week" id="idw" value="1970-W01">
+						<input id="idw" type="week" value="1970-W01">
 					</p>
 					<p>
 						<label for="idt">Datetime input</label>
-						<input type="datetime-local" id="idt" value="1970-01-01T00:00:00Z">
+						<input id="idt" type="datetime-local" value="1970-01-01T00:00:00Z">
 					</p>
 					<p>
 						<label for="idtl">Datetime-local input</label>
-						<input type="datetime-local" id="idtl" value="1970-01-01T00:00">
+						<input id="idtl" type="datetime-local" value="1970-01-01T00:00">
 					</p>
 					<p>
 						<label for="idl">Datalist</label>
-						<input type="text" id="idl" list="example-list">
+						<input id="idl" list="example-list" type="text">
 						<datalist id="example-list">
 							<option value="Example #1">
 							<option value="Example #2">
@@ -574,13 +567,13 @@
 						<input type="submit" value="<input type=submit>">
 						<input type="button" value="<input type=button>">
 						<input type="reset" value="<input type=reset>">
-						<input type="submit" value="<input disabled>" disabled>
+						<input disabled type="submit" value="<input disabled>">
 					</p>
 					<p>
 						<button type="submit">&lt;button type=submit&gt;</button>
 						<button type="button">&lt;button type=button&gt;</button>
 						<button type="reset">&lt;button type=reset&gt;</button>
-						<button type="button" disabled>&lt;button disabled&gt;</button>
+						<button disabled type="button">&lt;button disabled&gt;</button>
 					</p>
 				</fieldset>
 				<p><a href="#top">[Top]</a></p>
