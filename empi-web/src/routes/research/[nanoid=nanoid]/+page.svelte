@@ -11,7 +11,6 @@
 	import { plainToInstance } from 'class-transformer';
 	import Accordion from '$lib/components/Accordion.svelte';
 	import AccordionTab from '$lib/components/AccordionTab.svelte';
-	import { Participation } from '$lib/objects/participation';
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import ResearchPasswordRequiredModal from '$lib/components/ResearchPasswordRequiredModal.svelte';
 	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
@@ -20,6 +19,9 @@
 	import { ENABLE_ATTRS } from '$lib/constants';
 	import MarkdownGuideModal from "$lib/components/MarkdownGuideModal.svelte";
 	import { mount } from "svelte";
+	import { invalidateAll } from "$app/navigation";
+	import Participations from "$lib/components/Participations.svelte";
+	import type { IParticipation } from "$lib/objects/participation";
 
 	let { data }: { data: PageServerData } = $props();
 	let appointments = plainToInstance(Appt, data.appointments);
@@ -58,11 +60,11 @@
 	async function submitParticipations() {
 		submitting_participations = true;
 		const forms = document.getElementsByClassName('participation-form');
-		const participations: Participation[] = [];
+		const participations: IParticipation[] = [];
 		for (const element of forms) {
 			const form = element as HTMLFormElement;
 			const formData = new FormData(form);
-			const participation: Participation = convertFormData({ formData, stringify: false });
+			const participation = convertFormData({ formData, stringify: false });
 			participations.push(participation);
 		}
 
@@ -70,6 +72,7 @@
 			body: JSON.stringify(participations),
 			method: 'POST'
 		});
+		await invalidateAll();
 		submitting_participations = false;
 		submit_success_participations = response.ok;
 	}
@@ -230,26 +233,9 @@
 				</div>
 			</form>
 		</AccordionTab>
-		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
-			<div class="col" style="margin-bottom: var(--sm)">
-				{#if data.participations}
-					<div style="display: flex; gap: var(--md); flex-wrap: wrap">
-						{#each data.participations as participation}
-							<div class="box" style="margin: 0; flex: 1 1 calc(33% - 1rem)">
-								<form style="display: flex; justify-content: center;" class="participation-form">
-									<button style="font-weight: 700; text-align: center">{participation.participant.token}</button>
-									<input type="hidden" name="id" value={participation.id}>
-									<input type="checkbox" name="is_confirmed" checked={participation.is_confirmed}
-									       style="margin: 0 0 0 var(--sm)" value="true">
-								</form>
-							</div>
-						{/each}
-					</div>
-				{:else}
-					<p>{$t('research.no_participations')}</p>
-				{/if}
-			</div>
-			{#if data.participations && data.participations.length > 0}
+		<AccordionTab open={false} title={$t('research.protocol')}>
+			<Participations participations={data.participations}></Participations>
+			{#if data.participations.unconfirmed.length > 0 || data.participations.confirmed.length > 0}
 				{#if submitting_participations}
 					<button type="button" disabled>{$t('common.submitting')}</button>
 				{:else}
