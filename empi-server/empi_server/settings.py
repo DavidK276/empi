@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
-
 from pathlib import Path
 
 import sentry_sdk
@@ -165,7 +164,7 @@ REST_KNOX = {"USER_SERIALIZER": "users.serializers.UserSerializer", "AUTH_HEADER
 SPECTACULAR_SETTINGS = {
     "TITLE": "Empi API",
     "DESCRIPTION": "The backend API of Empi",
-    "VERSION": "2024.10.16",
+    "VERSION": "2024.10.29",
     "SERVE_INCLUDE_SCHEMA": True,
     "SERVERS": [{"url": "http://localhost:8000"}],
 }
@@ -209,7 +208,6 @@ STATIC_ROOT = BASE_DIR.parent / "static"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.EmpiUser"
-
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "").strip('"').strip("'")
 email_port = os.environ.get("EMAIL_PORT", "").strip('"').strip("'")
