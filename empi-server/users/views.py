@@ -198,7 +198,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer_class=ActivateUserSerializer,
         queryset=EmpiUser.users.get_queryset().filter(is_active=False),
     )
-    def activate_account(self, request, pk: int):  # noqa: F841
+    def activate_account(self, request, pk=None):  # noqa: F841
         serializer: ActivateUserSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
