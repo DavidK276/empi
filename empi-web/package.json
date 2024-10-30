@@ -36,8 +36,10 @@
     "sv": "^0.5.9",
     "svelte": "^5.1.2",
     "svelte-check": "^4.0.5",
+    "svelte-language-server": "^0.17.2",
     "tslib": "^2.8.0",
     "typescript": "^5.6.3",
+    "typescript-svelte-plugin": "^0.3.42",
     "unplugin-icons": "^0.19.3",
     "vite": "^5.4.9"
   },

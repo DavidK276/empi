@@ -18,8 +18,9 @@
 	import MaterialSymbolsVisibilityOffOutline from 'virtual:icons/material-symbols/visibility-outline';
 	import { ENABLE_ATTRS } from '$lib/constants';
 	import MarkdownGuideModal from "$lib/components/MarkdownGuideModal.svelte";
-	import { mount } from "svelte";
-	import { invalidateAll } from "$app/navigation";
+	import { mount, onMount } from "svelte";
+	import { goto, invalidateAll } from "$app/navigation";
+	import { base } from "$app/paths";
 	import Participations from "$lib/components/Participations.svelte";
 	import type { IParticipation } from "$lib/objects/participation";
 
@@ -76,6 +77,12 @@
 		submitting_participations = false;
 		submit_success_participations = response.ok;
 	}
+
+	onMount(() => {
+		if (!$page.data.user?.is_staff) {
+			goto(`${base}/`, { replaceState: true });
+		}
+	});
 </script>
 <ResearchPasswordRequiredModal></ResearchPasswordRequiredModal>
 <MarkdownGuideModal bind:show={showMarkdownGuide}></MarkdownGuideModal>
@@ -116,8 +123,16 @@
 					});
 				}}
 	      onformdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
-		<label for="url">{$t('research.info_url')}</label>
-		<input type="text" id="url" name="info_url" value={data.research.info_url}>
+		<div class="row">
+			<div style="width: 50%; display: inline-block" class="m-w-full">
+				<label for="points">{$t('common.points')}</label>
+				<input type="number" min="1" max="1000" id="points" name="points" value="{data.research.points}">
+			</div>
+			<div style="width: 50%; display: inline-block" class="m-w-full">
+				<label for="url">{$t('research.info_url')}</label>
+				<input type="text" id="url" name="info_url" value={data.research.info_url}>
+			</div>
+		</div>
 		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
 				href="/" target="_blank" onclick={(e) => {e.preventDefault(); showMarkdownGuide = true}}>markdown</a>)</label>
 		<textarea id="comment" name="comment" onkeyup={textAreaAdjustSize}
@@ -128,9 +143,10 @@
 		</div>
 	</form>
 	<Accordion>
-		<AccordionTab open={!data.research.is_protected} title={$t('research.protection')}>
-			<form method="POST" action="?/setPassword"
-			      use:enhance={({formElement, submitter}) => {
+		{#if data.research.is_protected}
+			<AccordionTab open={false} title={$t('research.protection')}>
+				<form method="POST" action="?/setPassword"
+				      use:enhance={({formElement, submitter}) => {
 							return universalEnhance({formElement, submitter}, {
 								idleMessage: $t('common.submit'),
 								runningMessage: $t('common.submitting'),
@@ -138,22 +154,23 @@
 								invalidateAll: true
 							});
 						}}>
-				{#if !data.research.is_protected}
-					<p class="error-msg message">
-						<MaterialSymbolsWarningOutline></MaterialSymbolsWarningOutline>&nbsp;{$t('research.unprotected_warning')}
-					</p>
-					<input type="hidden" name="current_password" value="__blank__">
-				{:else}
-					<label for="current_password">{$t('common.current_password')}</label>
-					<input type="password" name="current_password" id="current_password">
-				{/if}
-				<label for="new_password">{$t('common.new_password')}</label>
-				<input type="password" name="new_password" id="new_password" required minlength="8">
-				<div class="row ver-center" id="submit-div">
-					<button type="submit" id="submit">{$t('common.submit')}</button>
-				</div>
-			</form>
-		</AccordionTab>
+					{#if !data.research.is_protected}
+						<p class="error-msg message">
+							<MaterialSymbolsWarningOutline></MaterialSymbolsWarningOutline>&nbsp;{$t('research.unprotected_warning')}
+						</p>
+						<input type="hidden" name="current_password" value="__blank__">
+					{:else}
+						<label for="current_password">{$t('common.current_password')}</label>
+						<input type="password" name="current_password" id="current_password">
+					{/if}
+					<label for="new_password">{$t('common.new_password')}</label>
+					<input type="password" name="new_password" id="new_password" required minlength="8">
+					<div class="row ver-center" id="submit-div">
+						<button type="submit" id="submit">{$t('common.submit')}</button>
+					</div>
+				</form>
+			</AccordionTab>
+		{/if}
 		{#if ENABLE_ATTRS && data.attrs?.length > 0}
 			<AccordionTab open={false} title={$t('common.attributes')}>
 				<form method="POST" action="?/attrs"

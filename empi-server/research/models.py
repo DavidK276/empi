@@ -1,7 +1,6 @@
 import warnings
-from datetime import timedelta
 from collections.abc import Sequence, Mapping
-from django.utils import timezone
+from datetime import timedelta
 from typing import Self, Optional
 
 from Crypto.Cipher import PKCS1_OAEP, AES
@@ -13,14 +12,15 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q, Manager
 from django.forms import model_to_dict
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
 from users.models import EmpiUser, AttributeValue
+from utils.keys import export_privkey, export_privkey_plaintext
 from .fields import SeparatedBinaryField
 from .utils.constants import *
-from utils.keys import export_privkey, export_privkey_plaintext
 from .utils.misc import generate_nanoid
 
 
@@ -119,8 +119,7 @@ class Research(models.Model):
         encrypted_key = export_privkey(private_key, new_raw_password)
 
         self.privkey = encrypted_key
-        if new_raw_password != "unprotected":
-            self.is_protected = True
+        self.is_protected = new_raw_password != "unprotected"
         self.save(update_fields=["privkey", "is_protected"])
 
     def get_keypair(self) -> (bytes, bytes):

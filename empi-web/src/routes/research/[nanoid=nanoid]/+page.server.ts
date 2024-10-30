@@ -193,12 +193,14 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			body: formData,
 			method: 'POST'
 		});
-		for (const participation of await response.json()) {
-			if (participation.is_confirmed) {
-				confirmed_participations.push(participation);
-			}
-			else {
-				unconfirmed_participations.push(participation);
+		if (response.ok) {
+			for (const participation of await response.json()) {
+				if (participation.is_confirmed) {
+					confirmed_participations.push(participation);
+				}
+				else {
+					unconfirmed_participations.push(participation);
+				}
 			}
 		}
 	}
