@@ -11,7 +11,6 @@
 	import { plainToInstance } from 'class-transformer';
 	import Accordion from '$lib/components/Accordion.svelte';
 	import AccordionTab from '$lib/components/AccordionTab.svelte';
-	import { Participation } from '$lib/objects/participation';
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import ResearchPasswordRequiredModal from '$lib/components/ResearchPasswordRequiredModal.svelte';
 	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
@@ -19,20 +18,24 @@
 	import MaterialSymbolsVisibilityOffOutline from 'virtual:icons/material-symbols/visibility-outline';
 	import { ENABLE_ATTRS } from '$lib/constants';
 	import MarkdownGuideModal from "$lib/components/MarkdownGuideModal.svelte";
+	import { mount } from "svelte";
+	import { invalidateAll } from "$app/navigation";
+	import Participations from "$lib/components/Participations.svelte";
+	import type { IParticipation } from "$lib/objects/participation";
 
-	export let data: PageServerData;
-	$: appointments = plainToInstance(Appt, data.appointments);
-	let emails: EmailInput;
-	let submitting_appointments = false;
-	let submit_success_appointments: boolean | null = null;
-	let submitting_participations = false;
-	let submit_success_participations: boolean | null = null;
-	let showMarkdownGuide: boolean = false;
+	let { data }: { data: PageServerData } = $props();
+	let appointments = plainToInstance(Appt, data.appointments);
+	let emails = $state();
+	let submitting_appointments = $state(false);
+	let submit_success_appointments: boolean | null = $state(null);
+	let submitting_participations = $state(false);
+	let submit_success_participations: boolean | null = $state(null);
+	let showMarkdownGuide = $state(false);
 
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		new Appointment({ target: parent!, anchor: target, props: { nanoid: $page.params.nanoid } });
+		mount(Appointment, { target: parent!, anchor: target, props: { nanoid: $page.params.nanoid } });
 	}
 
 	async function submitAppointments() {
@@ -57,11 +60,11 @@
 	async function submitParticipations() {
 		submitting_participations = true;
 		const forms = document.getElementsByClassName('participation-form');
-		const participations: Participation[] = [];
+		const participations: IParticipation[] = [];
 		for (const element of forms) {
 			const form = element as HTMLFormElement;
 			const formData = new FormData(form);
-			const participation: Participation = convertFormData({ formData, stringify: false });
+			const participation = convertFormData({ formData, stringify: false });
 			participations.push(participation);
 		}
 
@@ -69,6 +72,7 @@
 			body: JSON.stringify(participations),
 			method: 'POST'
 		});
+		await invalidateAll();
 		submitting_participations = false;
 		submit_success_participations = response.ok;
 	}
@@ -111,13 +115,13 @@
 						invalidateAll: true
 					});
 				}}
-	      on:formdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+	      onformdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
 		<label for="url">{$t('research.info_url')}</label>
 		<input type="text" id="url" name="info_url" value={data.research.info_url}>
 		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
-				href="/" target="_blank" on:click|preventDefault={() => {showMarkdownGuide = true}}>markdown</a>)</label>
-		<textarea id="comment" name="comment" on:keyup={textAreaAdjustSize}
-		          on:click={textAreaAdjustSize}>{data.research.comment}</textarea>
+				href="/" target="_blank" onclick={(e) => {e.preventDefault(); showMarkdownGuide = true}}>markdown</a>)</label>
+		<textarea id="comment" name="comment" onkeyup={textAreaAdjustSize}
+		          onclick={textAreaAdjustSize}>{data.research.comment}</textarea>
 		<EmailInput bind:this={emails} emails={data.research.email_recipients}></EmailInput>
 		<div class="row ver-center" style="margin-bottom: var(--lg)" id="submit-div">
 			<button type="submit">{$t('common.submit')}</button>
@@ -178,11 +182,11 @@
 			{#each appointments as appointment}
 				<Appointment {appointment} nanoid={$page.params.nanoid}></Appointment>
 			{/each}
-			<button type="button" on:click={addAppointment}>+</button>
+			<button type="button" onclick={addAppointment}>+</button>
 			{#if submitting_appointments}
 				<button type="button" disabled>{$t('common.submitting')}</button>
 			{:else}
-				<button type="button" on:click={submitAppointments}>{$t('common.submit')}</button>
+				<button type="button" onclick={submitAppointments}>{$t('common.submit')}</button>
 			{/if}
 			{#if submit_success_appointments === true}
 				<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>
@@ -221,37 +225,21 @@
 				<label for="subject">Predmet&nbsp;({$t('common.optional')})</label>
 				<input type="text" name="subject" id="subject" maxlength="78">
 				<label for="body">Text emailu&nbsp;({$t('research.supports')}&nbsp;<a
-						href="/" target="_blank" on:click|preventDefault={() => {showMarkdownGuide = true}}>markdown</a>)</label>
-				<textarea id="body" name="body" on:keyup={textAreaAdjustSize}></textarea>
+						href="/" target="_blank"
+						onclick={(e) => {e.preventDefault(); showMarkdownGuide = true}}>markdown</a>)</label>
+				<textarea id="body" name="body" onkeyup={textAreaAdjustSize}></textarea>
 				<div class="row ver-center" id="submit-div">
 					<button type="submit" id="submit">{$t('common.send')}</button>
 				</div>
 			</form>
 		</AccordionTab>
-		<AccordionTab open={data.participations?.length > 0} title={$t('research.protocol')}>
-			<div class="col" style="margin-bottom: var(--sm)">
-				{#if data.participations}
-					<div style="display: flex; gap: var(--md); flex-wrap: wrap">
-						{#each data.participations as participation}
-							<div class="box" style="margin: 0; flex: 1 1 calc(33% - 1rem)">
-								<form style="display: flex; justify-content: center;" class="participation-form">
-									<button style="font-weight: 700; text-align: center">{participation.participant.token}</button>
-									<input type="hidden" name="id" value={participation.id}>
-									<input type="checkbox" name="is_confirmed" bind:checked={participation.is_confirmed}
-									       style="margin: 0 0 0 var(--sm)" value="true">
-								</form>
-							</div>
-						{/each}
-					</div>
-				{:else}
-					<p>{$t('research.no_participations')}</p>
-				{/if}
-			</div>
-			{#if data.participations && data.participations.length > 0}
+		<AccordionTab open={false} title={$t('research.protocol')}>
+			<Participations participations={data.participations}></Participations>
+			{#if data.participations.unconfirmed.length > 0 || data.participations.confirmed.length > 0}
 				{#if submitting_participations}
 					<button type="button" disabled>{$t('common.submitting')}</button>
 				{:else}
-					<button type="button" on:click={submitParticipations}>{$t('common.submit')}</button>
+					<button type="button" onclick={submitParticipations}>{$t('common.submit')}</button>
 				{/if}
 				{#if submit_success_participations === true}
 					<span style="margin: 0 var(--sm); color: var(--success)">{$t('attrs.success')}</span>

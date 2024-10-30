@@ -7,7 +7,7 @@
 		}
 	}
 
-	export let value: string | null;
+	let { value }: { value: string | null } = $props();
 </script>
 
 <label class="row ver-top" style="margin: var(--sm) 0">
@@ -16,11 +16,11 @@
 	{:else}
 		<input type="text" name="values[]">
 	{/if}
-	<button type="button" style="background-color: var(--danger); margin: 0" on:click={deleteOption}>-</button>
+	<button onclick={deleteOption} style="background-color: var(--danger); margin: 0" type="button">-</button>
 </label>
 
 <style>
-	input {
-			margin: 0;
-	}
+    input {
+        margin: 0;
+    }
 </style>

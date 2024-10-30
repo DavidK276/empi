@@ -17,14 +17,12 @@
 	function resetTheButton(event: Event) {
 		const target = event.target as HTMLInputElement;
 		const parent = target.parentElement as HTMLDivElement;
-		const submitButton = parent.children.namedItem('submit') as HTMLButtonElement | null;
-		if (submitButton != null) {
-			submitButton.innerText = $t('common.submit');
-			submitButton.style['background-color'] = '';
-		}
+		const submitButton = parent.children.namedItem('submit') as HTMLButtonElement;
+		submitButton.innerText = $t('common.submit');
+		submitButton.style.backgroundColor = '';
 	}
 
-	export let data: PageServerData;
+	let { data }: { data: PageServerData } = $props();
 </script>
 <h1>{$t('common.points')}</h1>
 {#if data.researches != null}
@@ -34,7 +32,7 @@
 			return async ({result, update}) => {
 				if (result.type === 'success' && submitter != null) {
 					submitter.innerText = $t('common.saved');
-					submitter.style['background-color'] = 'green';
+					submitter.style.backgroundColor = 'green';
 				}
 				await update({reset: false});
 			};
@@ -43,7 +41,7 @@
 				<div class="content row ver-center">
 					<input type="hidden" name="nanoid" value={research.nanoid}>
 					<input type="number" step="1" name="points" value={research.points} required style="margin: 0"
-					       on:input={resetTheButton}>
+					       oninput={resetTheButton}>
 					<button type="submit" id="submit">{$t('common.submit')}</button>
 				</div>
 			</form>

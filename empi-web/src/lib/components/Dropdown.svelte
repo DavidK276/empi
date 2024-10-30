@@ -2,9 +2,10 @@
 	import { slide } from 'svelte/transition';
 	import MaterialSymbolsKeyboardArrowDown from 'virtual:icons/material-symbols/keyboard-arrow-down';
 	import MaterialSymbolsKeyboardArrowUp from 'virtual:icons/material-symbols/keyboard-arrow-up';
+	import type { Snippet } from "svelte";
 
-	export let title: string;
-	let isOpen = false;
+	let { title, children }: { title: string, children: Snippet } = $props();
+	let isOpen = $state(false);
 
 	const addListeners = (event: Event) => {
 		const target = event.target as HTMLDivElement;
@@ -17,7 +18,7 @@
 </script>
 
 <div class="dropdown" class:show={isOpen}>
-	<button on:click={() => {isOpen = !isOpen}}>
+	<button onclick={() => {isOpen = !isOpen}}>
 		{title}
 		{#if isOpen}
 			<MaterialSymbolsKeyboardArrowUp width="24" height="24"></MaterialSymbolsKeyboardArrowUp>
@@ -26,8 +27,8 @@
 		{/if}
 	</button>
 	{#if isOpen}
-		<div class="dropdown-content col" transition:slide={{duration: 100}} on:introend={addListeners}>
-			<slot></slot>
+		<div class="dropdown-content col" transition:slide={{duration: 200}} onintroend={addListeners}>
+			{@render children?.()}
 		</div>
 	{/if}
 </div>

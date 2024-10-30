@@ -204,7 +204,7 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
 
         return passphrase
 
-    def reset_password(self, reset_key: ResetKey, passphrase: str, new_password: str):
+    def reset_password(self, reset_key: ResetKey, passphrase: str, new_password: str) -> bool:
         try:
             privkey = RSA.import_key(reset_key.backup_key, passphrase)
         except (ValueError, IndexError, TypeError):
@@ -212,6 +212,7 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
         self.privkey = export_privkey(privkey, new_password)
         self.set_password(new_password)
         self.save()
+        return True
 
     def is_participant(self):
         return Participant.objects.filter(user=self.pk).exists()

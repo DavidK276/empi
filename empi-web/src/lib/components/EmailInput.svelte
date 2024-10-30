@@ -1,12 +1,12 @@
 <script lang="ts">
 	import AdditionalEmail from '$lib/components/AdditionalEmail.svelte';
-	import { onMount } from 'svelte';
+	import { mount, onMount } from 'svelte';
 	import { t } from "$lib/translations";
 
 	function addNewEmail(event: Event) {
 		const target = event.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		new AdditionalEmail({ target: parent!, anchor: target });
+		mount(AdditionalEmail, { target: parent!, anchor: target });
 	}
 
 	export function getEmails() {
@@ -15,7 +15,10 @@
 		const emails: string[] = [];
 		for (const elem of emailInputs) {
 			const emailInput = elem as HTMLInputElement;
-			emails.push(emailInput.value);
+			const value = emailInput.value.trim();
+			if (value) {
+				emails.push(value);
+			}
 		}
 
 		return emails.join(',');
@@ -28,11 +31,11 @@
 		firstEmailInput.value = firstEmail!;
 
 		for (const email of separatedEmails) {
-			new AdditionalEmail({ target: addEmailButton.parentElement!, anchor: addEmailButton, props: { email } });
+			mount(AdditionalEmail, { target: addEmailButton.parentElement!, anchor: addEmailButton, props: { email } });
 		}
 	}
 
-	export let emails: string = '';
+	let { emails = '' } = $props();
 	let addEmailButton: HTMLButtonElement;
 	let firstEmailInput: HTMLInputElement;
 	onMount(() => setEmails(emails));
@@ -41,7 +44,7 @@
 <fieldset>
 	<legend>{$t('common.emails')}</legend>
 	<div class="row ver-center" style="margin: var(--sm) 0">
-		<input type="email" class="email-input" bind:this={firstEmailInput} style="margin: 0">
+		<input bind:this={firstEmailInput} class="email-input" style="margin: 0" type="email">
 	</div>
-	<button type="button" bind:this={addEmailButton} on:click={addNewEmail}>+</button>
+	<button bind:this={addEmailButton} onclick={addNewEmail} type="button">+</button>
 </fieldset>

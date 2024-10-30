@@ -5,15 +5,16 @@
 	import type { Attribute } from '$lib/objects/attribute';
 	import { t } from '$lib/translations';
 	import { ALLOW_TEXTENTRY_ATTR } from '$lib/constants';
+	import { mount } from "svelte";
 
 	function addOption(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		new Option({ target: parent!, anchor: target, props: { value: null } });
+		mount(Option, { target: parent!, anchor: target, props: { value: null } });
 	}
 
-	export let attr: Attribute | null = null;
-	let chosen_type: string;
+	let { attr = null }: { attr: Attribute | null } = $props();
+	let chosen_type: string = $state("SC");
 </script>
 {#if attr != null}
 	<div class="box">
@@ -34,7 +35,7 @@
 					{#each attr.values as value}
 						<Option {value}></Option>
 					{/each}
-					<button type="button" on:click={addOption}>+</button>
+					<button type="button" onclick={addOption}>+</button>
 				</fieldset>
 			{/if}
 			<input type="hidden" name="url" value={attr.url}>
@@ -58,7 +59,7 @@
 			{#if chosen_type !== 'ET'}
 				<fieldset id="options">
 					<legend>{$t('attrs.options')}</legend>
-					<button type="button" style="margin-top: var(--sm)" on:click={addOption}>+</button>
+					<button type="button" style="margin-top: var(--sm)" onclick={addOption}>+</button>
 				</fieldset>
 			{/if}
 			<input type="hidden" name="create">

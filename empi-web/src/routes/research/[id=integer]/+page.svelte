@@ -11,12 +11,12 @@
 	import { localeDateStringFromUTCString } from '$lib/functions';
 	import { universalEnhance } from "$lib/enhanceFunctions";
 
-	export let data: PageData;
+	let { data }: { data: PageData } = $props();
 
 	const converter = new showdown.Converter();
-	let sanitizedComment = "";
-	if (browser) {
-		sanitizedComment = DOMPurify.sanitize(converter.makeHtml(data.research?.comment || ''), { USE_PROFILES: { html: true } });
+	let sanitizedComment = $state("");
+	if (browser && data.research?.comment) {
+		sanitizedComment = DOMPurify.sanitize(converter.makeHtml(data.research?.comment), { USE_PROFILES: { html: true } });
 	}
 </script>
 {#if $page.data.user != null}
@@ -61,6 +61,7 @@
 		<p>{appointment.comment}</p>
 		<div style="width: 50%" class="m-w-full">
 			<table style="width: 100%; margin-bottom: var(--sm)">
+				<thead>
 				<tr>
 					<th>{$t('research.when')}</th>
 					{#if appointment.location}
@@ -70,6 +71,8 @@
 					{/if}
 					<th>{$t('research.free_capacity')}</th>
 				</tr>
+				</thead>
+				<tbody>
 				<tr>
 					<td>
 						<time datetime="{appointment.when}">{localeDateStringFromUTCString(appointment.when)}</time>
@@ -84,6 +87,7 @@
 								style="color: {appointment.free_capacity ? 'var(--text-primary)' : 'red'}">{appointment.free_capacity}</span>
 					</td>
 				</tr>
+				</tbody>
 			</table>
 			{#if data.canSignup && appointment.free_capacity > 0 && !signups_lapsed}
 				<form method="POST" action="?/signup" use:enhance={({formElement, submitter}) => {

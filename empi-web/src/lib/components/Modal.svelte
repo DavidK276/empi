@@ -1,38 +1,40 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
+	import type { Snippet } from "svelte";
 
-	export let show: boolean;
-	export let hasCloseButton: boolean = true;
-	export let dismissible = true;
+	let { show = $bindable(), hasCloseButton = true, dismissible = true, header, children }: {
+		show: boolean,
+		hasCloseButton: boolean,
+		dismissible: boolean,
+		header: Snippet,
+		children: Snippet
+	} = $props();
 
 	let dialog: HTMLDialogElement;
 
-	export const dismiss = () => {
-		dialog.close();
-	};
-
-	$: if (dialog && show) {
-		dialog.showModal();
-	}
+	$effect(() => {
+		if (dialog && show) {
+			dialog.showModal();
+		}
+		else if (!show) {
+			dialog.close();
+		}
+	});
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
-<dialog
-	bind:this={dialog}
-	on:close={() => (show = false)}
-	on:click|self={() => {if (dismissible) dialog.close()}}
-	on:cancel={(e) => {if(!dismissible) e.preventDefault()}}
->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div on:click|stopPropagation>
-		<slot name="header"></slot>
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+<dialog bind:this={dialog} oncancel={(e) => {if(!dismissible) e.preventDefault()}}
+        onclick={() => {if (dismissible) dialog.close()}} onclose={() => (show = false)}>
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div onclick={(e) => e.stopPropagation()}>
+		{@render header?.()}
 		<hr>
-		<slot></slot>
+		{@render children?.()}
 
-		<!-- svelte-ignore a11y-autofocus -->
+		<!-- svelte-ignore a11y_autofocus -->
 		{#if dismissible && hasCloseButton}
 			<hr>
-			<button autofocus on:click={() => dialog.close()}>{$t('common.close')}</button>
+			<button autofocus onclick={() => dialog.close()}>{$t('common.close')}</button>
 		{/if}
 	</div>
 </dialog>

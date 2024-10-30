@@ -29,7 +29,7 @@ export const actions = {
 		});
 		const participation = await response.json();
 		if (response.ok) {
-			return redirect(300, `/participation/${participation.nanoid}`);
+			return redirect(302, `/participation/${participation.nanoid}`);
 		}
 		return fail(response.status, {
 			success: false

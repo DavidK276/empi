@@ -1,24 +1,26 @@
 <script lang="ts">
 
-	export let open: boolean;
-	export let title: string;
+	import type { Snippet } from "svelte";
+
+	let { open, title, children }: { open: boolean, title: string, children: Snippet } = $props();
 </script>
 
 <details {open}>
 	<summary>{title}</summary>
 	<div>
-		<slot></slot>
+		{@render children?.()}
 	</div>
 </details>
 
 <style>
-	summary {
-			cursor: pointer;
-			background-color: var(--button-primary);
-			color: var(--text-secondary);
-			padding: var(--sm);
-	}
-	details > div {
-			padding: var(--sm);
-	}
+    summary {
+        cursor: pointer;
+        background-color: var(--button-primary);
+        color: var(--text-secondary);
+        padding: var(--sm);
+    }
+
+    details > div {
+        padding: var(--sm);
+    }
 </style>

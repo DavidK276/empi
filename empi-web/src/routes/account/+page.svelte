@@ -5,10 +5,10 @@
 	import { universalEnhance } from '$lib/enhanceFunctions';
 	import MaterialSymbolsHelpOutline from 'virtual:icons/material-symbols/help-outline';
 
-	let user = $page.data.user;
-	let participant = $page.data.participant;
+	const user = $page.data.user;
+	const participant = $page.data.participant;
 
-	const onTokenButtonClick = (event: MouseEvent) => {
+	const copyToken = (event: MouseEvent) => {
 		navigator.clipboard.writeText(participant.token);
 		const target = event.target as HTMLButtonElement;
 		target.innerText = "Skopírovaný!"
@@ -17,6 +17,7 @@
 		}, 1000);
 	};
 </script>
+<svelte:options runes={true}></svelte:options>
 <div class="row ver-center">
 	<h1>{$t('account.my_account')}</h1>
 	{#if user?.is_staff}
@@ -34,10 +35,10 @@
 				<MaterialSymbolsHelpOutline width="24" height="24"></MaterialSymbolsHelpOutline>
 			</label>
 			<button id="token" style="font-size: 18px; cursor: pointer" title="{$t('common.click_to_copy')}"
-			        on:click={onTokenButtonClick}>{participant.token}</button>
+			        onclick={copyToken}>{participant.token}</button>
 		</div>
 	{/if}
-	<form method="POST" action="?/updateInfo" use:enhance={({formElement, submitter}) => {
+	<form action="?/updateInfo" method="POST" use:enhance={({formElement, submitter}) => {
 		return universalEnhance({formElement, submitter}, {
 			idleMessage: $t('common.submit'),
 			runningMessage: $t('common.submitting'),
@@ -48,17 +49,17 @@
 		<div class="row">
 			<div style="width: 50%">
 				<label for="first_name">{$t('common.first_name')}</label>
-				<input type="text" id="first_name" name="first_name" value={user?.first_name}>
+				<input id="first_name" name="first_name" type="text" value={user?.first_name}>
 			</div>
 			<div style="width: 50%">
 				<label for="last_name">{$t('common.last_name')}</label>
-				<input type="text" id="last_name" name="last_name" value={user?.last_name}>
+				<input id="last_name" name="last_name" type="text" value={user?.last_name}>
 			</div>
 		</div>
 		<div class="row">
 			<div style="width: 100%">
 				<label for="email">Email</label>
-				<input type="email" id="email" name="email" value={user?.email}>
+				<input id="email" name="email" type="email" value={user?.email}>
 			</div>
 		</div>
 		<div class="row ver-center" id="submit-div">
@@ -68,7 +69,7 @@
 </div>
 <h2>{$t('account.password_change')}</h2>
 <div class="col">
-	<form method="POST" action="?/changePassword" use:enhance={({formElement, submitter}) => {
+	<form action="?/changePassword" method="POST" use:enhance={({formElement, submitter}) => {
 		return universalEnhance({formElement, submitter}, {
 			idleMessage: $t('common.submit'),
 			runningMessage: $t('common.submitting'),
@@ -79,11 +80,11 @@
 		<div class="row">
 			<div style="width: 50%">
 				<label for="current_password">{$t('common.current_password')}</label>
-				<input type="password" id="current_password" name="current_password">
+				<input id="current_password" name="current_password" type="password">
 			</div>
 			<div style="width: 50%">
 				<label for="new_password">{$t('common.new_password')}</label>
-				<input type="password" id="new_password" name="new_password" minlength="8">
+				<input id="new_password" minlength="8" name="new_password" type="password">
 			</div>
 		</div>
 		<div class="row ver-center" id="submit-div">

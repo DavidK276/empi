@@ -1,5 +1,5 @@
 {
-  "author_text": "EMPI verzia 2024.10.16. Pôvodne navrhol a vytvoril David Krchňavý v 2024 ako bakalársku prácu na FMFI UK v Bratislave.",
+  "author_text": "EMPI verzia 2024.10.29. Pôvodne navrhol a vytvoril David Krchňavý v 2024 ako bakalársku prácu na FMFI UK v Bratislave.",
   "submit": "Uložiť",
   "submitting": "Ukladám…",
   "saved": "Uložené",
@@ -9,7 +9,7 @@
   "login": "Prihlásiť sa",
   "logging_in": "Prihlasujem sa…",
   "logging_out": "Odhlasujem sa…",
-  "wrong_login": "Prihlásenie sa nepodarilo.",
+  "wrong_login": "Nesprávne prihlasovacie údaje.",
   "username": "Prihlasovacie meno",
   "password": "Heslo",
   "current_password": "Aktuálne heslo",

@@ -5,31 +5,31 @@
 	import { page } from '$app/stores';
 	import { base } from "$app/paths";
 
-	let password_ok: boolean | null = null;
-	let modal: Modal;
-
-	$: session = $page.data.session;
+	let session = $page.data.session;
+	
+	let password_ok: boolean | null = $state(null);
+	let show = $state(!session?.user_password);
 </script>
 
-<svelte:component this={Modal} bind:this={modal} show="{!session?.user_password}" dismissible={false}>
-	<div slot="header">
+<Modal bind:show={show} dismissible={false} hasCloseButton={false}>
+	{#snippet header()}
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
-	</div>
-	<form method="POST" action="{base}/?/checkPassword" use:enhance={() => {
+	{/snippet}
+	<form action="{base}/?/checkPassword" method="POST" use:enhance={() => {
 		password_ok = null;
 		return async ({result}) => {
 			password_ok = result.type === 'success';
 			if (password_ok) {
-				modal.dismiss();
+				show = false;
 			}
 		};
 	}}>
 		<label for="password">{$t('common.password')}</label>
-		<input type="password" name="password" id="password">
+		<input id="password" name="password" type="password">
 		<button type="submit">{$t('common.check')}</button>
 		{#if password_ok === false}
 			<span style="color: var(--danger)">{$t('common.wrong_login')}</span>
 		{/if}
 	</form>
-</svelte:component>
+</Modal>

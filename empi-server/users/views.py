@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import *
 from rest_framework.response import Response
 from rest_framework.routers import reverse
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_403_FORBIDDEN
 
 from emails.types import PasswordResetEmail, AdminCreatedEmail
 from research.models import Research, Participation
@@ -41,7 +41,7 @@ class UserViewSet(viewsets.ModelViewSet):
         methods=[HTTPMethod.POST],
         serializer_class=PasswordChangeSerializer,
     )
-    def change_password(self, request, pk=None):
+    def change_password(self, request, pk=None):  # noqa: F841
         user: EmpiUser = self.get_object()
         if request.user != self.get_object():
             raise exceptions.AuthenticationFailed("only changing own password is allowed")
@@ -63,7 +63,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer_class=PasswordChangeSerializer,
         permission_classes=[IsAdminUser],
     )
-    def change_password_admin(self, request, pk=None):
+    def change_password_admin(self, request, pk=None):  # noqa: F841
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -99,7 +99,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         detail=True, methods=[HTTPMethod.POST], serializer_class=PasswordResetSerializer, permission_classes=[AllowAny]
     )
-    def complete_password_reset(self, request, pk=None):
+    def complete_password_reset(self, request, pk=None):  # noqa: F841
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -112,7 +112,8 @@ class UserViewSet(viewsets.ModelViewSet):
             reset_key.delete()
             _ = get_object_or_404(ResetKey, user=user.pk)
 
-        user.reset_password(reset_key, passphrase, new_password)
+        if not user.reset_password(reset_key, passphrase, new_password):
+            return Response(status=HTTP_403_FORBIDDEN)
 
         return Response(status=HTTP_204_NO_CONTENT)
 
@@ -167,7 +168,7 @@ class UserViewSet(viewsets.ModelViewSet):
             new_admin_pubkey = RSA.import_key(new_admin.pubkey)
 
             current_admin_privkey = RSA.import_key(current_admin.privkey, passphrase)
-            for participation in Participation.objects.all():
+            for participation in Participation.objects.all().filter(encrypted_tokens__isnull=False):
                 token = participation.decrypt(current_admin_privkey)
                 participation.add_encrypted_token(token, new_admin_pubkey)
                 participation.save()
@@ -197,7 +198,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer_class=ActivateUserSerializer,
         queryset=EmpiUser.users.get_queryset().filter(is_active=False),
     )
-    def activate_account(self, request, pk: int):
+    def activate_account(self, request, pk: int):  # noqa: F841
         serializer: ActivateUserSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

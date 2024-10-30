@@ -3,6 +3,7 @@
 	import type { ActionResult } from '@sveltejs/kit';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
+	import { mount } from "svelte";
 
 	let submitButton: HTMLButtonElement;
 
@@ -12,30 +13,31 @@
 			result: ActionResult
 		}) => {
 			if (result.type === 'success') {
-				new FormResultMessage({
+				mount(FormResultMessage, {
 					target: submitButton.parentElement as HTMLElement,
 					props: { result, message: 'Odkaz bol úspešne odoslaný' }
 				});
 			}
 			else {
-				new FormResultMessage({ target: submitButton.parentElement as HTMLElement, props: { result } });
+				mount(FormResultMessage, { target: submitButton.parentElement as HTMLElement, props: { result } });
 			}
 			await update();
 		};
 	}
 </script>
 
+<svelte:options runes={true}></svelte:options>
 <h1>Pridanie administrátora</h1>
 <p class="message">
 	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>
 	Zadajte emailovú adresu, na ktorú bude doručený odkaz na aktiváciu nového administrátorského účtu.
 </p>
 <div class="row" style="padding-top: var(--xl);">
-	<form method="POST" style="width: 50%" class="m-w-full" use:enhance={doUpdate}>
+	<form class="m-w-full" method="POST" style="width: 50%" use:enhance={doUpdate}>
 		<label for="email">Email</label>
-		<input type="email" name="email" id="email">
+		<input id="email" name="email" type="email">
 		<div class="row ver-center">
-			<button type="submit" bind:this={submitButton}>Odoslať</button>
+			<button bind:this={submitButton} type="submit">Odoslať</button>
 		</div>
 	</form>
 </div>

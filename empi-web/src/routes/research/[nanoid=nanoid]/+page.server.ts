@@ -1,10 +1,10 @@
 import * as consts from '$lib/constants';
-import { columnify, convertFormData } from '$lib/functions';
+import { convertFormData } from '$lib/functions';
 import { type Actions, fail } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
 import type { Appointment } from '$lib/objects/appointment';
 import type { PageServerLoad } from './$types';
-import type { Participation } from '$lib/objects/participation';
+import type { IParticipation } from "$lib/objects/participation";
 
 export const actions = {
 	update: async ({ request, fetch, params }) => {
@@ -183,7 +183,8 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 		appointments = await response.json();
 	}
 
-	let participations = null;
+	const confirmed_participations: IParticipation[] = [];
+	const unconfirmed_participations: IParticipation[] = [];
 	const password = locals.session.data.research_password;
 	if (password != null) {
 		const formData = new FormData();
@@ -192,13 +193,20 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 			body: formData,
 			method: 'POST'
 		});
-		participations = await response.json();
+		for (const participation of await response.json()) {
+			if (participation.is_confirmed) {
+				confirmed_participations.push(participation);
+			}
+			else {
+				unconfirmed_participations.push(participation);
+			}
+		}
 	}
 	return {
 		research,
 		attrs,
 		research_attrs,
 		appointments,
-		participations
+		participations: { confirmed: confirmed_participations, unconfirmed: unconfirmed_participations }
 	};
 };
