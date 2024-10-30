@@ -13,6 +13,7 @@
 			update: (options?: { reset?: boolean, invalidateAll?: boolean }) => Promise<void>,
 			result: ActionResult
 		}) => {
+			await update();
 			if (result.type === 'success') {
 				mount(FormResultMessage, {
 					target: submitButton.parentElement as HTMLElement,
@@ -22,7 +23,6 @@
 			else {
 				mount(FormResultMessage, { target: submitButton.parentElement as HTMLElement, props: { result } });
 			}
-			await update();
 		};
 	}
 </script>
