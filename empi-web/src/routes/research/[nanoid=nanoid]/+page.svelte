@@ -16,13 +16,14 @@
 	import MaterialSymbolsWarningOutline from 'virtual:icons/material-symbols/warning-outline';
 	import MaterialSymbolsVisibilityOutline from 'virtual:icons/material-symbols/visibility-outline';
 	import MaterialSymbolsVisibilityOffOutline from 'virtual:icons/material-symbols/visibility-outline';
-	import { ENABLE_ATTRS } from '$lib/constants';
+	import { ENABLE_ATTRS, TOKEN_REGEX } from '$lib/constants';
 	import MarkdownGuideModal from "$lib/components/MarkdownGuideModal.svelte";
 	import { mount, onMount } from "svelte";
 	import { goto, invalidateAll } from "$app/navigation";
 	import { base } from "$app/paths";
 	import Participations from "$lib/components/Participations.svelte";
 	import type { IParticipation } from "$lib/objects/participation";
+	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
 
 	let { data }: { data: PageServerData } = $props();
 	let appointments = plainToInstance(Appt, data.appointments);
@@ -76,6 +77,45 @@
 		await invalidateAll();
 		submitting_participations = false;
 		submit_success_participations = response.ok;
+	}
+
+	async function setParticipationsFromCsv(e: MouseEvent) {
+		const fileInput = document.getElementById('participationFileInput') as HTMLInputElement;
+		const file: File | null | undefined = fileInput?.files?.item(0);
+		if (file == null) {
+			return;
+		}
+		const text = await file.text();
+		const matches = [...text.matchAll(TOKEN_REGEX)].map(a => a[0]);
+
+		const keepExisting = (document.getElementById('keepExistingCheckbox') as HTMLInputElement).checked;
+		let unchecked = 0;
+		if (!keepExisting) {
+			for (let checkbox of document.getElementsByClassName('participation-checkbox') as Iterable<HTMLInputElement>) {
+				if (checkbox.checked) {
+					unchecked++;
+				}
+				checkbox.checked = false;
+			}
+		}
+
+		let checked = 0;
+		let notFound = 0;
+		matches.forEach(token => {
+			const checkbox = document.getElementById(`participation-checkbox-${token}`) as HTMLInputElement | null;
+			if (checkbox != null) {
+				checkbox.checked = true;
+				unchecked--;
+				checked++;
+			}
+			else {
+				notFound++;
+			}
+		});
+
+		const submitButton = e.target as HTMLButtonElement;
+		const message = `V dokumente sa našlo ${matches.length} identifikátorov. Bolo potvrdených ${checked} účastí a ${unchecked} účastí bolo zrušených.`;
+		mount(FormResultMessage, { target: submitButton.parentElement!, anchor: submitButton, props: { message } });
 	}
 
 	onMount(() => {
@@ -250,8 +290,20 @@
 				</div>
 			</form>
 		</AccordionTab>
-		<AccordionTab open={false} title={$t('research.protocol')}>
+		<AccordionTab open={true} title={$t('research.protocol')}>
 			<Participations participations={data.participations}></Participations>
+			<form style="width: 50%">
+				<fieldset>
+					<legend>{$t('research.csv_import')}</legend>
+					<input type="file" id="participationFileInput" accept="text/*">
+					<label for="keepExistingCheckbox" style="display: inline">{$t('research.keep_existing')}</label>
+					<input type="checkbox" id="keepExistingCheckbox" checked>
+					<div class="row hor-right" style="padding-top: var(--lg)">
+						<button type="button" onclick={setParticipationsFromCsv}
+						        style="cursor: pointer">{$t('common.insert')}</button>
+					</div>
+				</fieldset>
+			</form>
 			{#if data.participations.unconfirmed.length > 0 || data.participations.confirmed.length > 0}
 				{#if submitting_participations}
 					<button type="button" disabled>{$t('common.submitting')}</button>

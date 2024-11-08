@@ -6,7 +6,7 @@
 
 	let { message = '', result }: { message: string, result: ActionResult } = $props();
 
-	if (!message) {
+	if (!message && result) {
 		if (result.type === 'error') {
 			message = $t('common.unknown_error');
 		}
@@ -34,10 +34,10 @@
 </script>
 
 <div class="form-result">
-	{#if result.type === 'error' || result.type === 'failure'}
+	{#if result && (result.type === 'error' || result.type === 'failure')}
 		<p style="color: var(--danger)">
 			<MaterialSymbolsErrorOutline width="24" height="24"></MaterialSymbolsErrorOutline>&nbsp;{message}</p>
-	{:else if result.type === 'success'}
+	{:else}
 		<p style="color: var(--success)">{message}</p>
 	{/if}
 </div>

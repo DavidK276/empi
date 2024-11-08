@@ -57,5 +57,6 @@
   "confirmed_points": "Potvrdené body",
   "sum": "Súčet",
   "click_to_copy": "skopíruj kliknutím",
-  "token": "Anonymný identifikátor"
+  "token": "Anonymný identifikátor",
+  "insert": "Vložiť"
 }

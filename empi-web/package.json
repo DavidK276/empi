@@ -12,15 +12,15 @@
   },
   "overrides": {
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
-    "svelte": "^5.1.2"
+    "svelte": "^5.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.13.0",
-    "@iconify-json/material-symbols": "^1.2.5",
+    "@eslint/js": "^9.14.0",
+    "@iconify-json/material-symbols": "^1.2.6",
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/adapter-node": "^5.2.9",
-    "@sveltejs/kit": "^2.7.3",
+    "@sveltejs/kit": "^2.7.7",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@types/dompurify": "^3.0.5",
     "@types/eslint": "^9.6.1",
@@ -33,15 +33,15 @@
     "eslint-plugin-svelte": "^2.46.0",
     "globals": "^15.11.0",
     "jsdom": "^25.0.1",
-    "sv": "^0.5.9",
-    "svelte": "^5.1.2",
-    "svelte-check": "^4.0.5",
-    "svelte-language-server": "^0.17.2",
+    "sv": "^0.6.1",
+    "svelte": "^5.1.12",
+    "svelte-check": "^4.0.6",
+    "svelte-language-server": "^0.17.4",
     "tslib": "^2.8.0",
     "typescript": "^5.6.3",
-    "typescript-svelte-plugin": "^0.3.42",
+    "typescript-svelte-plugin": "^0.3.43",
     "unplugin-icons": "^0.19.3",
-    "vite": "^5.4.9"
+    "vite": "^5.4.10"
   },
   "type": "module",
   "dependencies": {

@@ -39,6 +39,10 @@
     &.hor-center {
         justify-content: center;
     }
+
+    &.hor-right {
+        justify-content: end;
+    }
 }
 
 .content {

@@ -21,7 +21,6 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from emails.types import PublicSignupEmail, ResearchCreatedEmail, NewSignupEmail, CancelSignupEmail
 from users.models import Participant
 from users.serializers import PasswordChangeSerializer, PasswordSerializer, ParticipantSerializer
-from .auth import ResearchAuthentication
 from .models import Appointment, Research, Participation
 from .permissions import *
 from .serializers import (
@@ -59,7 +58,7 @@ class ResearchUserViewSet(
 class ResearchAdminViewSet(viewsets.ModelViewSet):
     queryset = Research.objects.get_queryset().order_by("-created")
     serializer_class = ResearchAdminSerializer
-    authentication_classes = [ResearchAuthentication, TokenAuthentication, SessionAuthentication]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = [ResearchPermission]
     lookup_field = "nanoid"
 
