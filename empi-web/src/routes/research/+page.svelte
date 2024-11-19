@@ -6,11 +6,19 @@
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import { addFormErrors } from '$lib/functions';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
+	import { onMount } from "svelte";
+	import { base } from "$app/paths";
 
 	let { form }: { form: ActionData } = $props();
 
 	let submitting = $state(false);
 	let emails: EmailInput;
+
+	onMount(() => {
+		if (!$page.data.user?.is_staff) {
+			goto(`${base}/`, { replaceState: true });
+		}
+	});
 </script>
 
 <h1>{$t('research.create_research')}</h1>
