@@ -19,7 +19,7 @@
 	let { data }: { data: PageServerData } = $props();
 	const converter = new showdown.Converter();
 </script>
-<h1>{$t('common.points')}</h1>
+<h1>{$t('common.research_list')}</h1>
 {#if data.researches != null}
 	{#each data.researches as research}
 		<div class="box">
@@ -34,3 +34,7 @@
 	{/each}
 {/if}
 <Pagination count={data.count}></Pagination>
+
+<a href="{base}/research">
+	<button>{$t('common.add_research')}</button>
+</a>
