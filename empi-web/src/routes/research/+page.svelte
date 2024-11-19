@@ -8,6 +8,7 @@
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { onMount } from "svelte";
 	import { base } from "$app/paths";
+	import { page } from "$app/stores";
 
 	let { form }: { form: ActionData } = $props();
 
