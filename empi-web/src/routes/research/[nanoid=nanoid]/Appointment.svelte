@@ -48,7 +48,7 @@
 				<textarea name="comment" id="comment">{appointment.comment}</textarea>
 				{#if type === 'online'}
 					<label for="info_url">{$t('research.appointment_url')}</label>
-					<input type="url" name="info_url" id="info_url" value={appointment.info_url}>
+					<input type="url" name="info_url" id="info_url" maxlength="500" value={appointment.info_url}>
 				{:else if type === 'in_person'}
 					<label for="location">{$t('research.location')}</label>
 					<input type="text" name="location" id="location" value={appointment.location}>

@@ -170,7 +170,7 @@
 			</div>
 			<div style="width: 50%; display: inline-block" class="m-w-full">
 				<label for="url">{$t('research.info_url')}</label>
-				<input type="text" id="url" name="info_url" value={data.research.info_url}>
+				<input type="url" id="url" name="info_url" maxlength="500" value={data.research.info_url}>
 			</div>
 		</div>
 		<label for="comment">{$t('research.comment')}&nbsp;({$t('research.supports')}&nbsp;<a
