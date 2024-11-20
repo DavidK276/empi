@@ -26,6 +26,8 @@
 	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
 
 	let { data }: { data: PageServerData } = $props();
+	const hasParticipations = data.participations.unconfirmed.length > 0 || data.participations.confirmed.length > 0;
+
 	let appointments = plainToInstance(Appt, data.appointments);
 	let emails = $state();
 	let submitting_appointments = $state(false);
@@ -290,21 +292,21 @@
 				</div>
 			</form>
 		</AccordionTab>
-		<AccordionTab open={true} title={$t('research.protocol')}>
+		<AccordionTab open={hasParticipations} title={$t('research.protocol')}>
 			<Participations participations={data.participations}></Participations>
-			<form style="width: 50%">
-				<fieldset>
-					<legend>{$t('research.csv_import')}</legend>
-					<input type="file" id="participationFileInput" accept="text/*">
-					<label for="keepExistingCheckbox" style="display: inline">{$t('research.keep_existing')}</label>
-					<input type="checkbox" id="keepExistingCheckbox" checked>
-					<div class="row hor-right" style="padding-top: var(--lg)">
-						<button type="button" onclick={setParticipationsFromCsv}
-						        style="cursor: pointer">{$t('common.insert')}</button>
-					</div>
-				</fieldset>
-			</form>
-			{#if data.participations.unconfirmed.length > 0 || data.participations.confirmed.length > 0}
+			{#if hasParticipations}
+				<form style="width: 50%">
+					<fieldset>
+						<legend>{$t('research.csv_import')}</legend>
+						<input type="file" id="participationFileInput" accept="text/*">
+						<label for="keepExistingCheckbox" style="display: inline">{$t('research.keep_existing')}</label>
+						<input type="checkbox" id="keepExistingCheckbox" checked>
+						<div class="row hor-right" style="padding-top: var(--lg)">
+							<button type="button" onclick={setParticipationsFromCsv}
+							        style="cursor: pointer">{$t('common.insert')}</button>
+						</div>
+					</fieldset>
+				</form>
 				{#if submitting_participations}
 					<button type="button" disabled>{$t('common.submitting')}</button>
 				{:else}
