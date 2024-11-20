@@ -89,3 +89,23 @@
     min-width: 24px;
     min-height: 24px;
 }
+
+@supports selector(&) and selector(p:has(a)) and selector(input:user-invalid) and (color: light-dark(red, red)) {
+    .unsupported-browser {
+        display: none;
+    }
+}
+
+.unsupported-browser {
+    margin-bottom: 8px;
+    min-height: 2rem;
+    padding: var(--lg);
+    background-color: #833502;
+    color: red;
+    font-weight: 700;
+    font-size: 18px;
+
+    & p {
+        margin: 0;
+    }
+}

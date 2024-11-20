@@ -2,8 +2,10 @@
     box-sizing: border-box;
 }
 
-:root {
-    interpolate-size: allow-keywords;
+@supports (interpolate-size: allow-keywords) {
+    :root {
+        interpolate-size: allow-keywords
+    }
 }
 
 body {

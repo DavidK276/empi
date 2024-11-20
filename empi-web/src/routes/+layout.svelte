@@ -16,6 +16,13 @@
 	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
 </script>
 
+<div class="row unsupported-browser">
+	<div class="col hor-center" style="width: 100%; align-items: center">
+		<p>Používate zastaranú verziu prehliadača alebo nepodporovaný prehliadač. Na stránke sa môžu vyskytnúť vizuálne
+			chyby.</p>
+		<p>Odporúčame použiť aktuálnu verziu podporovaných prehliadačov: Chrome, Firefox</p>
+	</div>
+</div>
 <header class="row hor-center ver-center m-col">
 	<nav>
 		<a href="{base}/">{$t('common.home')}</a>
