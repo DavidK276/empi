@@ -88,35 +88,34 @@
 			return;
 		}
 		const text = await file.text();
-		const matches = [...text.matchAll(TOKEN_REGEX)].map(a => a[0]);
+		const matches: Set<string> = new Set([...text.matchAll(TOKEN_REGEX)].map(a => a[0]));
+		const checkedTokens: Set<string> = new Set();
+		const uncheckedTokens: Set<string> = new Set();
 
 		const keepExisting = (document.getElementById('keepExistingCheckbox') as HTMLInputElement).checked;
-		let unchecked = 0;
 		if (!keepExisting) {
 			for (let checkbox of document.getElementsByClassName('participation-checkbox') as Iterable<HTMLInputElement>) {
 				if (checkbox.checked) {
-					unchecked++;
+					const tokenMatch = checkbox.id.match(TOKEN_REGEX);
+					if (tokenMatch && !matches.has(tokenMatch[0])) {
+						uncheckedTokens.add(tokenMatch[0]);
+						checkbox.checked = false;
+					}
 				}
-				checkbox.checked = false;
 			}
 		}
 
-		let checked = 0;
-		let notFound = 0;
 		matches.forEach(token => {
 			const checkbox = document.getElementById(`participation-checkbox-${token}`) as HTMLInputElement | null;
-			if (checkbox != null) {
+			if (checkbox != null && !checkbox.checked) {
 				checkbox.checked = true;
-				unchecked--;
-				checked++;
-			}
-			else {
-				notFound++;
+				checkedTokens.add(token);
+				uncheckedTokens.delete(token);
 			}
 		});
 
 		const submitButton = e.target as HTMLButtonElement;
-		const message = `V dokumente sa našlo ${matches.length} identifikátorov. Bolo potvrdených ${checked} účastí a ${unchecked} účastí bolo zrušených.`;
+		const message = `V dokumente sa našlo ${matches.size} identifikátorov. Bolo potvrdených ${checkedTokens.size} účastí a ${uncheckedTokens.size} účastí bolo zrušených.`;
 		mount(FormResultMessage, { target: submitButton.parentElement!, anchor: submitButton, props: { message } });
 	}
 
