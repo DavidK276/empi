@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "empi"
-version = "2024.11.2"
+version = "2024.12.1"
 description = "Backend for the Empirical research CMS"
 authors = ["David Krchňavý <krchnavy11@uniba.sk>"]
 readme = "README.md"
