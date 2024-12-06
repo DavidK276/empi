@@ -78,7 +78,6 @@
 .message {
     display: inline-flex;
     align-items: center;
-    margin: 0;
 }
 
 .my-label:has(+ input:user-invalid) {
@@ -104,8 +103,4 @@
     color: red;
     font-weight: 700;
     font-size: 18px;
-
-    & p {
-        margin: 0;
-    }
 }

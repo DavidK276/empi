@@ -72,6 +72,7 @@ label {
 }
 
 header {
+    margin-top: var(--md);
     margin-bottom: var(--md);
 }
 
@@ -139,4 +140,14 @@ table, th, td {
     border: 1px solid var(--text-primary);
     border-collapse: collapse;
     padding: var(--sm);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: var(--md);
+    margin-bottom: var(--md);
+}
+
+p {
+    margin-top: var(--sm);
+    margin-bottom: var(--sm);
 }

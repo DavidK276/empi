@@ -5,8 +5,8 @@
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
 	import { page } from '$app/stores';
-	import { browser } from "$app/environment";
 	import { enhance } from '$app/forms';
+	import { onMount } from 'svelte';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { localeDateStringFromUTCString } from '$lib/functions';
 	import { universalEnhance } from "$lib/enhanceFunctions";
@@ -15,24 +15,27 @@
 
 	const converter = new showdown.Converter();
 	let sanitizedComment = $state("");
-	if (browser && data.research?.comment) {
-		sanitizedComment = DOMPurify.sanitize(converter.makeHtml(data.research?.comment), { USE_PROFILES: { html: true } });
-	}
+	onMount(() => {
+		if (data.research?.comment) {
+			sanitizedComment = DOMPurify.sanitize(converter.makeHtml(data.research?.comment), { USE_PROFILES: { html: true } });
+		}
+	});
 </script>
 {#if $page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
 <div class="row m-col">
-	<h1 style="display: inline; margin: 0">{data.research?.name}</h1>
+	<h1 style="display: inline">{data.research?.name}</h1>
 	{#if data.isConfirmed}
 		<p class="message">
 			<MaterialSymbolsInfoOutline width="24"
 			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
 	{/if}
 </div>
-
-<!-- eslint-disable-next-line svelte/no-at-html-tags The html in this variable IS sanitized. -->
-{@html sanitizedComment}
+<div class="col" style="gap: 0">
+	<!-- eslint-disable-next-line svelte/no-at-html-tags The html in this variable IS sanitized. -->
+	{@html sanitizedComment}
+</div>
 {#if data.research?.info_url}
 	<p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
 	</p>

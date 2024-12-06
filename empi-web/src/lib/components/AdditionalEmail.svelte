@@ -22,9 +22,3 @@
 		</button>
 	</div>
 {/if}
-
-<style>
-    input {
-        margin: 0;
-    }
-</style>

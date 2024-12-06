@@ -44,7 +44,7 @@
 <fieldset>
 	<legend>{$t('common.emails')}</legend>
 	<div class="row ver-center" style="margin: var(--sm) 0">
-		<input bind:this={firstEmailInput} class="email-input" style="margin: 0" type="email">
+		<input bind:this={firstEmailInput} class="email-input" type="email">
 	</div>
 	<button bind:this={addEmailButton} onclick={addNewEmail} type="button">+</button>
 </fieldset>

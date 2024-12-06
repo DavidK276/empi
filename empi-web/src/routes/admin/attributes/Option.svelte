@@ -16,11 +16,5 @@
 	{:else}
 		<input type="text" name="values[]">
 	{/if}
-	<button onclick={deleteOption} style="background-color: var(--danger); margin: 0" type="button">-</button>
+	<button onclick={deleteOption} style="background-color: var(--danger)" type="button">-</button>
 </label>
-
-<style>
-    input {
-        margin: 0;
-    }
-</style>

@@ -2,9 +2,8 @@
 	import { t } from '$lib/translations';
 	import MaterialSymbolsErrorOutline from 'virtual:icons/material-symbols/error-outline';
 	import type { ActionResult } from "@sveltejs/kit";
-	import { browser } from "$app/environment";
 
-	let { message = '', result }: { message: string, result: ActionResult } = $props();
+	let { message = '', result = null }: { message: string, result: ActionResult | null } = $props();
 
 	if (!message && result) {
 		if (result.type === 'error') {
@@ -28,9 +27,9 @@
 	message = message.charAt(0).toUpperCase() + message.slice(1);
 
 	// destroys all previous messages before adding new one
-	if (browser) {
+	$effect.pre(() => {
 		document.querySelectorAll('.form-result').forEach(element => element.remove());
-	}
+	});
 </script>
 
 <div class="form-result">
@@ -43,13 +42,13 @@
 </div>
 
 <style>
-    p {
-        display: inline-flex;
-        align-items: center;
-        margin: 0;
-    }
+	p {
+		display: inline-flex;
+		align-items: center;
+		margin: 0;
+	}
 
-    div {
-        display: inline-flex;
-    }
+	div {
+		display: inline-flex;
+	}
 </style>

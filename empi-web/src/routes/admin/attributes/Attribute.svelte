@@ -19,7 +19,7 @@
 {#if attr != null}
 	<div class="box">
 		<form method="POST" action="?/admin">
-			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
+			<label for="name">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" value={attr.name} required>
 			<label for="type">{$t('attrs.type')}</label>
 			<select name="type" id="type" disabled>
@@ -46,7 +46,7 @@
 {:else}
 	<div class="box">
 		<form method="POST" action="?/admin">
-			<label for="name" style="margin: 0">{$t('attrs.name')}</label>
+			<label for="name">{$t('attrs.name')}</label>
 			<input type="text" name="name" id="name" required>
 			<label for="type">{$t('attrs.type')}</label>
 			<select name="type" id="type" bind:value={chosen_type}>

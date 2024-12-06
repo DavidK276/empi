@@ -23,11 +23,13 @@
 {#if data.researches != null}
 	{#each data.researches as research}
 		<div class="box">
-			<h2 style="margin: 0">{research.name}</h2>
-			{#if browser}
-				{@html DOMPurify.sanitize(converter.makeHtml(research.comment), {USE_PROFILES: {html: true}})}
+			<h1>{research.name}</h1>
+			{#if browser && research.comment}
+				<div class="box">
+					{@html DOMPurify.sanitize(converter.makeHtml(research.comment), {USE_PROFILES: {html: true}})}
+				</div>
 			{/if}
-			<a href="{base}/research/{research.nanoid}" style="margin-top: var(--md)">
+			<a href="{base}/research/{research.nanoid}">
 				<button type="button">Spravovať</button>
 			</a>
 		</div>
