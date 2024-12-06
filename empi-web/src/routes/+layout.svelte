@@ -85,6 +85,6 @@
 </div>
 <footer class="row ver-center hor-center">
 	<div>
-		<p style="text-align: justify">{$t('common.author_text')}</p>
+		<p style="text-align: center">{$t('common.author_text')}</p>
 	</div>
 </footer>
