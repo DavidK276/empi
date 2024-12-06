@@ -1,6 +1,7 @@
 body {
     font-family: "Source Sans Pro", "sans-serif";
     background: var(--background-primary);
+    margin: var(--md);
 }
 
 a {
@@ -21,9 +22,9 @@ a {
 }
 
 nav {
-    a {
-        margin: 0 var(--sm);
-    }
+    display: flex;
+    flex-direction: row;
+    gap: var(--md);
 }
 
 button {
@@ -72,8 +73,8 @@ label {
 }
 
 header {
-    margin-top: var(--md);
-    margin-bottom: var(--md);
+    padding-bottom: var(--sm);
+    border-bottom: 2px solid var(--text-primary);
 }
 
 footer {

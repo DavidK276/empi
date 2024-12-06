@@ -16,7 +16,7 @@
 	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
 </script>
 
-<div class="row unsupported-browser">
+<div aria-hidden="true" class="row unsupported-browser">
 	<div class="col hor-center" style="width: 100%; align-items: center">
 		<p>Používate zastaranú verziu prehliadača alebo nepodporovaný prehliadač. Na stránke sa môžu vyskytnúť vizuálne
 			chyby.</p>
@@ -31,44 +31,51 @@
 			<a href="{base}/research">{$t('common.create_research')}</a>
 		{/if}
 	</nav>
-	<div class="row ver-center">
-		{#if data.user != null}
-			<Dropdown title={(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}>
-				{#if !data.user.is_staff}
-					{#if ENABLE_ATTRS}
-						<div><a href="{base}/attributes">{$t('common.attributes')}
+	<div class="row m-col ver-center">
+		<div class="row ver-center">
+			{#if data.user != null}
+				<Dropdown title={(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}>
+					{#if !data.user.is_staff}
+						{#if ENABLE_ATTRS}
+							<div><a href="{base}/attributes">{$t('common.attributes')}
+								<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
+							</a></div>
+						{/if}
+						<div><a href="{base}/account/points">{$t('common.my_points')}
 							<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
-						</a></div>
+						</a>
+						</div>
 					{/if}
-					<div><a href="{base}/account/points">{$t('common.my_points')}
-						<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
-					</a>
+					<div>
+						<a href="{base}/account">{$t('common.account')}
+							<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
+						</a>
 					</div>
-				{/if}
-				<div><a href="{base}/account">{$t('common.account')}
-					<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
-				</a>
-				</div>
-				<Login is_logged_in={true}></Login>
-			</Dropdown>
-		{:else}
-			<Dropdown title={$t('common.account')}>
-				<Login is_logged_in={false}></Login>
-			</Dropdown>
-		{/if}
+					<Login is_logged_in={true}></Login>
+				</Dropdown>
+			{:else}
+				<Dropdown title={$t('common.account')}>
+					<Login is_logged_in={false}></Login>
+				</Dropdown>
+			{/if}
+			{#if !data.user?.is_staff}
+				<ThemeToggle></ThemeToggle>
+			{/if}
+		</div>
 		{#if data.user?.is_staff}
-			<Dropdown title={$t('common.administration')}>
-				{#if ENABLE_ATTRS}
-					<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
-				{/if}
-				<div><a href="{base}/admin/research-list">{$t('common.research_list')}</a></div>
-				<div><a href="{base}/admin/student-points">{$t('common.student_points')}</a></div>
-				<div><a href="{base}/admin/add-admin">{$t('common.add_admin')}</a></div>
-				<div><a href="{base}/admin/password-reset">{$t('common.password_reset')}</a></div>
-			</Dropdown>
+			<div class="row ver-center">
+				<Dropdown title={$t('common.administration')}>
+					{#if ENABLE_ATTRS}
+						<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
+					{/if}
+					<div><a href="{base}/admin/research-list">{$t('common.research_list')}</a></div>
+					<div><a href="{base}/admin/student-points">{$t('common.student_points')}</a></div>
+					<div><a href="{base}/admin/add-admin">{$t('common.add_admin')}</a></div>
+					<div><a href="{base}/admin/password-reset">{$t('common.password_reset')}</a></div>
+				</Dropdown>
+				<ThemeToggle></ThemeToggle>
+			</div>
 		{/if}
-		<div style="border-left: 1px solid var(--text-primary); height: 2rem; display: inline"></div>
-		<ThemeToggle></ThemeToggle>
 	</div>
 </header>
 <div class="row ver-top hor-center">

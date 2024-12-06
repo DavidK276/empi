@@ -5,16 +5,17 @@
 
 	let themeSelect: HTMLSelectElement;
 </script>
-
-<button id="theme-toggle" onclick={() => {
+<div class="message" style="border-left: 1px solid var(--text-primary); height: 2rem; padding: var(--sm)">
+	<button id="theme-toggle" onclick={() => {
 						const selectedTheme = themeSelect.item((themeSelect.selectedIndex + 1) % 3)?.value || "os";
 						themeSelect.value = selectedTheme;
 						localStorage.setItem("theme", selectedTheme);
 	        }}
-        type="button">
-	<select bind:this={themeSelect} id="theme-select">
-		<option selected={theme === 'os'} value="os">OS</option>
-		<option selected={theme === 'light'} value="light">Light</option>
-		<option selected={theme === 'dark'} value="dark">Dark</option>
-	</select>
-</button>
+	        type="button">
+		<select bind:this={themeSelect} id="theme-select">
+			<option selected={theme === 'os'} value="os">OS</option>
+			<option selected={theme === 'light'} value="light">Light</option>
+			<option selected={theme === 'dark'} value="dark">Dark</option>
+		</select>
+	</button>
+</div>
