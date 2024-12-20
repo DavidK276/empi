@@ -28,20 +28,18 @@
 		</thead>
 		<tbody>
 		{#each data.researches as research}
-			{#if research.has_open_appointments}
-				<tr>
-					<td>{research.name}</td>
-					{#if showInfoUrlColumn}
-						<td style="text-align: center"><a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>
-						</td>
-					{/if}
-					<td style="text-align: center">
-						<button>
-							<a href="research/{research.id}/">{$t('common.details')}</a>
-						</button>
+			<tr>
+				<td>{research.name}</td>
+				{#if showInfoUrlColumn}
+					<td style="text-align: center"><a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>
 					</td>
-				</tr>
-			{/if}
+				{/if}
+				<td style="text-align: center">
+					<button>
+						<a href="research/{research.id}/">{$t('common.details')}</a>
+					</button>
+				</td>
+			</tr>
 		{/each}
 		</tbody>
 	</table>
