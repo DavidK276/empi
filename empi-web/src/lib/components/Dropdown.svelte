@@ -34,40 +34,41 @@
 </div>
 
 <style>
-    .dropdown {
-        display: inline-block;
-    }
+	.dropdown {
+		display: inline-block;
+	}
 
-    button {
-        cursor: pointer;
-    }
+	button {
+		cursor: pointer;
+	}
 
-    .dropdown-content {
-        display: flex;
-        position: absolute;
-        margin-inline: auto;
-        width: fit-content;
-        box-shadow: 0 8px 16px 0 var(--text-primary);
-        background: var(--background-primary);
-        z-index: 1;
-        border-radius: var(--sm);
-        padding: var(--lg);
-        gap: var(--lg);
-        margin-top: 2px;
-    }
+	.dropdown-content {
+		display: flex;
+		position: absolute;
+		margin-inline: auto;
+		width: fit-content;
+		box-shadow: 0 8px 16px 0 var(--text-primary);
+		background: var(--background-primary);
+		z-index: 1;
+		border-radius: var(--sm);
+		padding: var(--lg);
+		gap: var(--lg);
+		margin-top: 2px;
+		white-space: nowrap;
+	}
 
-    @media screen and (min-width: 768px) {
-        .dropdown {
-            position: relative;
-        }
-    }
+	@media screen and (min-width: 768px) {
+		.dropdown {
+			position: relative;
+		}
+	}
 
-    @media screen and (max-width: 767px) {
-        .dropdown-content {
-            position: fixed;
-            width: calc(100dvw - var(--xl));
-            left: 0;
-            right: 0;
-        }
-    }
+	@media screen and (max-width: 767px) {
+		.dropdown-content {
+			position: fixed;
+			width: calc(100dvw - var(--xl));
+			left: 0;
+			right: 0;
+		}
+	}
 </style>
