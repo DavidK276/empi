@@ -59,5 +59,6 @@
   "click_to_copy": "click to copy",
   "token": "Anonymous ID",
   "insert": "Insert",
-  "add_research": "Add new research"
+  "add_research": "Add new research",
+  "loading": "Načítavam…"
 }

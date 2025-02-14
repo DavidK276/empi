@@ -59,5 +59,6 @@
   "click_to_copy": "skopíruj kliknutím",
   "token": "Anonymný identifikátor",
   "insert": "Vložiť",
-  "add_research": "Pridať nový výskum"
+  "add_research": "Pridať nový výskum",
+  "loading": "Načítavam…"
 }
