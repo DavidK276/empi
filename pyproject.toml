@@ -4,6 +4,7 @@ version = "2024.12.1"
 description = "Backend for the Empirical research CMS"
 authors = ["David Krchňavý <krchnavy11@uniba.sk>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.urls]
 "Homepage" = "https://gitlab.matfyz.sk/znamafirma/empi"
@@ -11,18 +12,18 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-django = "^5.1.4"
-django-cors-headers = "^4.3.1"
+django = "^5.1.6"
+django-cors-headers = "^4.7.0"
 djangorestframework = "^3.15.1"
 pycryptodome = "^3.21.0"
 python-magic = "^0.4.27"
 django-rest-knox = "^5.0.1"
-psycopg = { extras = ["binary"], version = "^3.2.3" }
+psycopg = { extras = ["binary"], version = "^3.2.4" }
 gunicorn = "^23.0.0"
 nanoid = "^2.0.0"
 html2text = "^2024.2.26"
 drf-spectacular = "^0.28.0"
-sentry-sdk = { extras = ["django"], version = "^2.19.2" }
+sentry-sdk = { extras = ["django"], version = "^2.21.0" }
 markdown = "^3.7"
 
 
