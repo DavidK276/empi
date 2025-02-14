@@ -25,6 +25,15 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 };
 
 const myHandle: Handle = async ({ event, resolve }) => {
+	if (!event.locals.session.data.settings) {
+		const settingsResponse = await event.fetch(consts.INT_API_ENDPOINT + `settings/`);
+		if (!settingsResponse.ok) {
+			await event.locals.session.update(() => ({ data: undefined }));
+		}
+
+		const settings = await settingsResponse.json();
+		await event.locals.session.update(async () => ({ settings }));
+	}
 	if (!event.cookies.get(consts.TOKEN_COOKIE)) {
 		await event.locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
 		return resolve(event);
@@ -58,17 +67,6 @@ const myHandle: Handle = async ({ event, resolve }) => {
 		else {
 			await event.locals.session.update(async () => ({ participant: undefined }));
 		}
-	}
-
-	if (!event.locals.session.data.settings) {
-		const settingsResponse = await event.fetch(consts.INT_API_ENDPOINT + `settings/`);
-		if (!settingsResponse.ok) {
-			await event.locals.session.update(() => ({ data: undefined }));
-			return resolve(event);
-		}
-
-		const settings = await settingsResponse.json();
-		await event.locals.session.update(async () => ({ settings }));
 	}
 
 	return resolve(event);
