@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PAGE_SIZE } from '$lib/constants';
 	import MaterialSymbolsArrowBack from 'virtual:icons/material-symbols/arrow-back';
 	import MaterialSymbolsArrowForward from 'virtual:icons/material-symbols/arrow-forward';
@@ -7,11 +7,11 @@
 
 	let { count }: { count: number } = $props();
 
-	let limit = Number.parseInt($page.url.searchParams.get('limit')!) || PAGE_SIZE;
-	let offset = $state(Number.parseInt($page.url.searchParams.get('offset')!) || 0);
+	let limit = Number.parseInt(page.url.searchParams.get('limit')!) || PAGE_SIZE;
+	let offset = $state(Number.parseInt(page.url.searchParams.get('offset')!) || 0);
 
 	$effect(() => {
-		let query = new URLSearchParams($page.url.searchParams.toString());
+		let query = new URLSearchParams(page.url.searchParams.toString());
 		if (limit.toString() === (query.get('limit') || PAGE_SIZE.toString())
 				&& offset.toString() === (query.get('offset') || "0")) {
 			return;

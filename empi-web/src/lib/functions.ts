@@ -1,3 +1,5 @@
+import type { Setting } from "$lib/objects/Setting";
+
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {
@@ -113,4 +115,11 @@ export function localeDateStringFromUTCString(utcString: string) {
 export function textAreaAdjustSize(event: Event) {
 	const element = event.target as HTMLTextAreaElement;
 	element.rows = (element.value.match(/\n/g) || []).length + 1;
+}
+
+export function getSetting(settings: Setting[], name: string) {
+	if (settings == null) {
+		return undefined;
+	}
+	return settings.find(setting => setting.name === name)?.value;
 }

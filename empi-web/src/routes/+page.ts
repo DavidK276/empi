@@ -17,5 +17,6 @@ export const load: PageLoad = async ({ fetch, url }) => {
 			count: responseJSON.count
 		};
 	}
+
 	throw error(response.status);
 };

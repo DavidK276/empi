@@ -1,12 +1,10 @@
 from collections.abc import Iterable
-from datetime import datetime
 
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as t
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from knox.auth import TokenAuthentication
@@ -164,15 +162,12 @@ class ParticipationViewSet(
     def get_queryset(self):
         queryset = super().get_queryset()
         year = self.request.query_params.get("year")
+        if year is not None:
+            queryset = queryset.filter(academic_year=year)
 
-        if year is not None and year.isnumeric():
-            year = int(year)
-            queryset = queryset.filter(
-                appointment__when__gte=datetime(year=year - 1, month=1, day=1, tzinfo=timezone.get_current_timezone()),
-                appointment__when__lte=datetime(
-                    year=year + 1, month=12, day=31, tzinfo=timezone.get_current_timezone()
-                ),
-            )
+        semester = self.request.query_params.get("semester")
+        if semester is not None:
+            queryset = queryset.filter(semester=semester)
 
         return queryset
 

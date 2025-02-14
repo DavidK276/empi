@@ -4,7 +4,7 @@
 	import type { PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
@@ -21,7 +21,7 @@
 		}
 	});
 </script>
-{#if $page.data.user != null}
+{#if page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
 <div class="row m-col">
@@ -41,7 +41,7 @@
 	</p>
 {/if}
 {#each data.appointments as appointment, i}
-	{@const participation = $page.data.participations?.get(appointment.id)}
+	{@const participation = page.data.participations?.get(appointment.id)}
 	{@const is_confirmed = participation?.is_confirmed === true}
 	{@const signups_lapsed = new Date(appointment.when) < new Date()}
 	<div class="box">
@@ -102,13 +102,13 @@
 					});
 				}}>
 					<input type="hidden" name="appointment" value={appointment.id}>
-					{#if $page.data.user == null}
+					{#if page.data.user == null}
 						<label for="recipient">Email</label>
 						<input type="email" name="recipient" id="recipient" class="m-w-full">
 					{/if}
 					<div class="row ver-center" id="submit-div">
 						<button type="submit">{$t('research.signup')}</button>
-						{#if $page.data.user == null}
+						{#if page.data.user == null}
 							<p class="message">
 								<MaterialSymbolsInfoOutline width="24" height="24"
 								></MaterialSymbolsInfoOutline>&nbsp;{$t('research.anonymous_signup')}

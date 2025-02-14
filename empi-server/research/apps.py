@@ -7,4 +7,3 @@ class ResearchConfig(AppConfig):
 
     def ready(self):
         super().ready()
-        import research.schema

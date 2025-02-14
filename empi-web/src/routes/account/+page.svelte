@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { universalEnhance } from '$lib/enhanceFunctions';
 	import MaterialSymbolsHelpOutline from 'virtual:icons/material-symbols/help-outline';
 
-	const user = $page.data.user;
-	const participant = $page.data.participant;
+	const user = page.data.user;
+	const participant = page.data.participant;
 
 	const copyToken = (event: MouseEvent) => {
 		navigator.clipboard.writeText(participant.token);

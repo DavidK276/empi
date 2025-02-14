@@ -1,9 +1,9 @@
 <script lang="ts">
 
 	import { t } from '$lib/translations';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	const participations = $page.data.participations;
+	const participations = page.data.participations;
 </script>
 
 <h1>{$t('common.points')}</h1>

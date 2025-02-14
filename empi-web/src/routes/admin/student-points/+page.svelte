@@ -2,26 +2,22 @@
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
 	import type { PageServerData } from './$types';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 
 	let { data }: { data: PageServerData } = $props();
 
-	function getCurrentSemester() {
-		const month = new Date().getMonth();
-		return month >= 7 ? 'z' : 'l';
-	}
+	let selectedSemester = $state(page.url.searchParams.get('semester') || getCurrentSemester(page.data.settings));
+	let selectedYear = $state(page.url.searchParams.get('year') || getCurrentAcademicYear(page.data.settings));
 
 	function setSearchParams() {
-		let query = new URLSearchParams($page.url.searchParams.toString());
-		query.set('year', selectedYear.toString());
+		let query = new URLSearchParams(page.url.searchParams.toString());
+		query.set('year', selectedYear);
 		query.set('semester', selectedSemester);
 
 		goto(`?${query.toString()}`, { invalidateAll: true });
 	}
-
-	let selectedSemester = $state($page.url.searchParams.get('semester') || getCurrentSemester());
-	let selectedYear = $state($page.url.searchParams.get('year') || new Date().getFullYear());
 
 	data.participations?.sort((a, b) => {
 		const textA = a.name.toUpperCase().split(' ', 2)[1];
@@ -32,14 +28,18 @@
 <UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
 <div style="overflow-x: auto">
-	<div class="row" style="padding: var(--xs)">
-		<label for="year">Rok</label>
-		<input bind:value={selectedYear} id="year" min="2024" onchange={setSearchParams} step="1" type="number">
-		<label for="semester">Semester</label>
-		<select bind:value={selectedSemester} id="semester" onchange={setSearchParams}>
-			<option value="z">zimný</option>
-			<option value="l">letný</option>
-		</select>
+	<div class="row m-col" style="padding: var(--xs)">
+		<div class="row" style="justify-content: space-between">
+			<label for="year">Rok</label>
+			<input bind:value={selectedYear} id="year" onchange={setSearchParams} type="text">
+		</div>
+		<div class="row" style="justify-content: space-between">
+			<label for="semester">Semester</label>
+			<select bind:value={selectedSemester} id="semester" onchange={setSearchParams}>
+				<option value="Z">zimný</option>
+				<option value="L">letný</option>
+			</select>
+		</div>
 	</div>
 	{#if data.participations && data.participations.length > 0}
 		<table style="width: 100%; max-width: 100vw">
@@ -68,8 +68,8 @@
 </div>
 
 <style>
-    input, select {
-        margin: var(--sm) 0;
-        width: fit-content;
-    }
+	input, select {
+		margin: var(--sm) 0;
+		width: fit-content;
+	}
 </style>

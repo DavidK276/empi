@@ -2,11 +2,11 @@
 	import { t } from '$lib/translations';
 	import Modal from '$lib/components/Modal.svelte';
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { base } from "$app/paths";
 
-	let session = $page.data.session;
-	
+	let session = page.data.session;
+
 	let password_ok: boolean | null = $state(null);
 	let show = $state(!session?.user_password);
 </script>

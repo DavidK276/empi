@@ -4,7 +4,7 @@
 	import Setting from '$lib/components/Setting.svelte';
 	import { enhance } from '$app/forms';
 	import { universalEnhance } from '$lib/enhanceFunctions';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Appointment from './Appointment.svelte';
 	import { Appointment as Appt } from '$lib/objects/appointment';
 	import { convertFormData, localeDateStringFromUTCString, textAreaAdjustSize } from '$lib/functions';
@@ -39,7 +39,7 @@
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		mount(Appointment, { target: parent!, anchor: target, props: { nanoid: $page.params.nanoid } });
+		mount(Appointment, { target: parent!, anchor: target, props: { nanoid: page.params.nanoid } });
 	}
 
 	async function submitAppointments() {
@@ -120,7 +120,7 @@
 	}
 
 	onMount(() => {
-		if (!$page.data.user?.is_staff) {
+		if (!page.data.user?.is_staff) {
 			goto(`${base}/`, { replaceState: true });
 		}
 	});
@@ -153,7 +153,7 @@
 		{/if}
 	</div>
 	<label for="page-url">{$t('research.page_url')}</label>
-	<input type="url" id="page-url" readonly value="{$page.url}">
+	<input type="url" id="page-url" readonly value="{page.url}">
 	<form method="POST" action="?/update"
 	      use:enhance={({formElement, submitter}) => {
 					return universalEnhance({formElement, submitter}, {
@@ -238,7 +238,7 @@
 		{/if}
 		<AccordionTab open={false} title={$t('research.appointments')}>
 			{#each appointments as appointment}
-				<Appointment {appointment} nanoid={$page.params.nanoid}></Appointment>
+				<Appointment {appointment} nanoid={page.params.nanoid}></Appointment>
 			{/each}
 			<button type="button" onclick={addAppointment}>+</button>
 			{#if submitting_appointments}

@@ -2,6 +2,7 @@
 	import '@fontsource/source-sans-pro';
 	import '$lib/styles/styles.css';
 
+	import { getSetting } from '$lib/functions';
 	import { t } from '$lib/translations';
 	import type { LayoutServerData } from './$types';
 	import Dropdown from '$lib/components/Dropdown.svelte';
@@ -12,8 +13,10 @@
 	import { base } from '$app/paths';
 	import { ENABLE_ATTRS } from '$lib/constants';
 	import type { Snippet } from "svelte";
+	import { getCurrentSemesterUI } from "$lib/settings";
 
 	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
+	const settings = data.settings;
 </script>
 
 <div aria-hidden="true" class="row unsupported-browser">
@@ -23,7 +26,14 @@
 		<p>Odporúčame použiť aktuálnu verziu podporovaných prehliadačov: Chrome, Firefox</p>
 	</div>
 </div>
-<header class="row hor-center ver-center m-col">
+<header class="row m-col hor-center ver-center">
+	<div class="row ver-center">
+		<div class="hor-center col"
+		     style="border: 2px var(--button-primary) solid; border-radius: var(--sm); padding: var(--sm) var(--md);">
+			<div>Akademický rok {getSetting(settings, "CURRENT_ACAD_YEAR")}</div>
+			<div style="width: fit-content">{getCurrentSemesterUI(settings)}</div>
+		</div>
+	</div>
 	<nav>
 		<a href="{base}/">{$t('common.home')}</a>
 		<a href="{base}/guide">{$t('common.guide')}</a>

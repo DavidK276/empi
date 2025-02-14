@@ -38,6 +38,7 @@
 
     &.hor-center {
         justify-content: center;
+        align-items: center;
     }
 
     &.hor-right {

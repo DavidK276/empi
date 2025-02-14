@@ -60,6 +60,17 @@ const myHandle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
+	if (!event.locals.session.data.settings) {
+		const settingsResponse = await event.fetch(consts.INT_API_ENDPOINT + `settings/`);
+		if (!settingsResponse.ok) {
+			await event.locals.session.update(() => ({ data: undefined }));
+			return resolve(event);
+		}
+
+		const settings = await settingsResponse.json();
+		await event.locals.session.update(async () => ({ settings }));
+	}
+
 	return resolve(event);
 };
 

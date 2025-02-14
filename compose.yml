@@ -7,6 +7,8 @@ services:
       POSTGRES_DB: "postgres"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - empi
 
   api:
     depends_on:
@@ -16,6 +18,8 @@ services:
       target: api
     ports:
       - "8000:8000"
+    networks:
+      - empi
 
   web:
     depends_on:
@@ -25,8 +29,14 @@ services:
       target: web
     ports:
       - "3000:3000"
-    environment:
-      INT_SERVER_URL: "http://api:8000/"
+    networks:
+      - empi
 
 volumes:
   postgres_data:
+
+networks:
+  empi:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "br-empi"

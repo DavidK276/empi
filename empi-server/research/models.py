@@ -17,6 +17,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions
 
 from empi_server.fields import SeparatedValuesField
+from empi_settings.models import Settings
 from users.models import EmpiUser, AttributeValue
 from utils.keys import export_privkey, export_privkey_plaintext
 from .fields import SeparatedBinaryField
@@ -184,10 +185,13 @@ class Appointment(models.Model):
 
 
 class Participation(models.Model):
+    SEMESTER_CHOICES = (("Z", "Zimný"), ("L", "Letný"))
     nanoid = models.CharField(max_length=20, unique=True, editable=False, default=generate_nanoid)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     is_confirmed = models.BooleanField(default=False, blank=True, null=False)
     encrypted_tokens = SeparatedBinaryField(blank=True, null=True)
+    academic_year = models.CharField(editable=False, default="2024/2025", max_length=15)
+    semester = models.CharField(max_length=1, editable=False, choices=SEMESTER_CHOICES, default="Z")
 
     def __str__(self):
         return f"{self.appointment.research.name} / {self.appointment.when.strftime('%d. %m. %Y, %H:%M')} ({self.pk})"
@@ -206,7 +210,14 @@ class Participation(models.Model):
             cipher_rsa = PKCS1_OAEP.new(pubkey)
             encrypted_tokens.append(cipher_rsa.encrypt(token_bytes))
 
-        return cls(appointment=appointment, is_confirmed=is_confirmed, encrypted_tokens=encrypted_tokens)
+        current_acad_year, current_semester = cls.get_current_semester()
+        return cls(
+            appointment=appointment,
+            is_confirmed=is_confirmed,
+            encrypted_tokens=encrypted_tokens,
+            academic_year=current_acad_year,
+            semester=current_semester,
+        )
 
     def add_encrypted_token(self, token: str, pubkey: RsaKey):
         cipher_rsa = PKCS1_OAEP.new(pubkey)
@@ -223,3 +234,15 @@ class Participation(models.Model):
             except ValueError:
                 continue
             return token_bytes.decode("UTF-8")
+
+    @staticmethod
+    def get_current_semester() -> (str, str):
+        try:
+            acad_year_setting = Settings.objects.get(name="CURRENT_ACAD_YEAR")
+            semester_setting = Settings.objects.get(name="CURRENT_SEMESTER")
+            return acad_year_setting, semester_setting
+        except Settings.DoesNotExist:
+            now = timezone.now()
+            if now.month >= 7:
+                return f"{now.year}/{now.year + 1}", "Z"
+            return f"{now.year - 1}/{now.year}", "Z"

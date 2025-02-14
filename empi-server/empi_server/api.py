@@ -2,9 +2,11 @@ from django.contrib.auth.models import Permission
 from django.urls import include, path
 from rest_framework import routers, viewsets, serializers
 from rest_framework.permissions import IsAdminUser
-from users import views as users_views
+
 from emails import views as emails_views
+from empi_settings import views as settings_views
 from research import views as research_views
+from users import views as users_views
 
 
 class PermissionSerializer(serializers.ModelSerializer):
@@ -34,6 +36,8 @@ router.register(r"research-admin", research_views.ResearchAdminViewSet, basename
 
 router.register(r"participation", research_views.ParticipationViewSet, basename="participation")
 router.register(r"anon-participation", research_views.AnonymousParticipationViewSet, basename="anon-participation")
+
+router.register(r"settings", settings_views.SettingsViewSet)
 
 urlpatterns = [
     path("rf-auth/", include("rest_framework.urls", namespace="rest_framework")),

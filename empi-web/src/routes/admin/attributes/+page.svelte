@@ -6,15 +6,15 @@
 	import Setting from '$lib/components/Setting.svelte';
 	import { goto } from '$app/navigation';
 	import { mount } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { base } from "$app/paths";
 
 	let { data }: { data: PageData } = $props();
 
-	let session = $page.data.session;
+	let session = page.data.session;
 	$effect(() => {
-		if (session?.user.is_staff == null) {
+		if (!page.data.user.is_staff) {
 			goto(`${base}/`, { replaceState: true });
 		}
 	});

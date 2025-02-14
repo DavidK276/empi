@@ -4,14 +4,14 @@
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { t } from '$lib/translations';
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import type { PageServerData } from './$types';
 	import { base } from "$app/paths";
 	import { browser } from "$app/environment";
 
 	onMount(() => {
-		if (!$page.data.user?.is_staff) {
+		if (!page.data.user?.is_staff) {
 			goto(`${base}/`, { replaceState: true });
 		}
 	});

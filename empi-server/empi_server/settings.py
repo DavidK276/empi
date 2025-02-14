@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "knox",
     "drf_spectacular",
     "users",
+    "empi_settings",
     "research",
     "emails",
 ]
@@ -164,7 +165,7 @@ REST_KNOX = {"USER_SERIALIZER": "users.serializers.UserSerializer", "AUTH_HEADER
 SPECTACULAR_SETTINGS = {
     "TITLE": "Empi API",
     "DESCRIPTION": "The backend API of Empi",
-    "VERSION": "2024.12.1",
+    "VERSION": "2025.2.1",
     "SERVE_INCLUDE_SCHEMA": True,
     "SERVERS": [{"url": "http://localhost:8000"}],
 }
