@@ -92,14 +92,6 @@ export function paginationParams(urlSearchParams: URLSearchParams) {
 	return result;
 }
 
-export function getCurrentAcadYear() {
-	const currentYear = new Date().getFullYear();
-	const currentMonth = new Date().getMonth();
-	const startYear = (currentMonth >= 8) ? currentYear : currentYear - 1;
-
-	return `${startYear}/${(startYear + 1) % 100}`;
-}
-
 export function localeDateStringFromUTCString(utcString: string) {
 	return new Date(utcString)
 			.toLocaleString(undefined, {
