@@ -169,7 +169,9 @@ class ParticipationViewSet(
             year = int(year)
             queryset = queryset.filter(
                 appointment__when__gte=datetime(year=year - 1, month=1, day=1, tzinfo=timezone.get_current_timezone()),
-                appointment__when__lte=datetime(year=year, month=12, day=31, tzinfo=timezone.get_current_timezone()),
+                appointment__when__lte=datetime(
+                    year=year + 1, month=12, day=31, tzinfo=timezone.get_current_timezone()
+                ),
             )
 
         return queryset
