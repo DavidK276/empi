@@ -238,8 +238,8 @@ class Participation(models.Model):
     @staticmethod
     def get_current_semester() -> (str, str):
         try:
-            acad_year_setting = Settings.objects.get(name="CURRENT_ACAD_YEAR")
-            semester_setting = Settings.objects.get(name="CURRENT_SEMESTER")
+            acad_year_setting = Settings.objects.get(name="CURRENT_ACAD_YEAR").value
+            semester_setting = Settings.objects.get(name="CURRENT_SEMESTER").value
             return acad_year_setting, semester_setting
         except Settings.DoesNotExist:
             now = timezone.now()
