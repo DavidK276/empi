@@ -5,7 +5,7 @@
 
 	let themeSelect: HTMLSelectElement;
 </script>
-<div class="message" style="border-left: 1px solid var(--text-primary); height: 2rem; padding: var(--sm)">
+<div class="message">
 	<button id="theme-toggle" onclick={() => {
 						const selectedTheme = themeSelect.item((themeSelect.selectedIndex + 1) % 3)?.value || "os";
 						themeSelect.value = selectedTheme;

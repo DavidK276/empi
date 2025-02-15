@@ -289,24 +289,10 @@ def generate_acad_year():
     return f"{year}/{(year + 1) % 100}"
 
 
-def current_year():
-    return timezone.now().year
-
-
-def current_semester():
-    return "z" if timezone.now().month >= 7 else "l"
-
-
 class Participant(models.Model):
-    SEMESTER_CHOICES = (("z", "zimný"), ("l", "letný"))
-
     user = models.OneToOneField(EmpiUser, on_delete=models.CASCADE, primary_key=True)
-    year = models.IntegerField(verbose_name="rok štúdia", default=current_year)
-    semester = models.CharField(
-        verbose_name="semester", choices=SEMESTER_CHOICES, max_length=1, default=current_semester
-    )
     chosen_attribute_values = models.ManyToManyField(AttributeValue, related_name="attributes", blank=True)
     token = models.CharField(default=generate_token, unique=True, null=False, editable=False, max_length=9)
 
     def __str__(self):
-        return f"{self.token} ({self.user.first_name} {self.user.last_name}) / {self.year}{self.semester}"
+        return f"{self.token} ({self.user.first_name} {self.user.last_name})"

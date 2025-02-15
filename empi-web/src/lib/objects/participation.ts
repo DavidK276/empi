@@ -7,4 +7,6 @@ export interface IParticipation {
 	research: Research;
 	participant: Participant;
 	is_confirmed: boolean;
+	academic_year: string;
+	semester: string;
 }

@@ -106,7 +106,7 @@ export function localeDateStringFromUTCString(utcString: string) {
 
 export function textAreaAdjustSize(event: Event) {
 	const element = event.target as HTMLTextAreaElement;
-	element.rows = (element.value.match(/\n/g) || []).length + 1;
+	element.rows = (element.value.match(/\n/g) ?? []).length + 1;
 }
 
 export function getSetting(settings: Setting[], name: string) {

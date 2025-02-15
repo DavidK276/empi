@@ -1,6 +1,6 @@
 {
   "name": "empi-web",
-  "version": "2025.2.1",
+  "version": "2025.2.2",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -44,6 +44,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@eslint/compat": "^1.2.6",
     "@fontsource/source-sans-pro": "^5.1.0",
     "@furudean/svelte-persistent-store": "^0.9.0",
     "@types/node": "^22.10.1",
@@ -53,6 +54,7 @@
     "showdown": "^2.1.0",
     "svelte-eslint-parser": "^0.43.0",
     "svelte-kit-cookie-session": "^4.1.1",
-    "sveltekit-i18n": "^2.4.2"
+    "sveltekit-i18n": "^2.4.2",
+    "typescript-eslint": "^8.24.0"
   }
 }

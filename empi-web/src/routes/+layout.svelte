@@ -14,6 +14,7 @@
 	import { ENABLE_ATTRS } from '$lib/constants';
 	import type { Snippet } from "svelte";
 	import { getCurrentSemesterUI } from "$lib/settings";
+	import VerticalSeparator from "$lib/components/visual/VerticalSeparator.svelte";
 
 	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
 	const settings = data.settings;
@@ -28,10 +29,12 @@
 </div>
 <header class="row m-col hor-center ver-center">
 	<div class="row ver-center">
-		<div class="hor-center col"
-		     style="border: 2px var(--button-primary) solid; border-radius: var(--sm); padding: var(--sm) var(--md);">
-			<div>Akademický rok {getSetting(settings, "CURRENT_ACAD_YEAR")}</div>
-			<div style="width: fit-content">{getCurrentSemesterUI(settings)}</div>
+		<div class="hor-center row"
+		     style="border: 2px var(--button-primary) solid; border-radius: var(--sm); padding: var(--sm) var(--md); gap: var(--sm)">
+			<div>Akademický
+				rok&nbsp;<strong>{getSetting(settings, "CURRENT_ACAD_YEAR")}</strong></div>
+			<VerticalSeparator></VerticalSeparator>
+			<div style="width: fit-content">{getCurrentSemesterUI(settings)} semester</div>
 		</div>
 	</div>
 	<nav>

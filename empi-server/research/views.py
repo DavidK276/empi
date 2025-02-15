@@ -304,6 +304,11 @@ class ParticipationViewSet(
             participation.save()
         return Response(status.HTTP_204_NO_CONTENT)
 
+    @action(detail=False, methods=[HTTPMethod.GET], permission_classes=[AllowAny])
+    def academic_year_choices(self, request: Request) -> Response:
+        academic_years = list(self.get_queryset().values_list("academic_year").distinct())
+        return Response(data=[x[0] for x in academic_years])
+
 
 class AnonymousParticipationViewSet(viewsets.ModelViewSet):
     """

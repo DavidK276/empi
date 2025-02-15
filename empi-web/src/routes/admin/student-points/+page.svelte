@@ -22,10 +22,14 @@
 <UserPasswordRequiredModal></UserPasswordRequiredModal>
 <h1>{$t('common.points')}</h1>
 <div style="overflow-x: auto">
-	<div class="row m-col" style="padding: var(--xs)">
+	<div class="row m-col" style="padding: var(--xs); white-space: nowrap">
 		<div class="row" style="justify-content: space-between">
-			<label for="year">Rok</label>
-			<input bind:value={selectedYear} id="year" onchange={setSearchParams} type="text">
+			<label for="year">Akad. rok</label>
+			<select bind:value={selectedYear} id="year" onchange={setSearchParams}>
+				{#each data.academic_year_choices as year}
+					<option value="{year}">{year}</option>
+				{/each}
+			</select>
 		</div>
 		<div class="row" style="justify-content: space-between">
 			<label for="semester">Semester</label>
@@ -66,7 +70,7 @@
 </div>
 
 <style>
-	input, select {
+	select {
 		margin: var(--sm) 0;
 		width: fit-content;
 	}

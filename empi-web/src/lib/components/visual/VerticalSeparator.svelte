@@ -1,0 +1,1 @@
+<div style="background: var(--text-primary); width: 1px; height: 100%">&nbsp;</div>

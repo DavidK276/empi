@@ -1,8 +1,10 @@
 import type { PageServerLoad } from './$types';
 import * as consts from '$lib/constants';
+import { INT_API_ENDPOINT } from '$lib/constants';
 import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 
-async function getParticipations(fetch: Function, formData: FormData, year: string, semester: string) {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+async function loadParticipations(fetch: Function, formData: FormData, year: string, semester: string) {
 	const response = await fetch(consts.INT_API_ENDPOINT + `participation/user/?year=${year}&semester=${semester}`, {
 		body: formData,
 		method: 'POST'
@@ -41,17 +43,20 @@ async function getParticipations(fetch: Function, formData: FormData, year: stri
 	return participations;
 }
 
-export const load: PageServerLoad = async ({ cookies, fetch, locals, request }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, parent, request }) => {
+	const { session } = await parent();
+
 	const formData = new FormData();
-	formData.set('password', locals.session.data.user_password);
+	formData.set('password', session.data.user_password);
 
-	const searchParams = new URL(request.url).searchParams;
-
-	const year = searchParams.get('year') || getCurrentAcademicYear(locals.session.data.settings);
-	const semester = searchParams.get('semester') || getCurrentSemester(locals.session.data.settings);
+	const response = await fetch(INT_API_ENDPOINT + 'participation/academic_year_choices/');
+	const academic_year_choices = await response.json();
 
 	if (cookies.get(consts.TOKEN_COOKIE)) {
-		return { participations: getParticipations(fetch, formData, year, semester) };
+		const searchParams = new URL(request.url).searchParams;
+		const year = searchParams.get('year') || getCurrentAcademicYear(session.data.settings);
+		const semester = searchParams.get('semester') || getCurrentSemester(session.data.settings);
+		return { participations: loadParticipations(fetch, formData, year, semester), academic_year_choices };
 	}
-	return { participations: null };
+	return { participations: null, academic_year_choices };
 };
