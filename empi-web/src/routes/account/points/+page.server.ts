@@ -29,8 +29,8 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent, request }) 
 	formData.set('password', session?.user_password);
 	if (cookies.get(consts.TOKEN_COOKIE)) {
 		const searchParams = new URL(request.url).searchParams;
-		const year = searchParams.get('year') || getCurrentAcademicYear(session.data.settings);
-		const semester = searchParams.get('semester') || getCurrentSemester(session.data.settings);
+		const year = searchParams.get('year') || getCurrentAcademicYear(session.data?.settings);
+		const semester = searchParams.get('semester') || getCurrentSemester(session.data?.settings);
 
 
 		return { participations: loadParticipations(fetch, formData, year, semester), academic_year_choices }
