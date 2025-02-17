@@ -78,6 +78,8 @@ export const handle: Handle = handleSession({
 					id: 1,
 					secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 				}
-			]
+			],
+			expires: 1,
+			expires_in: "days"
 		},
 		myHandle);

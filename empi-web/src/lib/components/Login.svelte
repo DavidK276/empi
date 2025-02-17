@@ -41,7 +41,7 @@
 		<label for="password">{$t('common.password')}: </label>
 		<input type="password" id="password" name="password" required>
 		{#if login_message}
-			<p class="error-msg" style="display: block; margin-top: 0">{login_message}</p>
+			<div class="error-msg" style="margin-top: 0">{login_message}</div>
 		{/if}
 		<div style="display: flex; flex-wrap: nowrap">
 			{#if logging_in}

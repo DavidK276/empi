@@ -1,44 +1,42 @@
 <script lang="ts">
-	import showdown from 'showdown';
-	import DOMPurify from 'dompurify';
+	import markdownit from 'markdown-it';
 	import type { PageData } from './$types';
 	import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
 	import { t } from '$lib/translations';
 	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
-	import { onMount } from 'svelte';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
 	import { localeDateStringFromUTCString } from '$lib/functions';
 	import { universalEnhance } from "$lib/enhanceFunctions";
 
 	let { data }: { data: PageData } = $props();
 
-	const converter = new showdown.Converter();
-	let sanitizedComment = $state("");
-	onMount(() => {
-		if (data.research?.comment) {
-			sanitizedComment = DOMPurify.sanitize(converter.makeHtml(data.research?.comment), { USE_PROFILES: { html: true } });
-		}
-	});
+	const converter = markdownit();
 </script>
 {#if page.data.user != null}
 	<UserPasswordRequiredModal></UserPasswordRequiredModal>
 {/if}
-<div class="row m-col">
-	<h1 style="display: inline">{data.research?.name}</h1>
+<div class="row m-col heading">
+	<h1>{data.research?.name}</h1>
 	{#if data.isConfirmed}
-		<p class="message">
+		<div class="row ver-center no-gap">
 			<MaterialSymbolsInfoOutline width="24"
-			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</p>
+			                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}</div>
 	{/if}
 </div>
-<div class="col" style="gap: 0">
-	<!-- eslint-disable-next-line svelte/no-at-html-tags The html in this variable IS sanitized. -->
-	{@html sanitizedComment}
+<div class="col no-gap">
+	{#if data.research?.comment}
+		<hr>
+	{/if}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags The rendering using markdownit is safe. -->
+	{@html converter.render(data.research?.comment ?? "")}
+	{#if data.research?.comment}
+		<hr>
+	{/if}
 </div>
 {#if data.research?.info_url}
-	<p>{$t('research.info_url_introduction')} <a href={data.research?.info_url} target="_blank">{$t('research.here')}</a>
-	</p>
+	<span>{$t('research.info_url_introduction')} <a href={data.research?.info_url}
+	                                                target="_blank">{$t('research.here')}</a></span>
 {/if}
 {#each data.appointments as appointment, i}
 	{@const participation = page.data.participations?.get(appointment.id)}
@@ -56,9 +54,9 @@
 				<button style="background: var(--success)">{$t('research.appointment_signedup')}</button>
 			{/if}
 			{#if signups_lapsed}
-				<p class="message">
+				<span class="row ver-center no-gap">
 					<MaterialSymbolsInfoOutline width="24"
-					                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.signups_lapsed')}</p>
+					                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.signups_lapsed')}</span>
 			{/if}
 		</div>
 		<p>{appointment.comment}</p>
@@ -109,10 +107,10 @@
 					<div class="row ver-center" id="submit-div">
 						<button type="submit">{$t('research.signup')}</button>
 						{#if page.data.user == null}
-							<p class="message">
+							<span class="row ver-center no-gap">
 								<MaterialSymbolsInfoOutline width="24" height="24"
 								></MaterialSymbolsInfoOutline>&nbsp;{$t('research.anonymous_signup')}
-							</p>
+							</span>
 						{/if}
 					</div>
 				</form>
@@ -133,7 +131,7 @@
 		</div>
 	</div>
 {:else}
-	<p class="message">
+	<div class="row ver-center no-gap">
 		<MaterialSymbolsInfoOutline width="24"
-		                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</p>
+		                            height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.no_appointments')}</div>
 {/each}

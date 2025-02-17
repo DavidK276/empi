@@ -36,6 +36,7 @@
 			<select bind:value={selectedSemester} id="semester" onchange={setSearchParams}>
 				<option value="Z">zimný</option>
 				<option value="L">letný</option>
+				<option value="ANY">celý akad. rok</option>
 			</select>
 		</div>
 	</div>

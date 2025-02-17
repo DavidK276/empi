@@ -166,7 +166,8 @@ class ParticipationViewSet(
             queryset = queryset.filter(academic_year=year)
 
         semester = self.request.query_params.get("semester")
-        if semester is not None:
+        semester = (semester or "").upper()
+        if len(semester) > 0 and semester != "ANY":
             queryset = queryset.filter(semester=semester)
 
         return queryset

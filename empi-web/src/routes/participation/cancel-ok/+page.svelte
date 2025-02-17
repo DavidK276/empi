@@ -4,7 +4,7 @@
 	import { base } from "$app/paths";
 </script>
 
-<p class="message" style="display: flex; margin: var(--lg) 0">
+<div class="row ver-center" style="display: flex; margin: var(--lg) 0">
 	<MaterialSymbolsHelpOutline height="24" width="24"></MaterialSymbolsHelpOutline>&nbsp;{$t('research.cancel_success')}
-</p>
+</div>
 <button><a href="{base}/">{$t('common.goto_home')}</a></button>

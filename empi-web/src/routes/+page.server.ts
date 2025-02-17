@@ -11,7 +11,7 @@ export const actions = {
 			method: 'POST'
 		});
 
-		await locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
+		await locals.session.destroy();
 		cookies.delete(consts.TOKEN_COOKIE, { path: base });
 
 		const responseJSON = await response.json();
@@ -32,7 +32,7 @@ export const actions = {
 				method: 'POST'
 			});
 
-			await locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
+			await locals.session.destroy();
 			cookies.delete(consts.TOKEN_COOKIE, { path: base });
 		}
 	},

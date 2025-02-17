@@ -49,9 +49,9 @@
 		{:else}
 			<button type="submit" disabled>{$t('research.creating')}</button>
 		{/if}
-		<p class="message">
+		<span class="row ver-center no-gap">
 			<MaterialSymbolsInfoOutline height="24" width="24"></MaterialSymbolsInfoOutline>&nbsp;
 			{$t('research.creation_info')}
-		</p>
+		</span>
 	</div>
 </form>

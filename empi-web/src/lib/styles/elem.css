@@ -153,3 +153,8 @@ p {
     margin-top: var(--sm);
     margin-bottom: var(--sm);
 }
+
+hr {
+    margin-top: var(--xs);
+    margin-bottom: var(--xs);
+}

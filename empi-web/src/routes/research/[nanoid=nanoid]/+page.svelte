@@ -196,9 +196,10 @@
 							});
 						}}>
 					{#if !data.research.is_protected}
-						<p class="error-msg message">
-							<MaterialSymbolsWarningOutline></MaterialSymbolsWarningOutline>&nbsp;{$t('research.unprotected_warning')}
-						</p>
+						<div class="error-msg row ver-center no-gap">
+							<MaterialSymbolsWarningOutline width="24"
+							                               height="24"></MaterialSymbolsWarningOutline>&nbsp;{$t('research.unprotected_warning')}
+						</div>
 						<input type="hidden" name="current_password" value="__blank__">
 					{:else}
 						<label for="current_password">{$t('common.current_password')}</label>

@@ -3,7 +3,7 @@ import type { Setting } from "$lib/objects/Setting";
 export const addFormError = (element: HTMLElement, text: string) => {
 	const errorElement = document.getElementById(`${element.id}_error`);
 	if (errorElement == null) {
-		const error = `<p class="error-msg auto-error" id="${element.id}_error">${text}</p>`;
+		const error = `<div class="error-msg auto-error" id="${element.id}_error">${text}</div>`;
 		element.insertAdjacentHTML('afterend', error);
 		element.classList.add('error');
 	}

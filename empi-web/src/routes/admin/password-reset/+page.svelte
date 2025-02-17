@@ -28,11 +28,11 @@
 
 <svelte:options runes={true}></svelte:options>
 <h1>Resetovanie hesla</h1>
-<p class="message">
+<div class="row ver-center">
 	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>
 	Zadajte emailovú adresu používateľa. Pokiaľ používateľ s takou emailovou adresou existuje, bude mu doručený email s
 	linkom na obnovu hesla.
-</p>
+</div>
 <div class="row" style="padding-top: var(--xl);">
 	<form class="m-w-full" method="POST" style="width: 50%" use:enhance={doUpdate}>
 		<label for="email">Email</label>

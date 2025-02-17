@@ -1,6 +1,5 @@
 <script lang="ts">
-	import showdown from 'showdown';
-	import DOMPurify from 'dompurify';
+	import markdownit from 'markdown-it';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { t } from '$lib/translations';
 	import { onMount } from 'svelte';
@@ -17,7 +16,7 @@
 	});
 
 	let { data }: { data: PageServerData } = $props();
-	const converter = new showdown.Converter();
+	const converter = markdownit();
 </script>
 <h1>{$t('common.research_list')}</h1>
 {#if data.researches != null}
@@ -26,7 +25,7 @@
 			<h1>{research.name}</h1>
 			{#if browser && research.comment}
 				<div class="box">
-					{@html DOMPurify.sanitize(converter.makeHtml(research.comment), {USE_PROFILES: {html: true}})}
+					{@html converter.render(research.comment)}
 				</div>
 			{/if}
 			<a href="{base}/research/{research.nanoid}">

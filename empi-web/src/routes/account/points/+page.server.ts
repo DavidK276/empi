@@ -19,17 +19,18 @@ async function loadParticipations(fetch: Function, formData: FormData, year: str
 	return participations;
 }
 
-export const load: PageServerLoad = async ({ cookies, fetch, locals, request }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, parent, request }) => {
+	const { session } = await parent();
 
 	const response = await fetch(INT_API_ENDPOINT + 'participation/academic_year_choices/');
 	const academic_year_choices = await response.json();
 
 	const formData = new FormData();
-	formData.set('password', locals.session.data.user_password);
+	formData.set('password', session.user_password);
 	if (cookies.get(consts.TOKEN_COOKIE)) {
 		const searchParams = new URL(request.url).searchParams;
-		const year = searchParams.get('year') || getCurrentAcademicYear(locals.session.data.settings);
-		const semester = searchParams.get('semester') || getCurrentSemester(locals.session.data.settings);
+		const year = searchParams.get('year') || getCurrentAcademicYear(session.settings);
+		const semester = searchParams.get('semester') || getCurrentSemester(session.settings);
 
 
 		return { participations: loadParticipations(fetch, formData, year, semester), academic_year_choices }

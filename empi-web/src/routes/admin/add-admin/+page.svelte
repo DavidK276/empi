@@ -28,10 +28,10 @@
 
 <svelte:options runes={true}></svelte:options>
 <h1>Pridanie administrátora</h1>
-<p class="message">
+<div class="row ver-center">
 	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>
 	Zadajte emailovú adresu, na ktorú bude doručený odkaz na aktiváciu nového administrátorského účtu.
-</p>
+</div>
 <div class="row" style="padding-top: var(--xl);">
 	<form class="m-w-full" method="POST" style="width: 50%" use:enhance={doUpdate}>
 		<label for="email">Email</label>

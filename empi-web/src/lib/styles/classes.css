@@ -20,6 +20,10 @@
     display: flex;
     gap: var(--md);
 
+    &.no-gap {
+        gap: 0;
+    }
+
     &.ver-top {
         align-items: start;
     }
@@ -53,7 +57,6 @@
 
 .error-msg {
     color: var(--danger);
-    display: block;
     margin-top: var(--sm);
     margin-bottom: var(--lg);
 
@@ -76,9 +79,13 @@
     padding: var(--sm) var(--lg);
 }
 
-.message {
-    display: inline-flex;
-    align-items: center;
+.heading {
+    margin-top: var(--md);
+    margin-bottom: var(--md);
+
+    h1, h2 {
+        margin: 0;
+    }
 }
 
 .my-label:has(+ input:user-invalid) {
