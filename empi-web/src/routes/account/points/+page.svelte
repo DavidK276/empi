@@ -21,11 +21,11 @@
 </script>
 
 <h1>{$t('common.points')}</h1>
-<div style="overflow-x: auto">
+<div class="col" style="overflow-x: auto">
 	<div class="row m-col" style="padding: var(--xs); white-space: nowrap">
 		<div class="row" style="justify-content: space-between">
 			<label for="year">Akad. rok</label>
-			<select bind:value={selectedYear} id="year" onchange={setSearchParams}>
+			<select bind:value={selectedYear} id="year" onchange={setSearchParams} style="margin: 0; width: 16ch">
 				{#each data.academic_year_choices as year}
 					<option value="{year}">{year}</option>
 				{/each}
@@ -33,7 +33,7 @@
 		</div>
 		<div class="row" style="justify-content: space-between">
 			<label for="semester">Semester</label>
-			<select bind:value={selectedSemester} id="semester" onchange={setSearchParams}>
+			<select bind:value={selectedSemester} id="semester" onchange={setSearchParams} style="margin: 0; width: 16ch">
 				<option value="Z">zimný</option>
 				<option value="L">letný</option>
 				<option value="ANY">celý akad. rok</option>
