@@ -1,7 +1,8 @@
 import * as consts from '$lib/constants';
 import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { Participation } from '$lib/objects/participation';
+import type { IParticipation } from '$lib/objects/participation';
+import { convertFormData } from "$lib/functions";
 
 export const actions = {
 	signup: async ({ request, fetch, cookies, locals }) => {
@@ -12,7 +13,10 @@ export const actions = {
 			formData.set('password', session.user_password);
 			const response = await fetch(consts.INT_API_ENDPOINT + `participation/signup/`, {
 				method: 'POST',
-				body: formData
+				body: convertFormData({ formData }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			});
 			if (response.ok) {
 				return {
@@ -20,7 +24,8 @@ export const actions = {
 				};
 			}
 			return fail(response.status, {
-				success: false
+				success: false,
+				errors: await response.json()
 			});
 		}
 		const response = await fetch(consts.INT_API_ENDPOINT + `anon-participation/`, {
@@ -73,10 +78,14 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 		});
 		if (response.ok) {
 			const responseJSON = await response.json();
-
-			const participations: Map<number, Participation> = new Map();
+			const participations: Map<number, IParticipation> = new Map();
 			for (const participation of responseJSON) {
-				participations.set(participation.appointment, participation);
+				if (participation.appointment) {
+					participations.set(participation.appointment, participation);
+				}
+				else {
+					participations.set(0, participation);
+				}
 			}
 			return { participations, canSignup: true };
 		}

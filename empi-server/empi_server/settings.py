@@ -39,9 +39,9 @@ DEBUG = os.environ.get("DEBUG", "0") == "1"
 if DEBUG:
     print("\033[93m" + "Django debug is enabled. Remember to not run with debug turned on in production." + "\033[0m")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 hosts = os.environ.get("ALLOWED_HOSTS", "").strip('"').strip("'")
-if hosts:
+if not DEBUG and hosts:
     ALLOWED_HOSTS = hosts.split(",")
 if os.environ.get("EMPI_DOCKER", ""):
     ALLOWED_HOSTS += ["api"]

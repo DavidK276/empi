@@ -36,6 +36,9 @@ export const convertFormData = (args: { formData: FormData, stringify?: boolean 
 	args.formData.forEach((formDataEntryValue, key) => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let value: any = formDataEntryValue;
+		if (!isNaN(value)) {
+			value = value * 1;
+		}
 		if (value === '__NULL__') {
 			value = null;
 		}

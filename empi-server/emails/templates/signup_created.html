@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 	<h1>Nová prihláška na výskum {{ research.name }}</h1>
-	<p>Na termín {{ appointment.when }}</p>
+	{% if appointment %}
+		<p>Na termín {{ appointment.when }}</p>
+	{% endif %}
 {% endblock body %}

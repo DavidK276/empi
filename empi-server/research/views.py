@@ -48,7 +48,7 @@ class ResearchUserViewSet(
     def appointments(self, request, id=None):  # noqa: F841 the id parameter is needed by DRF
         research: Research = self.get_object()
 
-        appointments = Appointment.objects.filter(research=research).order_by("when")
+        appointments = research.appointment_set.order_by("when")
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
 
@@ -139,10 +139,9 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
                 appointment: Appointment = serializer.save()
                 to_keep.append(appointment.pk)
 
-            Appointment.objects.filter(Q(research=research) & ~Q(pk__in=to_keep)).delete()
+            research.appointment_set.filter(~Q(pk__in=to_keep)).delete()
 
-        appointments = Appointment.objects.filter(research=research)
-        serializer = self.get_serializer(appointments, many=True)
+        serializer = self.get_serializer(research.appointment_set, many=True)
         return Response(serializer.data)
 
 
@@ -172,8 +171,6 @@ class ParticipationViewSet(
 
         return queryset
 
-    def _create(self): ...
-
     def create(self, request: Request, *args, **kwargs):
         """
         Creates the :class:`Participation` if there is free space in the specified appointment.
@@ -183,17 +180,16 @@ class ParticipationViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         participant = get_object_or_404(Participant, pk=request.user.pk)
-
         appointment: Appointment = serializer.validated_data["appointment"]
         if appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
 
         with transaction.atomic():
-            pubkeys = appointment.get_pubkeys(request.user)
+            pubkeys = research.get_pubkeys(request.user)
             participation = Participation.new(participant.token, appointment, is_confirmed=False, pubkeys=pubkeys)
             participation.save()
 
-            email = NewSignupEmail(appointment)
+            email = NewSignupEmail(appointment, research)
             email.send()
 
         return Response(status=status.HTTP_201_CREATED)
@@ -240,7 +236,11 @@ class ParticipationViewSet(
                 data = ParticipationSerializer(p, context={"request": request}).data
                 data |= {"participant": ParticipantSerializer(instance=Participant.objects.get(token=token)).data}
                 data |= {
-                    "research": ResearchUserSerializer(instance=Research.objects.get(pk=p.appointment.research.pk)).data
+                    "research": ResearchUserSerializer(
+                        instance=Research.objects.get(
+                            pk=p.appointment.research.pk if p.appointment is not None else p.research.pk
+                        )
+                    ).data
                 }
                 result.append(data)
         return result
@@ -299,10 +299,10 @@ class ParticipationViewSet(
         serializer.is_valid(raise_exception=True)
 
         data = {data["id"]: data["is_confirmed"] for data in serializer.data}
-        participations = Participation.objects.filter(appointment__research=research).filter(pk__in=data.keys())
+        participations = research.participation_set.filter(pk__in=data.keys())
         for participation in participations:
             participation.is_confirmed = data[participation.pk]
-            participation.save()
+            participation.save(update_fields=["is_confirmed"])
         return Response(status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=[HTTPMethod.GET], permission_classes=[AllowAny])
@@ -330,7 +330,7 @@ class AnonymousParticipationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         appointment: Appointment = serializer.validated_data["appointment"]
-        if appointment.free_capacity <= 0:
+        if appointment is not None and appointment.free_capacity <= 0:
             raise exceptions.ParseError("no free capacity left for this appointment")
 
         with transaction.atomic():

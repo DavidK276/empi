@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from .models import Appointment, Participation, Research
 
@@ -6,7 +7,7 @@ from .models import Appointment, Participation, Research
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Research
-        fields = ["id", "name", "comment", "info_url", "points", "created", "has_open_appointments"]
+        fields = ["id", "name", "comment", "info_url", "points", "created", "all_appointments_closed"]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,7 +22,7 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
             "created",
             "is_protected",
             "is_published",
-            "has_open_appointments",
+            "all_appointments_closed",
             "email_recipients",
         ]
 
@@ -37,7 +38,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class ParticipationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participation
-        fields = ["id", "appointment", "is_confirmed"]
+        fields = ["id", "research", "appointment", "is_confirmed"]
 
 
 class ParticipationUpdateSerializer(serializers.Serializer):
@@ -47,10 +48,12 @@ class ParticipationUpdateSerializer(serializers.Serializer):
 
 class ParticipationCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    appointment = AppointmentSerializer(allow_null=True)
+    research = PrimaryKeyRelatedField(required=False, allow_null=True, queryset=Research.objects.get_queryset())
 
     class Meta:
         model = Participation
-        fields = ["id", "appointment", "is_confirmed", "password"]
+        fields = ["id", "research", "appointment", "is_confirmed", "password"]
 
 
 class AnonymousParticipationSerializer(serializers.Serializer):

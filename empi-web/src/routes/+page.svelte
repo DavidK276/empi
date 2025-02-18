@@ -28,7 +28,7 @@
 		</thead>
 		<tbody>
 		{#each data.researches as research}
-			{#if research.has_open_appointments}
+			{#if !research.all_appointments_closed}
 				<tr>
 					<td>{research.name}</td>
 					{#if showInfoUrlColumn}

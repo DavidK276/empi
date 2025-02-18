@@ -1,4 +1,5 @@
 from collections.abc import Sequence
+from typing import Optional
 
 from django.conf import settings
 from django.utils import timezone
@@ -52,15 +53,17 @@ class NewSignupEmail(BaseEmail):
     template_name = "signup_created.html"
     subject = "Nové prihlásenie na výskum"
 
-    def __new__(cls, appointment: Appointment):
-        research = appointment.research
+    def __new__(cls, appointment: Optional[Appointment], research: Research):
         kwargs = {
             "research": research,
             "recipients": research.email_recipients,
             "send_when": timezone.now(),
             "is_finalized": True,
         }
-        return super().__new__(cls, {"appointment": appointment.serialize()}, **kwargs)
+        context = {}
+        if appointment is not None:
+            context["appointment"] = appointment.serialize()
+        return super().__new__(cls, context, **kwargs)
 
 
 class CancelSignupEmail(BaseEmail):
