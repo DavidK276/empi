@@ -1,7 +1,7 @@
 import * as consts from '$lib/constants';
 import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { Participation } from '$lib/objects/participation';
+import type { IParticipation } from '$lib/objects/participation';
 
 export const actions = {
 	signup: async ({ request, fetch, cookies, locals }) => {
@@ -74,7 +74,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 		if (response.ok) {
 			const responseJSON = await response.json();
 
-			const participations: Map<number, Participation> = new Map();
+			const participations: Map<number, IParticipation> = new Map();
 			for (const participation of responseJSON) {
 				participations.set(participation.appointment, participation);
 			}
