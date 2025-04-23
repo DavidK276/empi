@@ -1,6 +1,6 @@
 ################### WEB BUILD #########################
 
-FROM node:22-bookworm-slim AS web-build
+FROM node:23-alpine AS web-build
 
 ARG EMPI_INT_API_ENDPOINT
 ENV EMPI_INT_API_ENDPOINT=$EMPI_INT_API_ENDPOINT
@@ -9,18 +9,9 @@ ENV EMPI_EXT_API_ENDPOINT=$EMPI_EXT_API_ENDPOINT
 ARG ORIGIN
 ENV ORIGIN=$ORIGIN
 
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update \
-    && apt-get install -y patch \
-    && apt-get -y upgrade \
-    && apt-get -y clean \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /build
 
 COPY --chown=appuser empi-web ./
-COPY --chown=appuser docker/patches/svelte.config.js.patch ./
-RUN patch svelte.config.js svelte.config.js.patch
 
 RUN npm ci
 RUN npm run build
@@ -39,7 +30,7 @@ ENV EMPI_DOCKER 1
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
-    && apt-get install -y caddy xz-utils libmagic1 nano \
+    && apt-get install -y caddy xz-utils libmagic1 \
     && apt-get -y upgrade \
     && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/*
@@ -69,7 +60,7 @@ RUN poetry run ./empi-server/manage.py collectstatic --no-input
 
 CMD ["/bin/multirun", "caddy run --adapter caddyfile --config /app/Caddyfile", "/app/start.sh"]
 
-FROM node:22-alpine AS web
+FROM node:23-alpine AS web
 
 ARG ORIGIN
 ENV ORIGIN=$ORIGIN

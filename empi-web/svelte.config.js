@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const origin = (Object.hasOwn(process.env, 'ORIGIN') ? [process.env.ORIGIN.replace(/\/$/, '') + '/'] : []);

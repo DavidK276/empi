@@ -12,3 +12,7 @@ services:
     environment:
       COOKIE_SECRET: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # must be exactly 32 characters long
       ORIGIN: "http://localhost:3000"
+    build:
+      args:
+        EMPI_INT_API_ENDPOINT: "http://api:8000/api"
+        EMPI_EXT_API_ENDPOINT: "http://localhost:8000/api"
