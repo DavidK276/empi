@@ -11,7 +11,7 @@ ENV ORIGIN=$ORIGIN
 
 WORKDIR /build
 
-COPY --chown=appuser empi-web ./
+COPY empi-web ./
 
 RUN npm ci
 RUN npm run build
