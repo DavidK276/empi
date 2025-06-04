@@ -165,7 +165,7 @@ REST_KNOX = {"USER_SERIALIZER": "users.serializers.UserSerializer", "AUTH_HEADER
 SPECTACULAR_SETTINGS = {
     "TITLE": "Empi API",
     "DESCRIPTION": "The backend API of Empi",
-    "VERSION": "2025.2.2",
+    "VERSION": "2025.6.1",
     "SERVE_INCLUDE_SCHEMA": True,
     "SERVERS": [{"url": "http://localhost:8000"}],
 }
