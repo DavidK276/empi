@@ -22,7 +22,7 @@ class SeparatedBinaryField(models.BinaryField):
     def stuff_bytes(self, value: bytes) -> bytes:
         return b"".join(self.stuff_byte(byte) for byte in value)
 
-    def unstuff_bytes(self, value: bytes):
+    def unstuff_bytes(self, value: bytes) -> list[bytes]:
         result = []
         i = 0
         curr_value = b""

@@ -232,9 +232,10 @@ class Participation(models.Model):
         for enc_token in self.encrypted_tokens:
             try:
                 token_bytes = cipher_rsa.decrypt(enc_token)
-            except ValueError:
+                return token_bytes.decode("UTF-8")
+            except ValueError | UnicodeDecodeError:
                 continue
-            return token_bytes.decode("UTF-8")
+        return None
 
     @staticmethod
     def get_current_semester() -> (str, str):
