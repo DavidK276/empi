@@ -192,6 +192,7 @@ class Participation(models.Model):
     encrypted_tokens = SeparatedBinaryField(blank=True, null=True)
     academic_year = models.CharField(editable=False, default="2024/2025", max_length=15)
     semester = models.CharField(max_length=1, editable=False, choices=SEMESTER_CHOICES, default="Z")
+    created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
         return f"{self.appointment.research.name} / {self.appointment.when.strftime('%d. %m. %Y, %H:%M')} ({self.pk})"
