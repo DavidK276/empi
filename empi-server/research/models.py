@@ -123,7 +123,7 @@ class Research(models.Model):
         self.is_protected = new_raw_password != "unprotected"
         self.save(update_fields=["privkey", "is_protected"])
 
-    def get_keypair(self) -> (bytes, bytes):
+    def get_keypair(self):
         """
         Retrieves the keypair for this user.
         :return: a tuple of the exported public key and the exported private key
@@ -233,12 +233,14 @@ class Participation(models.Model):
             try:
                 token_bytes = cipher_rsa.decrypt(enc_token)
                 return token_bytes.decode("UTF-8")
-            except ValueError | UnicodeDecodeError:
+            except ValueError:
+                continue
+            except UnicodeDecodeError:
                 continue
         return None
 
     @staticmethod
-    def get_current_semester() -> (str, str):
+    def get_current_semester():
         try:
             acad_year_setting = Settings.objects.get(name="CURRENT_ACAD_YEAR").value
             semester_setting = Settings.objects.get(name="CURRENT_SEMESTER").value
