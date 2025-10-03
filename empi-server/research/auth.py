@@ -3,12 +3,11 @@ import binascii
 import re
 from typing import Optional
 
-from rest_framework.authentication import get_authorization_header
-
 from Crypto.PublicKey import RSA
 from django.http import HttpRequest
-from rest_framework import authentication, exceptions
 from django.utils.translation import gettext_lazy as _
+from rest_framework import authentication, exceptions
+from rest_framework.authentication import get_authorization_header
 
 from research.models import Research
 
@@ -85,9 +84,8 @@ class ResearchAuthentication(authentication.BasicAuthentication):
         except Research.DoesNotExist:
             return None
         if research.is_protected:
-            _, privkey = research.get_keypair()
             try:
-                _ = RSA.import_key(privkey, password)
+                _ = RSA.import_key(research.privkey, password)
             except (ValueError, IndexError, TypeError):
                 raise exceptions.AuthenticationFailed()
 

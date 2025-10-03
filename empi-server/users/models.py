@@ -135,7 +135,7 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
         _("active"),
         default=True,
         help_text=_(
-            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
+            "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
@@ -152,26 +152,17 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _("users")
         default_manager_name = "users"
 
-    def get_keypair(self) -> (bytes, bytes):
-        """
-        Retrieves the keypair for this user.
-        :return: a tuple of the exported public key and the exported private key
-        """
-
-        return self.pubkey, self.privkey
-
     def change_password(self, old_raw_password, new_raw_password):
         if self.has_usable_password():
             if not self.check_password(old_raw_password):
                 raise exceptions.PermissionDenied("invalid password")
         self.set_password(new_raw_password)
 
-        _, encrypted_key = self.get_keypair()
-        private_key = RSA.import_key(encrypted_key, old_raw_password)
+        private_key = RSA.import_key(self.privkey, old_raw_password)
         encrypted_key = export_privkey(private_key, new_raw_password)
 
         self.privkey = encrypted_key
-        self.save()
+        self.save(update_fields=["privkey"])
 
     def use_backup_key(self, admin: Self, admin_password: str) -> RsaKey:
         try:
@@ -179,8 +170,7 @@ class EmpiUser(AbstractBaseUser, PermissionsMixin):
         except EncryptedSessionKey.DoesNotExist:
             raise exceptions.PermissionDenied("This admin has not protected this user")
 
-        _, enc_privkey = admin.get_keypair()
-        admin_privkey = RSA.import_key(enc_privkey, admin_password)
+        admin_privkey = RSA.import_key(admin.privkey, admin_password)
         cipher_rsa = PKCS1_OAEP.new(admin_privkey)
 
         sessionkey = cipher_rsa.decrypt(admin_key.data)

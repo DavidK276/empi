@@ -103,10 +103,9 @@ class ResearchAdminViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            _, encrypted_key = research.get_keypair()
             current_password = serializer.validated_data["password"]
             try:
-                _ = RSA.import_key(encrypted_key, current_password)
+                _ = RSA.import_key(research.privkey, current_password)
             except (ValueError, IndexError, TypeError):
                 raise exceptions.PermissionDenied(t("invalid current password"))
         return Response(status=status.HTTP_200_OK)
@@ -208,8 +207,7 @@ class ParticipationViewSet(
 
         interesting_participations = self.get_queryset().filter(appointment=serializer.validated_data["appointment"])
 
-        _, encrypted_privkey = request.user.get_keypair()
-        private_key = RSA.import_key(encrypted_privkey, passphrase=serializer.validated_data["password"])
+        private_key = RSA.import_key(request.user.privkey, passphrase=serializer.validated_data["password"])
         for p in interesting_participations:
             if p.decrypt(private_key) is not None:
                 return Response(status=HTTP_400_BAD_REQUEST)
@@ -224,8 +222,7 @@ class ParticipationViewSet(
         request_user_token = request.user.participant.token
         participation: Participation = self.get_object()
 
-        _, encrypted_key = request.user.get_keypair()
-        private_key = RSA.import_key(encrypted_key, password)
+        private_key = RSA.import_key(request.user.privkey, password)
         if participation_token := participation.decrypt(private_key):
             if participation_token == request_user_token:
                 email = CancelSignupEmail(participation.appointment)
@@ -258,8 +255,7 @@ class ParticipationViewSet(
             raise exceptions.AuthenticationFailed("invalid password")
 
         participations = self.get_queryset()
-        _, encrypted_key = request.user.get_keypair()
-        private_key = RSA.import_key(encrypted_key, password)
+        private_key = RSA.import_key(request.user.privkey, password)
 
         return Response(self.get_participations_for_key(private_key, participations, request))
 
@@ -276,13 +272,12 @@ class ParticipationViewSet(
         if research.is_protected:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-
             password = serializer.validated_data["password"]
         else:
             password = "unprotected"
-        _, encrypted_key = research.get_keypair()
+
         try:
-            private_key = RSA.import_key(encrypted_key, password)
+            private_key = RSA.import_key(research.privkey, password)
         except (ValueError, IndexError, TypeError):
             raise exceptions.AuthenticationFailed("invalid password")
         participations = self.get_queryset()

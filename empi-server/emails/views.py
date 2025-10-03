@@ -1,6 +1,7 @@
 from http import HTTPMethod
 
 from Crypto.PublicKey import RSA
+from django.forms import modelform_factory
 from knox.auth import TokenAuthentication
 from rest_framework import viewsets, status, mixins
 from rest_framework.authentication import SessionAuthentication
@@ -8,8 +9,6 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-from django.forms import modelform_factory
 
 from research.auth import ResearchAuthentication
 from research.models import Research, Participation
@@ -56,8 +55,7 @@ class EmailViewSet(viewsets.ModelViewSet):
 
         research: Research = get_object_or_404(Research, nanoid=serializer.validated_data.pop("research_nanoid"))
 
-        _, encrypted_privkey = research.get_keypair()
-        private_key = RSA.import_key(encrypted_privkey, passphrase=serializer.validated_data.pop("research_password"))
+        private_key = RSA.import_key(research.privkey, passphrase=serializer.validated_data.pop("research_password"))
 
         appointment = serializer.validated_data.pop("appointment", None)
         tokens, recipients = [], []

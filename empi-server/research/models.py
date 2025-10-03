@@ -112,9 +112,8 @@ class Research(models.Model):
         return model_to_dict(self, fields=["name", "points", "info_url"])
 
     def change_password(self, old_raw_password, new_raw_password):
-        __, encrypted_key = self.get_keypair()
         try:
-            private_key = RSA.import_key(encrypted_key, old_raw_password if self.is_protected else "unprotected")
+            private_key = RSA.import_key(self.privkey, old_raw_password if self.is_protected else "unprotected")
         except (ValueError, IndexError, TypeError):
             raise exceptions.PermissionDenied(_("invalid current password"))
         encrypted_key = export_privkey(private_key, new_raw_password)
@@ -122,14 +121,6 @@ class Research(models.Model):
         self.privkey = encrypted_key
         self.is_protected = new_raw_password != "unprotected"
         self.save(update_fields=["privkey", "is_protected"])
-
-    def get_keypair(self):
-        """
-        Retrieves the keypair for this user.
-        :return: a tuple of the exported public key and the exported private key
-        """
-
-        return self.pubkey, self.privkey
 
     @property
     def has_open_appointments(self) -> bool:
@@ -161,17 +152,11 @@ class Appointment(models.Model):
         return AppointmentType.IN_PERSON
 
     def get_pubkeys(self, user) -> Sequence[RsaKey]:
-        pubkeys = []
-        public_key_bytes, _ = self.research.get_keypair()
-        pubkeys.append(RSA.import_key(public_key_bytes))
-
-        public_key_bytes, _ = user.get_keypair()
-        pubkeys.append(RSA.import_key(public_key_bytes))
+        pubkeys = [RSA.import_key(self.research.pubkey), RSA.import_key(user.pubkey)]
 
         admins = get_user_model().users.filter(is_staff=True)
         for admin in admins:
-            public_key_bytes, _ = admin.get_keypair()
-            pubkeys.append(RSA.import_key(public_key_bytes))
+            pubkeys.append(RSA.import_key(admin.pubkey))
         return pubkeys
 
     @property
