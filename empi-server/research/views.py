@@ -170,6 +170,9 @@ class ParticipationViewSet(
         if len(semester) > 0 and semester != "ANY":
             queryset = queryset.filter(semester=semester)
 
+        research = self.request.query_params.get("research")
+        if research is not None:
+            queryset = queryset.filter(appointment__research_id=research)
         return queryset
 
     def _create(self): ...

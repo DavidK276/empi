@@ -58,7 +58,7 @@ export const actions = {
 	}
 } satisfies Actions;
 
-export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, parent, params }) => {
 	const { session } = await parent();
 	if (session?.user?.is_staff) {
 		return { participations: null, canSignup: false };
@@ -69,7 +69,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 
 	const formData = new FormData();
 	formData.set('password', session?.user_password);
-	const participations = fetch(consts.INT_API_ENDPOINT + `participation/user/`, {
+	const participations = fetch(consts.INT_API_ENDPOINT + `participation/user/?research=${params.id}`, {
 		body: formData,
 		method: 'POST'
 	}).then(async (response) => {
