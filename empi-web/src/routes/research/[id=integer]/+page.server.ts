@@ -63,23 +63,26 @@ export const load: PageServerLoad = async ({ cookies, fetch, parent }) => {
 	if (session?.user?.is_staff) {
 		return { participations: null, canSignup: false };
 	}
+	if (!cookies.get(consts.TOKEN_COOKIE)) {
+		return { participations: null, canSignup: true };
+	}
 
 	const formData = new FormData();
 	formData.set('password', session?.user_password);
-	if (cookies.get(consts.TOKEN_COOKIE)) {
-		const response = await fetch(consts.INT_API_ENDPOINT + `participation/user/`, {
-			body: formData,
-			method: 'POST'
-		});
-		if (response.ok) {
-			const responseJSON = await response.json();
-
-			const participations: Map<number, IParticipation> = new Map();
-			for (const participation of responseJSON) {
-				participations.set(participation.appointment, participation);
-			}
-			return { participations, canSignup: true };
+	const participations = fetch(consts.INT_API_ENDPOINT + `participation/user/`, {
+		body: formData,
+		method: 'POST'
+	}).then(async (response) => {
+		if (!response.ok) {
+			throw error(response.status);
 		}
-	}
-	return { participations: null, canSignup: true };
+		const responseJSON = await response.json();
+		const participations: Map<number, IParticipation> = new Map();
+		for (const participation of responseJSON) {
+			participations.set(participation.appointment, participation);
+		}
+		return participations;
+	});
+
+	return { participations, canSignup: true };
 };
