@@ -25,7 +25,7 @@
     });
 </script>
 
-{#if count > PAGE_SIZE || true}
+{#if count > PAGE_SIZE}
     <div class="content row ver-center hor-center">
         <button disabled={offset - limit < 0}
                 onclick={() => offset -= limit}
