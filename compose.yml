@@ -9,6 +9,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     networks:
       - empi
+    restart: unless-stopped
 
   api:
     depends_on:
@@ -20,6 +21,7 @@ services:
       - "8000:8000"
     networks:
       - empi
+    restart: unless-stopped
 
   web:
     depends_on:
@@ -31,6 +33,7 @@ services:
       - "3000:3000"
     networks:
       - empi
+    restart: unless-stopped
 
 volumes:
   postgres_data:

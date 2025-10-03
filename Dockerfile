@@ -1,6 +1,6 @@
 ################### WEB BUILD #########################
 
-FROM node:23-alpine AS web-build
+FROM node:24-alpine AS web-build
 
 ARG EMPI_INT_API_ENDPOINT
 ENV EMPI_INT_API_ENDPOINT=$EMPI_INT_API_ENDPOINT
@@ -31,7 +31,6 @@ ENV EMPI_DOCKER 1
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get install -y caddy xz-utils libmagic1 \
-    && apt-get -y upgrade \
     && apt-get -y clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -60,7 +59,7 @@ RUN poetry run ./empi-server/manage.py collectstatic --no-input
 
 CMD ["/bin/multirun", "caddy run --adapter caddyfile --config /app/Caddyfile", "/app/start.sh"]
 
-FROM node:23-alpine AS web
+FROM node:24-alpine AS web
 
 ARG ORIGIN
 ENV ORIGIN=$ORIGIN
