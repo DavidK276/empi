@@ -1,6 +1,6 @@
 import * as consts from '$lib/constants';
 import { convertFormData } from '$lib/functions';
-import { type Actions, fail } from '@sveltejs/kit';
+import { type Actions, error, fail } from '@sveltejs/kit';
 import { Attribute } from '$lib/objects/attribute';
 import type { Appointment } from '$lib/objects/appointment';
 import type { PageServerLoad } from './$types';
@@ -183,32 +183,43 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 		appointments = await response.json();
 	}
 
-	const confirmed_participations: IParticipation[] = [];
-	const unconfirmed_participations: IParticipation[] = [];
 	const password = locals.session.data.research_password;
-	if (password != null) {
+	let participations: Promise<{ confirmed: IParticipation[], unconfirmed: IParticipation[] }>;
+	if (password == null) {
+		participations = new Promise(() => {
+			return { confirmed: [], unconfirmed: [] };
+		});
+	}
+	else {
 		const formData = new FormData();
 		formData.set('password', password);
-		response = await fetch(consts.INT_API_ENDPOINT + `participation/research/${params.nanoid}/get/`, {
+		participations = fetch(consts.INT_API_ENDPOINT + `participation/research/${params.nanoid}/get/`, {
 			body: formData,
 			method: 'POST'
-		});
-		if (response.ok) {
-			for (const participation of await response.json()) {
+		}).then(response => {
+			if (!response.ok) {
+				throw error(response.status);
+			}
+			return response.json();
+		}).then(participations => {
+			const result: { confirmed: IParticipation[], unconfirmed: IParticipation[] } = { confirmed: [], unconfirmed: [] };
+			for (const participation of participations) {
 				if (participation.is_confirmed) {
-					confirmed_participations.push(participation);
+					result.confirmed.push(participation);
 				}
 				else {
-					unconfirmed_participations.push(participation);
+					result.unconfirmed.push(participation);
 				}
 			}
-		}
+			return result;
+		});
 	}
+
 	return {
 		research,
 		attrs,
 		research_attrs,
 		appointments,
-		participations: { confirmed: confirmed_participations, unconfirmed: unconfirmed_participations }
+		participations
 	};
 };
