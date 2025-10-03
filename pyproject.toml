@@ -7,7 +7,7 @@ readme = "README.md"
 requires-python = "^3.13"
 dependencies = [
     "django (~=5.1.0)",
-    "django-cors-headers (~=4.7.0)",
+    "django-cors-headers (~=4.9.0)",
     "djangorestframework (~=3.16.0)",
     "pycryptodome (~=3.23.0)",
     "python-magic (~=0.4.0)",
@@ -17,7 +17,7 @@ dependencies = [
     "nanoid (~=2.0.0)",
     "html2text (~=2025.4.15)",
     "drf-spectacular (~=0.28.0)",
-    "sentry-sdk[django] (~=2.26.0)",
+    "sentry-sdk[django] (~=2.39.0)",
     "markdown (~=3.8)"
 ]
 
