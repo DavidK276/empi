@@ -3,6 +3,7 @@ import * as consts from '$lib/constants';
 import { error } from '@sveltejs/kit';
 import { paginationParams } from '$lib/functions';
 import { browser } from '$app/environment';
+import type { Research } from "$lib/objects/research";
 
 const API_ENDPOINT = (browser) ? consts.EXT_API_ENDPOINT : consts.INT_API_ENDPOINT;
 
@@ -11,10 +12,11 @@ export const load: PageLoad = async ({ fetch, url }) => {
 	const response = await fetch(API_ENDPOINT + 'research-user/?' + searchParams.toString());
 
 	if (response.ok) {
-		const responseJSON = await response.json();
+		const responseJSON: { count: number, results: Research[] } = await response.json();
 		return {
 			researches: responseJSON.results,
-			count: responseJSON.count
+			count: responseJSON.results.map(r => +r.has_open_appointments)
+					.reduce((a, b) => a + b, 0)
 		};
 	}
 
