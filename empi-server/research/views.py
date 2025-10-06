@@ -5,6 +5,7 @@ from Crypto.PublicKey.RSA import RsaKey
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as t
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from knox.auth import TokenAuthentication
@@ -35,7 +36,12 @@ from .serializers import (
 class ResearchUserViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
-    queryset = Research.objects.get_queryset().filter(is_published=True).order_by("-created")
+    queryset = (
+        Research.objects.get_queryset()
+        .filter(is_published=True)
+        .filter(appointment__when__gte=timezone.now())
+        .order_by("-created")
+    )
     serializer_class = ResearchUserSerializer
     permission_classes = [AllowAny]
     lookup_field = "id"
@@ -48,7 +54,7 @@ class ResearchUserViewSet(
     def appointments(self, request, id=None):  # noqa: F841 the id parameter is needed by DRF
         research: Research = self.get_object()
 
-        appointments = Appointment.objects.filter(research=research).order_by("when")
+        appointments = research.appointment_set.order_by("when")
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data)
 
