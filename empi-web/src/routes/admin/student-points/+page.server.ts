@@ -12,16 +12,19 @@ async function loadParticipations(fetch: Function, formData: FormData, year: str
 	const responseJSON = await response.json();
 	const participationMap: Map<string, {
 		name: string,
+		email: string,
 		unconfirmedPoints: number,
 		confirmedPoints: number
 	}> = new Map();
 	for (const participation of responseJSON) {
 		const token = participation.participant.token;
 		const name = participation.participant.user_detail.first_name + ' ' + participation.participant.user_detail.last_name;
+		const email = participation.participant.user_detail.email;
 		const currentParticipation = participationMap.get(token) || { name, unconfirmedPoints: 0, confirmedPoints: 0 };
 		if (participation.is_confirmed) {
 			participationMap.set(token, {
 				name,
+				email,
 				unconfirmedPoints: currentParticipation.unconfirmedPoints,
 				confirmedPoints: currentParticipation.confirmedPoints + participation.research.points
 			});
@@ -29,6 +32,7 @@ async function loadParticipations(fetch: Function, formData: FormData, year: str
 		else {
 			participationMap.set(token, {
 				name,
+				email,
 				unconfirmedPoints: currentParticipation.unconfirmedPoints + participation.research.points,
 				confirmedPoints: currentParticipation.confirmedPoints
 			});
@@ -45,7 +49,7 @@ async function loadParticipations(fetch: Function, formData: FormData, year: str
 
 export const load: PageServerLoad = async ({ cookies, fetch, parent, request }) => {
 	const { session } = await parent();
-	
+
 	const formData = new FormData();
 	formData.set('password', session.user_password);
 
