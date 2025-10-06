@@ -15,8 +15,7 @@ export const load: PageLoad = async ({ fetch, url }) => {
 		const responseJSON: { count: number, results: Research[] } = await response.json();
 		return {
 			researches: responseJSON.results,
-			count: responseJSON.results.map(r => +r.has_open_appointments)
-					.reduce((a, b) => a + b, 0)
+			count: responseJSON.count
 		};
 	}
 
