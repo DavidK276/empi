@@ -6,6 +6,8 @@
     import { goto } from '$app/navigation';
     import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 
+    import { Datatable, TableHandler, ThFilter, ThSort } from '@vincjo/datatables'
+
     let { data }: { data: PageServerData } = $props();
 
     let selectedSemester = $state(page.url.searchParams.get('semester') || getCurrentSemester(page.data.settings));
@@ -44,29 +46,41 @@
     {#await data.participations}
         <p>{$t('common.loading')}</p>
     {:then participations}
+        <!-- the || undefined part is there to silence a warning -->
+        {@const table = new TableHandler(participations || undefined, {rowsPerPage: 999, highlight: false})}
         {#if participations?.length || 0 > 0}
-            <table style="width: 100%; max-width: 100vw">
-                <thead>
-                <tr>
-                    <th>{$t('common.name')}</th>
-                    <th>Email</th>
-                    <th>{$t('common.unconfirmed_points')}</th>
-                    <th>{$t('common.confirmed_points')}</th>
-                    <th>{$t('common.sum')}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {#each participations || [] as participation}
+            <Datatable headless {table}>
+                <table style="width: 100%; max-width: 100vw; border: none">
+                    <thead>
                     <tr>
-                        <td>{participation.name}</td>
-                        <td>{participation.email}</td>
-                        <td style="text-align: center">{participation.unconfirmedPoints}</td>
-                        <td style="text-align: center">{participation.confirmedPoints}</td>
-                        <td style="text-align: center">{participation.unconfirmedPoints + participation.confirmedPoints}</td>
+                        <ThSort {table} field="name">{$t('common.name')}</ThSort>
+                        <ThSort {table} field="email">Email</ThSort>
+                        <ThSort {table} field="unconfirmedPoints">{$t('common.unconfirmed_points')}</ThSort>
+                        <ThSort {table} field="confirmedPoints">{$t('common.confirmed_points')}</ThSort>
+                        <ThSort {table} field="totalPoints">{$t('common.sum')}</ThSort>
                     </tr>
-                {/each}
-                </tbody>
-            </table>
+                    <tr>
+                        <ThFilter {table} field="name"></ThFilter>
+                        <ThFilter {table} field="email"></ThFilter>
+                        <ThFilter {table} field="unconfirmedPoints"></ThFilter>
+                        <ThFilter {table} field="confirmedPoints"></ThFilter>
+                        <ThFilter {table} field="totalPoints"></ThFilter>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {#each table.rows as row}
+                        <tr>
+                            <td>{row.name}</td>
+                            <td>{row.email}</td>
+                            <td style="text-align: center">{row.unconfirmedPoints}</td>
+                            <td style="text-align: center">{row.confirmedPoints}</td>
+                            <td style="text-align: center">{row.totalPoints}</td>
+                        </tr>
+                    {/each}
+                    </tbody>
+                </table>
+            </Datatable>
+
         {:else}
             <p>{$t('common.no_students')}</p>
         {/if}

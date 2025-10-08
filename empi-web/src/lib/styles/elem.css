@@ -158,3 +158,10 @@ hr {
     margin-top: var(--xs);
     margin-bottom: var(--xs);
 }
+
+/*
+ hides the empty headers and footers of headless datatables
+ */
+section :is(header, footer):empty {
+    display: none !important;
+}
