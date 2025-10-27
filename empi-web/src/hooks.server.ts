@@ -1,8 +1,9 @@
 import * as consts from '$lib/constants';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { handleSession } from 'svelte-kit-cookie-session';
-import { base } from "$app/paths";
+import { base } from '$app/paths';
 import * as env from '$env/static/private';
+import { sequence } from '@sveltejs/kit/hooks';
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	const urlPath = new URL(request.url).pathname;
@@ -40,7 +41,7 @@ const myHandle: Handle = async ({ event, resolve }) => {
 	}
 	if (!event.locals.session.data.user) {
 		const userResponse = await event.fetch(consts.INT_API_ENDPOINT + 'user/get_self/', {
-			redirect: 'follow'
+			redirect: 'follow',
 		});
 		if (!userResponse.ok) {
 			event.cookies.delete(consts.TOKEN_COOKIE, { path: base });
@@ -72,14 +73,22 @@ const myHandle: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = handleSession({
-			secret: [
-				{
-					id: 1,
-					secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-				}
-			],
-			expires: 1,
-			expires_in: "days"
-		},
-		myHandle);
+const handleLang: Handle = async ({ resolve, event }) => {
+	let lang = event.cookies.get('locale') ?? 'sk';
+	return resolve(event, {
+		transformPageChunk: ({ html }) => html.replace('%lang%', lang),
+	});
+};
+
+const handleSezzion: Handle = handleSession({
+		secret: [
+			{
+				id: 1,
+				secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+			},
+		],
+		expires: 1,
+		expires_in: 'days',
+	});
+
+export const handle = sequence(handleSezzion, myHandle, handleLang);

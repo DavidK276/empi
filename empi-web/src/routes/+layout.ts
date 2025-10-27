@@ -1,10 +1,22 @@
+import { browser } from '$app/environment';
 import { loadTranslations } from '$lib/translations';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ url }) => {
-	const { pathname } = url;
+  const { pathname } = url;
 
-	const initLocale = 'sk'; // get from cookie, user session, ...
+  let initLocale = 'sk'; // get from cookie, user session, ...
 
-	await loadTranslations(initLocale, pathname);
+  if (browser) {
+    const setLocale = (await cookieStore.get('locale'))?.value;
+    if (setLocale) {
+      initLocale = setLocale;
+    }
+    else {
+      await cookieStore.set('locale', initLocale);
+    }
+  }
+
+
+  await loadTranslations(initLocale, pathname);
 };

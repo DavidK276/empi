@@ -16,13 +16,13 @@
 
 <h1>EMPI <span style="font-weight: normal">- Účasť na Empirickom Výskume (2-MXX-132)</span></h1>
 <div style="overflow-x: auto">
-    <h2>Aktuálne zverejnené výskumy</h2>
+    <h2>{$t('common.current_published_research')}</h2>
     <table style="width: 100%; max-width: 100vw">
         <thead>
         <tr>
             <th>{$t('research.name')}</th>
             {#if showInfoUrlColumn}
-                <th>{$t('common.more_info')}</th>
+                <th>{$t('common.info_url')}</th>
             {/if}
             <th>{$t('common.details')}</th>
         </tr>

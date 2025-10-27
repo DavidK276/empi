@@ -12,7 +12,7 @@ export function getCurrentSemester(settings: Setting[]) {
 export function getCurrentSemesterUI(settings: Setting[]) {
 	const currentSemester = getCurrentSemester(settings);
 	if (currentSemester === 'Z') {
-		return "Zimný";
+		return 'common.winter_semester';
 	}
-	return "Letný";
+	return 'common.summer_semester';
 }

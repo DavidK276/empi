@@ -112,3 +112,7 @@
     font-weight: 700;
     font-size: 18px;
 }
+
+.font-light {
+	font-weight: lighter;
+}

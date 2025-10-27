@@ -49,14 +49,18 @@ button {
         background-color: var(--button-disabled) !important;
     }
 
+		&[type="button"] {
+			cursor: pointer;
+		}
+
+		&[type="submit"] {
+			cursor: pointer;
+		}
+
     a {
         color: var(--text-secondary);
         padding: var(--sm) var(--md);
     }
-}
-
-button[type="submit"] {
-    cursor: pointer;
 }
 
 label {
