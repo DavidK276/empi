@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 	import { goto } from "$app/navigation"
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 
 	let { data }: { data: PageServerData } = $props();
 
@@ -12,7 +13,7 @@
 	let selectedYear = $state(page.url.searchParams.get('year') || getCurrentAcademicYear(page.data.settings));
 
 	function setSearchParams() {
-		let query = new URLSearchParams(page.url.searchParams.toString());
+		let query = new SvelteURLSearchParams(page.url.searchParams.toString());
 		query.set('year', selectedYear);
 		query.set('semester', selectedSemester);
 
@@ -26,7 +27,7 @@
 		<div class="row" style="justify-content: space-between">
 			<label for="year">Akad. rok</label>
 			<select bind:value={selectedYear} id="year" onchange={setSearchParams} style="margin: 0; width: 16ch">
-				{#each data.academic_year_choices as year}
+				{#each data.academic_year_choices as year (year)}
 					<option value="{year}">{year}</option>
 				{/each}
 			</select>
@@ -54,7 +55,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					{#each participations as participation}
+					{#each participations as participation (participation.id)}
 						{@const research = participation.research}
 						<tr>
 							<td><a href="/research/{research?.id}">{research?.name}</a></td>

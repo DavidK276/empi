@@ -7,6 +7,7 @@
     import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 
     import { Datatable, TableHandler, ThFilter, ThSort } from '@vincjo/datatables'
+		import { SvelteURLSearchParams } from 'svelte/reactivity';
 
     let { data }: { data: PageServerData } = $props();
 
@@ -14,7 +15,7 @@
     let selectedYear = $state(page.url.searchParams.get('year') || getCurrentAcademicYear(page.data.settings));
 
     function setSearchParams() {
-        let query = new URLSearchParams(page.url.searchParams.toString());
+        let query = new SvelteURLSearchParams(page.url.searchParams.toString());
         query.set('year', selectedYear);
         query.set('semester', selectedSemester);
 
@@ -28,7 +29,7 @@
         <div class="row" style="justify-content: space-between">
             <label for="year">Akad. rok</label>
             <select bind:value={selectedYear} id="year" onchange={setSearchParams} style="margin: 0; width: 16ch">
-                {#each data.academic_year_choices as year}
+                {#each data.academic_year_choices as year (year)}
                     <option value="{year}">{year}</option>
                 {/each}
             </select>
@@ -68,7 +69,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {#each table.rows as row}
+										<!-- eslint-disable-next-line svelte/require-each-key -->
+										{#each table.rows as row}
                         <tr>
                             <td>{row.name}</td>
                             <td>{row.email}</td>

@@ -239,7 +239,7 @@
             </AccordionTab>
         {/if}
         <AccordionTab open={false} title={$t('research.appointments')}>
-            {#each appointments as appointment}
+            {#each appointments as appointment (appointment.id)}
                 <Appointment {appointment} nanoid={page.params.nanoid}></Appointment>
             {/each}
             <button type="button" onclick={addAppointment}>+</button>
@@ -269,7 +269,7 @@
                     <label for="appointment">Používatelia prihlásení na termín</label>
                     <select name="appointment" id="appointment">
                         <option value="">žiadny</option>
-                        {#each appointments as appointment}
+                        {#each appointments as appointment (appointment.id)}
                             {#if appointment.info_url != null}
                                 <option value={appointment.id}>{localeDateStringFromUTCString(appointment.when)}
                                     , {$t('research.online').toLowerCase()}</option>

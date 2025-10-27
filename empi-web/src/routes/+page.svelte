@@ -28,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        {#each data.researches as research}
+        {#each data.researches as research (research.id)}
             {#if research.has_open_appointments}
                 <tr>
                     <td>{research.name}</td>
