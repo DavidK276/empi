@@ -29,7 +29,7 @@
 				</div>
 			{/if}
 			<a href="{base}/research/{research.nanoid}">
-				<button type="button">Spravovať</button>
+				<button type="button">{$t('common.manage')}</button>
 			</a>
 		</div>
 	{/each}
