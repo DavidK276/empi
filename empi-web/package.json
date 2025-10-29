@@ -1,6 +1,6 @@
 {
   "name": "empi-web",
-  "version": "2025.10.2",
+  "version": "2025.10.3",
   "private": true,
   "scripts": {
     "dev": "vite dev",

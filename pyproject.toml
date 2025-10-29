@@ -1,6 +1,6 @@
 [project]
 name = "empi"
-version = "2025.10.2"
+version = "2025.10.3"
 description = "Backend for the Empirical research CMS"
 authors = [{ name = "David Krchňavý", email = "krchnavy11@uniba.sk" }]
 readme = "README.md"
