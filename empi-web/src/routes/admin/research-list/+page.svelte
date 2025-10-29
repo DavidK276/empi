@@ -20,7 +20,7 @@
 </script>
 <h1>{$t('common.research_list')}</h1>
 {#if data.researches != null}
-	{#each data.researches as research (research.id)}
+	{#each data.researches as research (research.nanoid)}
 		<div class="box">
 			<h1>{research.name}</h1>
 			{#if browser && research.comment}
