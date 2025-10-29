@@ -34,7 +34,9 @@
 					<td>{research.name}</td>
 					{#if showInfoUrlColumn}
 						<td style="text-align: center">
-							{#if research.info_url}<a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>{/if}
+							{#if research.info_url}<a href="{research.info_url}" target="_blank">{$t('common.learn_more')}</a>{:else}
+								N/A
+							{/if}
 						</td>
 					{/if}
 					<td style="text-align: center">
