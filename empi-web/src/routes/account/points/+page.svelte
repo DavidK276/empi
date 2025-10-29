@@ -6,6 +6,7 @@
 	import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 	import { goto } from "$app/navigation"
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
+	import { base } from "$app/paths";
 
 	let { data }: { data: PageServerData } = $props();
 
@@ -58,7 +59,7 @@
 					{#each participations as participation (participation.id)}
 						{@const research = participation.research}
 						<tr>
-							<td><a href="/research/{research?.id}">{research?.name}</a></td>
+							<td><a href="{base}/research/{research?.id}">{research?.name}</a></td>
 							{#if research?.points != null}
 								<td style="text-align: center">{research.points}</td>
 							{:else}
