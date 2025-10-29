@@ -8,14 +8,14 @@
 	import { mount } from 'svelte';
 	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 
 	let { data }: { data: PageData } = $props();
 
 	let session = page.data.session;
 	$effect(() => {
 		if (!page.data.user.is_staff) {
-			goto(`${base}/`, { replaceState: true });
+			goto(resolve('/'), { replaceState: true });
 		}
 	});
 

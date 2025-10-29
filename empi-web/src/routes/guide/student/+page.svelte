@@ -1,7 +1,7 @@
 <script lang="ts">
 	import MaterialSymbolsArrowForward from 'virtual:icons/material-symbols/arrow-forward';
 	import { t } from '$lib/translations';
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 </script>
 
 <h1>{$t('common.guide')}</h1>
@@ -34,37 +34,41 @@
 <h2>Ako sa zaznamenáva moja účasť?</h2>
 <p>Po registrácii do systému ti bude pridelený anonymný identifikátor. Svoj token môžeš zistiť kedykoľvek
 	na stránke detailov účtu. <a
-			href="/account">Zoberte ma tam!
-		<MaterialSymbolsArrowForward width="24px" height="24px"></MaterialSymbolsArrowForward>
+		href="/account">Zoberte ma tam!
+		<MaterialSymbolsArrowForward height="24px" width="24px"></MaterialSymbolsArrowForward>
 	</a></p>
 <p>Po zúčastnení na výskume svoj anonymný identifikátor odovzdaj organizátorovi výskumu a on ti potvrdí tvoju účasť.</p>
 
 <h2>Zvoľte scenár</h2>
 <div class="grid-container">
-	<button type="button" class="m-w-full"><a href="{base}/guide/student/register">Chcem sa registrovať do systému</a>
+	<button class="m-w-full" type="button"><a href="{resolve('/guide/student/register')}">Chcem sa registrovať do
+		systému</a>
 	</button>
-	<button type="button" class="m-w-full"><a href="{base}/guide/student/password">Zabudol som svoje heslo</a></button>
-	<button type="button" class="m-w-full"><a href="{base}/guide/student/signup">Chcem sa prihlásiť na výskum</a></button>
-	<button type="button" class="m-w-full"><a href="{base}/guide/student/cancel">Chcem zrušiť svoju prihlášku na
+	<button class="m-w-full" type="button"><a href="{resolve('/guide/student/password')}">Zabudol som svoje heslo</a>
+	</button>
+	<button class="m-w-full" type="button"><a href="{resolve('/guide/student/signup')}">Chcem sa prihlásiť na výskum</a>
+	</button>
+	<button class="m-w-full" type="button"><a href="{resolve('/guide/student/cancel')}">Chcem zrušiť svoju prihlášku na
 		výskum</a>
 	</button>
-	<button type="button" class="m-w-full"><a href="{base}/guide/student/points">Chcem zistiť moju účasť</a></button>
+	<button class="m-w-full" type="button"><a href="{resolve('/guide/student/points')}">Chcem zistiť moju účasť</a>
+	</button>
 </div>
 
 <style>
-    button {
-        width: 100%;
-    }
+	button {
+		width: 100%;
+	}
 
-    .grid-container {
-        display: grid;
-        gap: var(--sm);
-        grid-template-columns: auto auto auto;
-    }
+	.grid-container {
+		display: grid;
+		gap: var(--sm);
+		grid-template-columns: auto auto auto;
+	}
 
-    @media screen and (max-width: 768px) {
-        .grid-container {
-            grid-template-columns: auto;
-        }
-    }
+	@media screen and (max-width: 768px) {
+		.grid-container {
+			grid-template-columns: auto;
+		}
+	}
 </style>

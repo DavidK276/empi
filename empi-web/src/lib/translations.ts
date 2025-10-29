@@ -1,6 +1,6 @@
 import type { Config } from 'sveltekit-i18n';
 import i18n from 'sveltekit-i18n';
-import { base } from "$app/paths";
+import { resolve } from "$app/paths";
 
 const config: Config = {
 	loaders: [
@@ -14,7 +14,7 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'attrs',
-			routes: [`${base}/attributes`, RegExp(`${base}/research/.*`)], // you can use regexes as well!
+			routes: [`${resolve('/')}attributes`, RegExp(`${resolve('/')}research/.*`)], // you can use regexes as well!
 			loader: async () => (
 				await import('./translations/en/attrs.json')
 			).default
@@ -22,7 +22,7 @@ const config: Config = {
 		{
 			locale: 'en',
 			key: 'account',
-			routes: [`${base}/account`],
+			routes: [`${resolve('/')}account`],
 			loader: async () => (
 				await import('./translations/en/account.json')
 			).default
@@ -44,7 +44,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'attrs',
-			routes: [`${base}/attributes`, RegExp(`${base}/research/.*`)], // you can use regexes as well!
+			routes: [`${resolve('/')}attributes`, RegExp(`${resolve('/')}research/.*`)], // you can use regexes as well!
 			loader: async () => (
 				await import('./translations/sk/attrs.json')
 			).default
@@ -52,7 +52,7 @@ const config: Config = {
 		{
 			locale: 'sk',
 			key: 'account',
-			routes: [`${base}/account`], // you can use regexes as well!
+			routes: [`${resolve('/')}account`], // you can use regexes as well!
 			loader: async () => (
 				await import('./translations/sk/account.json')
 			).default

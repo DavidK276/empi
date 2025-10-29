@@ -6,7 +6,7 @@
 	import EmailInput from '$lib/components/EmailInput.svelte';
 	import { addFormErrors } from '$lib/functions';
 	import MaterialSymbolsInfoOutline from 'virtual:icons/material-symbols/info-outline';
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 	import { page } from "$app/state";
 	import { onMount } from "svelte";
 
@@ -16,7 +16,7 @@
 	let emails: EmailInput;
 	onMount(() => {
 		if (!page.data.user?.is_staff) {
-			goto(`${base}/`, { replaceState: true });
+			goto(resolve('/'), { replaceState: true });
 		}
 	});
 </script>

@@ -3,7 +3,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 
 	let session = page.data.session;
 
@@ -16,7 +16,7 @@
 		<h2>{$t('common.password_entry_title')}</h2>
 		<p>{$t('common.password_entry_text')}</p>
 	{/snippet}
-	<form action="{base}/?/checkPassword" method="POST" use:enhance={() => {
+	<form action="{resolve('/')}?/checkPassword" method="POST" use:enhance={() => {
 		password_ok = null;
 		return async ({result}) => {
 			password_ok = result.type === 'success';

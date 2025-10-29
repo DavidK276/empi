@@ -3,7 +3,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import type { ActionResult } from "@sveltejs/kit";
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
 	import { mount } from "svelte";
 
@@ -34,7 +34,7 @@
 	let login_message = $state("");
 </script>
 {#if !is_logged_in}
-	<form method="POST" action="{base}/?/login" style="width: 100%"
+	<form method="POST" action="{resolve('/')}?/login" style="width: 100%"
 	      use:enhance={login}>
 		<label for="email">Email: </label>
 		<input type="email" id="email" name="email" required>
@@ -49,16 +49,16 @@
 			{:else}
 				<button type="submit" id="loginBtn">{$t('common.login')}</button>
 			{/if}
-			<a href="{base}/account/register" style="margin: 0 var(--sm)">{$t('common.registration')}</a>
+			<a href="{resolve('/account/register')}" style="margin: 0 var(--sm)">{$t('common.registration')}</a>
 		</div>
 	</form>
 {:else}
-	<form method="POST" action="{base}/?/logout"
+	<form method="POST" action="{resolve('/')}?/logout"
 	      use:enhance={() => {
 									logging_out = true;
 
 									return async ({ update }) => {
-										await goto(`${base}/`);
+										await goto(resolve('/'));
 										await update();
 										logging_out = false;
 										is_logged_in = false;

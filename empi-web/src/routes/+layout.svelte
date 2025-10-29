@@ -9,7 +9,7 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	import MaterialSymbolsKeyboardArrowRight from 'virtual:icons/material-symbols/keyboard-arrow-right';
-	import { base, resolve } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { invalidateAll } from '$app/navigation';
 	import { ENABLE_ATTRS } from '$lib/constants';
 	import type { Snippet } from 'svelte';
@@ -51,10 +51,10 @@
 		</div>
 	</div>
 	<nav>
-		<a href="{base}/">{$t('common.home')}</a>
+		<a href="{resolve('/')}">{$t('common.home')}</a>
 		<a href="{resolve('/guide')}">{$t('common.guide')}</a>
 		{#if data.user?.is_staff}
-			<a href="{base}/research">{$t('common.create_research')}</a>
+			<a href="{resolve('/research')}">{$t('common.create_research')}</a>
 		{/if}
 	</nav>
 	<div class="row m-col ver-center">
@@ -62,18 +62,13 @@
 			{#if data.user != null}
 				<Dropdown title={(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}>
 					{#if !data.user.is_staff}
-						{#if ENABLE_ATTRS}
-							<div><a href="{base}/attributes">{$t('common.attributes')}
-								<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
-							</a></div>
-						{/if}
-						<div><a href="{base}/account/points">{$t('common.my_points')}
+						<div><a href="{resolve('/account/points')}">{$t('common.my_points')}
 							<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 						</a>
 						</div>
 					{/if}
 					<div>
-						<a href="{base}/account">{$t('common.account')}
+						<a href="{resolve('/account')}">{$t('common.account')}
 							<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 						</a>
 					</div>
@@ -87,16 +82,16 @@
 			{#if data.user?.is_staff}
 				<Dropdown title={$t('common.administration')}>
 					{#if ENABLE_ATTRS}
-						<div><a href="{base}/attributes">{$t('common.attributes')}</a></div>
+						<div><a href="{resolve('/admin/attributes')}">{$t('common.attributes')}</a></div>
 					{/if}
-					<div><a href="{base}/admin/research-list">{$t('common.research_list')}</a></div>
-					<div><a href="{base}/admin/student-points">{$t('common.student_points')}</a></div>
-					<div><a href="{base}/admin/add-admin">{$t('common.add_admin')}</a></div>
-					<div><a href="{base}/admin/password-reset">{$t('common.password_reset')}</a></div>
+					<div><a href="{resolve('/admin/research-list')}">{$t('common.research_list')}</a></div>
+					<div><a href="{resolve('/admin/student-points')}">{$t('common.student_points')}</a></div>
+					<div><a href="{resolve('/admin/add-admin')}">{$t('common.add_admin')}</a></div>
+					<div><a href="{resolve('/admin/password-reset')}">{$t('common.password_reset')}</a></div>
 				</Dropdown>
 			{/if}
 			<div id="language-switch">
-				<button type="button" onclick={switchLocale}><span
+				<button onclick={switchLocale} type="button"><span
 					class={{'font-light': data.locale === 'en'}}>Slovenčina</span><span class="font-light"> | </span><span
 					class={{'font-light': data.locale === 'sk'}}>English</span></button>
 			</div>

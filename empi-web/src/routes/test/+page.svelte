@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 </script>
 
 <div id="top" role="document">
@@ -406,14 +406,14 @@
 			<article id="embedded__iframe">
 				<header><h2>IFrame</h2></header>
 				<div>
-					<iframe height="300" src="{base}/" title="Embedded iframe"></iframe>
+					<iframe height="300" src="{resolve('/')}" title="Embedded iframe"></iframe>
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
 			<article id="embedded__embed">
 				<header><h2>Embed</h2></header>
 				<div>
-					<embed height="300" src="{base}/">
+					<embed height="300" src="{resolve('/')}">
 				</div>
 				<footer><p><a href="#top">[Top]</a></p></footer>
 			</article>
@@ -582,6 +582,6 @@
 	</main>
 	<footer>
 		<p>Made by <a href="http://twitter.com/cbracco">@cbracco</a>. Code on <a
-				href="http://github.com/cbracco/html5-test-page">GitHub</a>.</p>
+			href="http://github.com/cbracco/html5-test-page">GitHub</a>.</p>
 	</footer>
 </div>

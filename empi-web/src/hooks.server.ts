@@ -1,7 +1,7 @@
 import * as consts from '$lib/constants';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { handleSession } from 'svelte-kit-cookie-session';
-import { base } from '$app/paths';
+import { resolve as resolvePath } from '$app/paths';
 import * as env from '$env/static/private';
 import { sequence } from '@sveltejs/kit/hooks';
 
@@ -44,7 +44,7 @@ const myHandle: Handle = async ({ event, resolve }) => {
 			redirect: 'follow',
 		});
 		if (!userResponse.ok) {
-			event.cookies.delete(consts.TOKEN_COOKIE, { path: base });
+			event.cookies.delete(consts.TOKEN_COOKIE, { path: resolvePath('/') });
 			await event.locals.session.update(() => ({ user: undefined, user_password: undefined, participant: undefined }));
 			return resolve(event);
 		}
@@ -81,14 +81,14 @@ const handleLang: Handle = async ({ resolve, event }) => {
 };
 
 const handleSezzion: Handle = handleSession({
-		secret: [
-			{
-				id: 1,
-				secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-			},
-		],
-		expires: 1,
-		expires_in: 'days',
-	});
+	secret: [
+		{
+			id: 1,
+			secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+		},
+	],
+	expires: 1,
+	expires_in: 'days',
+});
 
 export const handle = sequence(handleSezzion, myHandle, handleLang);
