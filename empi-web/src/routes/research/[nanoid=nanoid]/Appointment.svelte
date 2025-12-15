@@ -6,7 +6,7 @@
 
 	let { appointment = null, nanoid }: { appointment: Appointment | null, nanoid: string } = $props();
 	let thisComponent: HTMLFormElement | undefined = $state();
-	let type: string = $state(appointment == null || appointment.info_url != null ? "online" : "in_person");
+	let type = $derived(appointment?.info_url != null ? "online" : "in_person");
 	let shown = $state(false);
 
 	function formData(event: FormDataEvent) {
