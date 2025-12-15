@@ -17,7 +17,6 @@
 	import VerticalSeparator from '$lib/components/visual/VerticalSeparator.svelte';
 
 	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
-	const settings = data.settings;
 
 	async function switchLocale() {
 		const currentLocale = data.locale;
@@ -45,9 +44,9 @@
 	<div class="row ver-center">
 		<div class="hor-center row"
 		     style="border: 2px var(--button-primary) solid; border-radius: var(--sm); padding: var(--sm) var(--md); gap: var(--sm)">
-			<div>{$t('common.academic_year')}&nbsp;<strong>{getCurrentAcademicYear(settings)}</strong></div>
+			<div>{$t('common.academic_year')}&nbsp;<strong>{getCurrentAcademicYear(data.settings)}</strong></div>
 			<VerticalSeparator></VerticalSeparator>
-			<div style="width: fit-content">{$t(getCurrentSemesterUI(settings))}</div>
+			<div style="width: fit-content">{$t(getCurrentSemesterUI(data.settings))}</div>
 		</div>
 	</div>
 	<nav>
