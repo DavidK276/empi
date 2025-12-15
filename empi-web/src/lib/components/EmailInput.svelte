@@ -6,22 +6,11 @@
 	function addNewEmail(event: Event) {
 		const target = event.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		mount(AdditionalEmail, { target: parent!, anchor: target });
+		mount(AdditionalEmail, { target: parent!, anchor: target, props: { email: null } });
 	}
 
 	export function getEmails() {
-		const emailInputs = document.getElementsByClassName('email-input');
-
-		const emails: string[] = [];
-		for (const elem of emailInputs) {
-			const emailInput = elem as HTMLInputElement;
-			const value = emailInput.value.trim();
-			if (value) {
-				emails.push(value);
-			}
-		}
-
-		return emails.join(',');
+		return document.getElementsByClassName('email-input').values().map(emailInput => emailInput.value.trim()).toArray();
 	}
 
 	export function setEmails(emails: string) {
