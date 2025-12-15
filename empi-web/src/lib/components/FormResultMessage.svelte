@@ -2,29 +2,34 @@
 	import { t } from '$lib/translations';
 	import MaterialSymbolsErrorOutline from 'virtual:icons/material-symbols/error-outline';
 	import type { ActionResult } from "@sveltejs/kit";
+	import { onMount } from "svelte";
 
-	let { message = '', result = null }: { message: string, result: ActionResult | null } = $props();
+	let props: { message: string, result: ActionResult | null } = $props();
+	let message = $state(props.message);
+	const result = props.result;
 
-	if (!message && result) {
-		if (result.type === 'error') {
-			message = $t('common.unknown_error');
-		}
-		else if (result.type === 'success') {
-			message = $t('common.saved');
-		}
-		else if (result.type === 'failure') {
-			const errors = result.data?.errors;
-
-			if (errors.non_field_errors != null && errors.non_field_errors.length > 0) {
-				message = errors.non_field_errors[0];
+	onMount(() => {
+		if (!message && result) {
+			if (result.type === 'error') {
+				message = $t('common.unknown_error');
 			}
-			if (errors.detail != null) {
-				message = errors.detail;
+			else if (result.type === 'success') {
+				message = $t('common.saved');
+			}
+			else if (result.type === 'failure') {
+				const errors = result.data?.errors;
+
+				if (errors.non_field_errors != null && errors.non_field_errors.length > 0) {
+					message = errors.non_field_errors[0];
+				}
+				if (errors.detail != null) {
+					message = errors.detail;
+				}
 			}
 		}
-	}
 
-	message = message.charAt(0).toUpperCase() + message.slice(1);
+		message = message.charAt(0).toUpperCase() + message.slice(1);
+	})
 
 	// destroys all previous messages before adding new one
 	$effect.pre(() => {
