@@ -27,8 +27,8 @@
 
 	let { data }: { data: PageServerData } = $props();
 
-	let appointments = plainToInstance(Appt, data.appointments);
-	let emails = $state();
+	let appointments = $derived(plainToInstance(Appt, data.appointments));
+	let emails: EmailInput | null = $state(null);
 	let submitting_appointments = $state(false);
 	let submit_success_appointments: boolean | null = $state(null);
 	let submitting_participations = $state(false);
@@ -163,7 +163,7 @@
 						invalidateAll: true
 					});
 				}}
-	      onformdata={(event) => event.formData.set('email_recipients', emails.getEmails())}>
+	      onformdata={(event) => event.formData.set('email_recipients', emails?.getEmails())}>
 		<div class="row">
 			<div style="width: 50%; display: inline-block" class="m-w-full">
 				<label for="points">{$t('common.points')}</label>
