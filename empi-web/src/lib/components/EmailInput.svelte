@@ -10,7 +10,18 @@
 	}
 
 	export function getEmails() {
-		return document.getElementsByClassName('email-input').values().map(emailInput => emailInput.value.trim()).toArray();
+		const emailInputs = document.getElementsByClassName('email-input');
+
+		const emails: string[] = [];
+		for (const elem of emailInputs) {
+			const emailInput = elem as HTMLInputElement;
+			const value = emailInput.value.trim();
+			if (value) {
+				emails.push(value);
+			}
+		}
+
+		return emails.join(',');
 	}
 
 	export function setEmails(emails: string) {
