@@ -4,7 +4,7 @@
 	import type { ActionResult } from "@sveltejs/kit";
 	import { onMount } from "svelte";
 
-	let props: { message: string, result: ActionResult | null } = $props();
+	let props: { message: string, result?: ActionResult | null } = $props();
 	let message = $state(props.message);
 	const result = props.result;
 

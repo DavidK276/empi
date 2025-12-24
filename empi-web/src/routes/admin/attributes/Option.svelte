@@ -7,7 +7,7 @@
 		}
 	}
 
-	let { value }: { value: string | null } = $props();
+	let { value }: { value?: string | null } = $props();
 </script>
 
 <label class="row ver-top" style="margin: var(--sm) 0">

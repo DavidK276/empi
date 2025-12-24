@@ -13,7 +13,7 @@
 		mount(Option, { target: parent!, anchor: target, props: { value: null } });
 	}
 
-	let { attr = null }: { attr: Attribute | null } = $props();
+	let { attr = null }: { attr?: Attribute | null } = $props();
 	let chosen_type: string = $state("SC");
 </script>
 {#if attr != null}

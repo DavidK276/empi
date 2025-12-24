@@ -4,7 +4,7 @@
 	import { onMount } from "svelte";
 	import { slide } from "svelte/transition";
 
-	let { appointment = null, nanoid }: { appointment: Appointment | null, nanoid: string } = $props();
+	let { appointment = null, nanoid }: { appointment?: Appointment | null, nanoid: string } = $props();
 	let thisComponent = $state<HTMLFormElement>(null!);
 	let type = $derived(appointment?.info_url != null ? "online" : "in_person");
 	let shown = $state(false);

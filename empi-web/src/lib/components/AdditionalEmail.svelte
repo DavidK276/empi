@@ -2,7 +2,7 @@
 	import { slide } from "svelte/transition";
 	import { onMount } from "svelte";
 
-	let { email = null }: { email: string | null } = $props();
+	let { email = null }: { email?: string | null } = $props();
 	let thisComponent = $state<HTMLDivElement>(null!);
 	let shown = $state(false);
 
