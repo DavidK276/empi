@@ -28,7 +28,7 @@
 	let { data }: { data: PageServerData } = $props();
 
 	let appointments = $derived(plainToInstance(Appt, data.appointments));
-	let emails: EmailInput | null = $state(null);
+	let emails = $state<EmailInput>(null!);
 	let submitting_appointments = $state(false);
 	let submit_success_appointments: boolean | null = $state(null);
 	let submitting_participations = $state(false);

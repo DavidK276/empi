@@ -3,7 +3,7 @@
 	import { onMount } from "svelte";
 
 	let { email = null }: { email: string | null } = $props();
-	let thisComponent: HTMLElement | undefined = $state();
+	let thisComponent = $state<HTMLDivElement>(null!);
 	let shown = $state(false);
 
 	onMount(() => shown = true);
