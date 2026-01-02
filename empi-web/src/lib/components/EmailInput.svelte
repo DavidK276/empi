@@ -11,17 +11,8 @@
 
 	export function getEmails() {
 		const emailInputs = document.getElementsByClassName('email-input');
-
-		const emails: string[] = [];
-		for (const elem of emailInputs) {
-			const emailInput = elem as HTMLInputElement;
-			const value = emailInput.value.trim();
-			if (value) {
-				emails.push(value);
-			}
-		}
-
-		return emails.join(',');
+		const emails = Array.prototype.map.call(emailInputs, (elem) => elem.value.trim()) as string[];
+		return emails.filter(value => value).join(',');
 	}
 
 	export function setEmails(emails: string) {
