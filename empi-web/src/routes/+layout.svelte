@@ -12,7 +12,7 @@
 	import { resolve } from '$app/paths';
 	import { invalidateAll } from '$app/navigation';
 	import { ENABLE_ATTRS } from '$lib/constants';
-	import { getCurrentAcademicYear, getCurrentSemesterUI } from '$lib/settings';
+	import { getCurrentAcademicYear, getCurrentSemesterUI, getSettingQuery } from '$lib/settings';
 	import VerticalSeparator from '$lib/components/visual/VerticalSeparator.svelte';
 
 	let { children, data }: LayoutProps = $props();
@@ -60,7 +60,7 @@
 			{#if data.user != null}
 				<Dropdown title={(data.user.first_name + ' ' + data.user.last_name).trim() || $t('common.account')}>
 					{#if !data.user.is_staff}
-						<div><a href="{resolve('/account/points')}">{$t('common.my_points')}
+						<div><a href="{resolve(`/account/points`) + `?${getSettingQuery(data.settings)}`}">{$t('common.my_points')}
 							<MaterialSymbolsKeyboardArrowRight width="24px" height="24px"></MaterialSymbolsKeyboardArrowRight>
 						</a>
 						</div>
@@ -83,7 +83,7 @@
 						<div><a href="{resolve('/admin/attributes')}">{$t('common.attributes')}</a></div>
 					{/if}
 					<div><a href="{resolve('/admin/research-list')}">{$t('common.research_list')}</a></div>
-					<div><a href="{resolve('/admin/student-points')}">{$t('common.student_points')}</a></div>
+					<div><a href="{resolve('/admin/student-points') + `?${getSettingQuery(data.settings)}`}">{$t('common.student_points')}</a></div>
 					<div><a href="{resolve('/admin/add-admin')}">{$t('common.add_admin')}</a></div>
 					<div><a href="{resolve('/admin/password-reset')}">{$t('common.password_reset')}</a></div>
 				</Dropdown>

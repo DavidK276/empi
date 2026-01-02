@@ -11,16 +11,17 @@
 	let { data }: PageProps = $props();
 	let query = new SvelteURLSearchParams(page.url.searchParams.toString());
 
-
 	let selectedSemester = $state(query.get('semester') || getCurrentSemester(page.data.settings));
 	let selectedYear = $state(query.get('year') || getCurrentAcademicYear(page.data.settings));
 
-	$effect(() => {
-		query.set('year', selectedYear);
-		query.set('semester', selectedSemester);
+    $effect(() => {
+			if (query.get('semester') != selectedSemester || query.get('year') != selectedYear) {
+				query.set('year', selectedYear);
+				query.set('semester', selectedSemester);
 
-		goto(`?${query.toString()}`, { invalidateAll: true });
-	});
+				goto(`?${query.toString()}`, { invalidateAll: true });
+			}
+    });
 </script>
 
 <h1>{$t('common.points')}</h1>

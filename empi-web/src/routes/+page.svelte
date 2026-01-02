@@ -2,16 +2,9 @@
 	import type { PageData } from './$types';
 	import { t } from '$lib/translations';
 	import Pagination from '$lib/components/Pagination.svelte';
-	import { onMount } from "svelte";
 
 	let { data }: { data: PageData } = $props();
-	let showInfoUrlColumn = $state(false);
-
-	onMount(() => {
-		for (const research of data.researches) {
-			showInfoUrlColumn ||= research.info_url != null;
-		}
-	});
+	let showInfoUrlColumn = $derived(data.researches.values().some(r => r.info_url != null));
 </script>
 
 <h1>EMPI <span style="font-weight: normal">- Účasť na Empirickom Výskume (2-MXX-132)</span></h1>

@@ -74,7 +74,7 @@ const myHandle: Handle = async ({ event, resolve }) => {
 };
 
 const handleLang: Handle = async ({ resolve, event }) => {
-	let lang = event.cookies.get('locale') ?? 'sk';
+	const lang = event.cookies.get('locale') ?? 'sk';
 	return resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('%lang%', lang),
 	});

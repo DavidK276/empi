@@ -16,3 +16,10 @@ export function getCurrentSemesterUI(settings: Setting[]) {
 	}
 	return 'common.summer_semester';
 }
+
+export function getSettingQuery(settings: Setting[]) {
+	const params = new URLSearchParams();
+	params.set('year', getCurrentAcademicYear(settings));
+	params.set('semester', getCurrentSemester(settings));
+	return params.toString();
+}

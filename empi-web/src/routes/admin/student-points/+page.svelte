@@ -16,10 +16,12 @@
     let selectedYear = $state(query.get('year') || getCurrentAcademicYear(page.data.settings));
 
     $effect(() => {
-				query.set('semester', selectedSemester);
+			if (query.get('semester') != selectedSemester || query.get('year') != selectedYear) {
 				query.set('year', selectedYear);
+				query.set('semester', selectedSemester);
 
-        goto(`?${query.toString()}`, { invalidateAll: true });
+				goto(`?${query.toString()}`, { invalidateAll: true });
+			}
     });
 </script>
 <UserPasswordRequiredModal></UserPasswordRequiredModal>

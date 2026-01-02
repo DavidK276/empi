@@ -1,6 +1,5 @@
 import * as consts from "$lib/constants";
 import { INT_API_ENDPOINT } from "$lib/constants";
-import type { IParticipation } from "$lib/objects/participation";
 import type { PageServerLoad } from "./$types";
 import { getCurrentAcademicYear, getCurrentSemester } from "$lib/settings";
 
@@ -10,13 +9,7 @@ async function loadParticipations(fetch: Function, formData: FormData, year: str
 		body: formData,
 		method: 'POST'
 	});
-	const responseJSON = await response.json();
-
-	const participations: IParticipation[] = [];
-	for (const participation of responseJSON) {
-		participations.push(participation);
-	}
-	return participations;
+	return await response.json();
 }
 
 export const load: PageServerLoad = async ({ cookies, fetch, parent, request }) => {
