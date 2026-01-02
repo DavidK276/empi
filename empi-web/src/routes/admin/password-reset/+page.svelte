@@ -5,7 +5,7 @@
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 	import { mount } from "svelte";
 
-	let submitButton: HTMLButtonElement;
+	let submitButton = $state<HTMLButtonElement>(null!);
 
 	async function doUpdate() {
 		return async ({ update, result }: {

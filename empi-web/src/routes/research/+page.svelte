@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
-	import type { ActionData } from './$types';
+	import type { PageProps } from './$types';
 	import { goto } from '$app/navigation';
 	import { applyAction, enhance } from '$app/forms';
 	import EmailInput from '$lib/components/EmailInput.svelte';
@@ -10,7 +10,7 @@
 	import { page } from "$app/state";
 	import { onMount } from "svelte";
 
-	let { form }: { form: ActionData } = $props();
+	let { form }: PageProps = $props();
 
 	let submitting = $state(false);
 	let emails: EmailInput;

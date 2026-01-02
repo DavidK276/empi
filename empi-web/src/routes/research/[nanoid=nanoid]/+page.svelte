@@ -38,7 +38,7 @@
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		mount(Appointment, { target: parent!, anchor: target, props: { nanoid: page.params.nanoid } });
+		mount(Appointment, { target: parent!, anchor: target, props: { nanoid: page.params.nanoid! } });
 	}
 
 	async function submitAppointments() {
@@ -88,7 +88,9 @@
 		}
 		const text = await file.text();
 		const matches: Set<string> = new Set([...text.matchAll(TOKEN_REGEX)].map(a => a[0]));
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const checkedTokens: Set<string> = new Set();
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const uncheckedTokens: Set<string> = new Set();
 
 		const keepExisting = (document.getElementById('keepExistingCheckbox') as HTMLInputElement).checked;
@@ -225,7 +227,7 @@
 									invalidateAll: true
 								});
 							}}>
-					{#each data.attrs as attr}
+					{#each data.attrs as attr(attr.name)}
 						{#if Reflect.has(data.research_attrs, attr.name)}
 							<Setting {attr} values={data.research_attrs[attr.name]}></Setting>
 						{:else}
@@ -240,7 +242,7 @@
 		{/if}
 		<AccordionTab open={false} title={$t('research.appointments')}>
 			{#each appointments as appointment (appointment.id)}
-				<Appointment {appointment} nanoid={page.params.nanoid}></Appointment>
+				<Appointment {appointment} nanoid={page.params.nanoid || ''}></Appointment>
 			{/each}
 			<button type="button" onclick={addAppointment}>+</button>
 			{#if submitting_appointments}

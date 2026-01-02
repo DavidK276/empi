@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
 	import { addFormError, removeFormError } from '$lib/functions';
-	import type { ActionData } from './$types';
+	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	import { universalEnhance } from "$lib/enhanceFunctions";
 
-	let { form }: { form: ActionData } = $props();
+	let { form }: PageProps = $props();
 
 	const submit = (event: SubmitEvent) => {
 		if (passwordInput.value !== repeatPasswordInput.value) {

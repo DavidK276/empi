@@ -1,6 +1,6 @@
 <script lang="ts">
     import markdownit from 'markdown-it';
-    import type { PageData } from './$types';
+    import type { PageProps } from './$types';
     import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
     import { t } from '$lib/translations';
     import { page } from '$app/state';
@@ -9,15 +9,7 @@
     import { localeDateStringFromUTCString } from '$lib/functions';
     import { universalEnhance } from "$lib/enhanceFunctions";
 
-    let { data }: { data: PageData } = $props();
-    const participationConfirmedP = data.participations?.then(participations => {
-        for (let participation of participations.values()) {
-            if (participation.is_confirmed) {
-                return true;
-            }
-        }
-        return false;
-    });
+    let { data }: PageProps = $props();
 
     const converter = markdownit();
 </script>
@@ -26,7 +18,8 @@
 {/if}
 <div class="row m-col heading">
     <h1>{data.research?.name}</h1>
-    {#await participationConfirmedP then participationConfirmed}
+    {#await data.participations then participations}
+	    {@const participationConfirmed = participations?.values().some(p => p.is_confirmed)}
         {#if participationConfirmed}
             <div class="row ver-center no-gap">
                 <MaterialSymbolsInfoOutline width="24"
@@ -52,7 +45,7 @@
 {#await data.participations}
     <p>{$t('common.loading')}</p>
 {:then participations}
-    {#each data.appointments as appointment, i}
+    {#each data.appointments as appointment, i (appointment.id)}
         {@const participation = participations?.get(appointment.id)}
         {@const participationConfirmed = participation?.is_confirmed === true}
         {@const signupsLapsed = new Date(appointment.when) < new Date()}

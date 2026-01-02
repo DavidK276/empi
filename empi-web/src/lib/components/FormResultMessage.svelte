@@ -4,7 +4,7 @@
 	import type { ActionResult } from "@sveltejs/kit";
 	import { onMount } from "svelte";
 
-	let props: { message: string, result?: ActionResult | null } = $props();
+	let props: { message?: string | null, result?: ActionResult | null } = $props();
 	let message = $state(props.message);
 	const result = props.result;
 
@@ -27,8 +27,9 @@
 				}
 			}
 		}
-
-		message = message.charAt(0).toUpperCase() + message.slice(1);
+		if (message) {
+					message = message.charAt(0).toUpperCase() + message.slice(1);
+		}
 	})
 
 	// destroys all previous messages before adding new one

@@ -32,7 +32,7 @@
 			{#if attr.type !== 'ET'}
 				<fieldset id="options">
 					<legend>{$t('attrs.options')}</legend>
-					{#each attr.values as value}
+					{#each attr.values as value(value)}
 						<Option {value}></Option>
 					{/each}
 					<button type="button" onclick={addOption}>+</button>

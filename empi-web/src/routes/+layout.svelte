@@ -3,7 +3,7 @@
 	import '$lib/styles/styles.css';
 
 	import { t } from '$lib/translations';
-	import type { LayoutServerData } from './$types';
+	import type { LayoutProps } from './$types';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import Login from '$lib/components/Login.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
@@ -12,11 +12,10 @@
 	import { resolve } from '$app/paths';
 	import { invalidateAll } from '$app/navigation';
 	import { ENABLE_ATTRS } from '$lib/constants';
-	import type { Snippet } from 'svelte';
 	import { getCurrentAcademicYear, getCurrentSemesterUI } from '$lib/settings';
 	import VerticalSeparator from '$lib/components/visual/VerticalSeparator.svelte';
 
-	let { children, data }: { children: Snippet, data: LayoutServerData } = $props();
+	let { children, data }: LayoutProps = $props();
 
 	async function switchLocale() {
 		const currentLocale = data.locale;

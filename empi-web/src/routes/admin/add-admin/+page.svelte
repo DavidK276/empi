@@ -5,7 +5,7 @@
 	import FormResultMessage from '$lib/components/FormResultMessage.svelte';
 	import { mount } from "svelte";
 
-	let submitButton: HTMLButtonElement;
+	let submitButton = $state<HTMLButtonElement>(null!);
 
 	async function doUpdate() {
 		return async ({ update, result }: {
@@ -14,7 +14,7 @@
 		}) => {
 			if (result.type === 'success') {
 				mount(FormResultMessage, {
-					target: submitButton.parentElement as HTMLElement,
+					target: submitButton.parentElement!,
 					props: { result, message: 'Odkaz bol úspešne odoslaný' }
 				});
 			}
@@ -26,7 +26,6 @@
 	}
 </script>
 
-<svelte:options runes={true}></svelte:options>
 <h1>Pridanie administrátora</h1>
 <div class="row ver-center">
 	<MaterialSymbolsInfoOutline class="icon"></MaterialSymbolsInfoOutline>

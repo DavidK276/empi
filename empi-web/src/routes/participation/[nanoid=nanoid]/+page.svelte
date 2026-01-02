@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { PageProps } from './$types';
 	import { t } from '$lib/translations';
 	import { localeDateStringFromUTCString } from "$lib/functions";
 
-	let { data }: { data: PageData } = $props();
+	let { data }: PageProps = $props();
 
-	const appointment = data.appointment;
+	const appointment = $derived(data.appointment);
 </script>
 
 <div class="box">

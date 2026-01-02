@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageServerData } from './$types';
+	import type { PageProps } from './$types';
 
 	import { t } from '$lib/translations';
 	import { page } from '$app/state';
@@ -8,18 +8,19 @@
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
 	import { resolve } from "$app/paths";
 
-	let { data }: { data: PageServerData } = $props();
+	let { data }: PageProps = $props();
+	let query = new SvelteURLSearchParams(page.url.searchParams.toString());
 
-	let selectedSemester = $state(page.url.searchParams.get('semester') || getCurrentSemester(page.data.settings));
-	let selectedYear = $state(page.url.searchParams.get('year') || getCurrentAcademicYear(page.data.settings));
 
-	function setSearchParams() {
-		let query = new SvelteURLSearchParams(page.url.searchParams.toString());
+	let selectedSemester = $state(query.get('semester') || getCurrentSemester(page.data.settings));
+	let selectedYear = $state(query.get('year') || getCurrentAcademicYear(page.data.settings));
+
+	$effect(() => {
 		query.set('year', selectedYear);
 		query.set('semester', selectedSemester);
 
 		goto(`?${query.toString()}`, { invalidateAll: true });
-	}
+	});
 </script>
 
 <h1>{$t('common.points')}</h1>
@@ -27,7 +28,7 @@
 	<div class="row m-col" style="padding: var(--xs); white-space: nowrap">
 		<div class="row" style="justify-content: space-between">
 			<label for="year">Akad. rok</label>
-			<select bind:value={selectedYear} id="year" onchange={setSearchParams} style="margin: 0; width: 16ch">
+			<select bind:value={selectedYear} id="year" style="margin: 0; width: 16ch">
 				{#each data.academic_year_choices as year (year)}
 					<option value="{year}">{year}</option>
 				{/each}
@@ -35,7 +36,7 @@
 		</div>
 		<div class="row" style="justify-content: space-between">
 			<label for="semester">Semester</label>
-			<select bind:value={selectedSemester} id="semester" onchange={setSearchParams} style="margin: 0; width: 16ch">
+			<select bind:value={selectedSemester} id="semester" style="margin: 0; width: 16ch">
 				<option value="Z">zimný</option>
 				<option value="L">letný</option>
 				<option value="ANY">celý akad. rok</option>

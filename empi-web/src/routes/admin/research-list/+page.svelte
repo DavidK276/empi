@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import type { PageServerData } from './$types';
+	import type { PageProps } from './$types';
 	import { resolve } from "$app/paths";
 	import { browser } from "$app/environment";
 
@@ -15,7 +15,7 @@
 		}
 	});
 
-	let { data }: { data: PageServerData } = $props();
+	let { data }: PageProps = $props();
 	const converter = markdownit();
 </script>
 <h1>{$t('common.research_list')}</h1>

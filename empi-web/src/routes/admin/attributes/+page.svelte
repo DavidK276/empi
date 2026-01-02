@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/translations';
 
-	import type { PageData } from './$types';
+	import type { PageProps } from './$types';
 	import Attribute from './Attribute.svelte';
 	import Setting from '$lib/components/Setting.svelte';
 	import { goto } from '$app/navigation';
@@ -10,7 +10,7 @@
 	import { enhance } from '$app/forms';
 	import { resolve } from "$app/paths";
 
-	let { data }: { data: PageData } = $props();
+	let { data }: PageProps = $props();
 
 	let session = page.data.session;
 	$effect(() => {
@@ -30,7 +30,7 @@
 </script>
 <h1>{$t('common.attributes')}</h1>
 {#if session?.user.is_staff === true}
-	{#each data.attrs as attr}
+	{#each data.attrs as attr(attr.name)}
 		<Attribute {attr}></Attribute>
 	{:else}
 		<p>{$t('attrs.no_attrs')}</p>
@@ -48,7 +48,7 @@
 						update({ reset: false });
 					};
 				}}>
-		{#each data.attrs as attr}
+		{#each data.attrs as attr(attr.name)}
 			{#if Reflect.has(data.user_attrs, attr.name)}
 				<Setting {attr} values={data.user_attrs[attr.name]}></Setting>
 			{:else}
