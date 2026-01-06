@@ -1,24 +1,24 @@
 [project]
 name = "empi"
-version = "2025.10.3"
+version = "2026.1.1"
 description = "Backend for the Empirical research CMS"
 authors = [{ name = "David Krchňavý", email = "krchnavy11@uniba.sk" }]
 readme = "README.md"
 requires-python = "^3.14"
 dependencies = [
-    "django (~=5.1.0)",
-    "django-cors-headers (~=4.9.0)",
-    "djangorestframework (~=3.16.0)",
-    "pycryptodome (~=3.23.0)",
-    "python-magic (~=0.4.0)",
-    "django-rest-knox (~=5.0)",
-    "psycopg[binary] (~=3.2.0)",
-    "gunicorn (~=23.0.0)",
-    "nanoid (~=2.0.0)",
-    "html2text (~=2025.4.15)",
-    "drf-spectacular (~=0.28.0)",
-    "sentry-sdk[django] (~=2.39.0)",
-    "markdown (~=3.8)"
+	"django (~=5.1.0)",
+	"django-cors-headers (~=4.9.0)",
+	"djangorestframework (~=3.16.0)",
+	"pycryptodome (~=3.23.0)",
+	"python-magic (~=0.4.0)",
+	"django-rest-knox (~=5.0)",
+	"psycopg[binary] (~=3.2.0)",
+	"gunicorn (~=23.0.0)",
+	"nanoid (~=2.0.0)",
+	"html2text (~=2025.4.15)",
+	"drf-spectacular (~=0.28.0)",
+	"sentry-sdk[django] (~=2.39.0)",
+	"markdown (~=3.8)"
 ]
 
 [tool.poetry]
