@@ -3,15 +3,13 @@
 	import { onMount } from "svelte";
 
 	let { email = null }: { email?: string | null } = $props();
-	let thisComponent = $state<HTMLDivElement>(null!);
 	let shown = $state(false);
 
 	onMount(() => shown = true);
 </script>
 
 {#if shown}
-	<div bind:this={thisComponent} class="row ver-center" style="margin: var(--sm) 0" transition:slide={{duration: 100}}
-	     onoutroend={() => thisComponent?.parentNode?.removeChild(thisComponent)}>
+	<div class="row ver-center" style="margin: var(--sm) 0" transition:slide={{duration: 100}}>
 		{#if email == null}
 			<input type="email" class="email-input">
 		{:else}

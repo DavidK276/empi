@@ -25,6 +25,7 @@
 	import type { IParticipation } from "$lib/objects/participation";
 	import FormResultMessage from "$lib/components/FormResultMessage.svelte";
 
+	const nanoid = page.params.nanoid!;
 	let { data }: { data: PageServerData } = $props();
 
 	let appointments = $derived(plainToInstance(Appt, data.appointments));
@@ -38,7 +39,7 @@
 	function addAppointment(e: Event) {
 		const target = e.target as HTMLButtonElement;
 		const parent = target.parentElement;
-		mount(Appointment, { target: parent!, anchor: target, props: { nanoid: page.params.nanoid! } });
+		mount(Appointment, { target: parent!, anchor: target, props: { nanoid } });
 	}
 
 	async function submitAppointments() {
@@ -242,7 +243,7 @@
 		{/if}
 		<AccordionTab open={false} title={$t('research.appointments')}>
 			{#each appointments as appointment (appointment.id)}
-				<Appointment {appointment} nanoid={page.params.nanoid || ''}></Appointment>
+				<Appointment {appointment} {nanoid}></Appointment>
 			{/each}
 			<button type="button" onclick={addAppointment}>+</button>
 			{#if submitting_appointments}

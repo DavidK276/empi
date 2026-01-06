@@ -4,7 +4,7 @@
 	import Pagination from '$lib/components/Pagination.svelte';
 
 	let { data }: { data: PageData } = $props();
-	let showInfoUrlColumn = $derived(data.researches.values().some(r => r.info_url != null));
+	let showInfoUrlColumn = $derived(data.researches.some(r => r.has_open_appointments && r.info_url));
 </script>
 
 <h1>EMPI <span style="font-weight: normal">- Účasť na Empirickom Výskume (2-MXX-132)</span></h1>
