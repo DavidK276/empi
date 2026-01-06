@@ -1,5 +1,5 @@
 <script lang="ts">
-    import markdownit from 'markdown-it';
+    import Markdown from 'svelte-exmarkdown';
     import type { PageProps } from './$types';
     import UserPasswordRequiredModal from '$lib/components/UserPasswordRequiredModal.svelte';
     import { t } from '$lib/translations';
@@ -10,8 +10,6 @@
     import { universalEnhance } from "$lib/enhanceFunctions";
 
     let { data }: PageProps = $props();
-
-    const converter = markdownit();
 </script>
 {#if page.data.user != null}
     <UserPasswordRequiredModal></UserPasswordRequiredModal>
@@ -30,12 +28,9 @@
 </div>
 <div class="col no-gap">
     {#if data.research?.comment}
-        <hr>
-    {/if}
-    <!-- eslint-disable-next-line svelte/no-at-html-tags -- Rendering using markdownit is safe. -->
-    {@html converter.render(data.research?.comment ?? "")}
-    {#if data.research?.comment}
-        <hr>
+	    <hr>
+      <Markdown md={data.research?.comment}></Markdown>
+	    <hr>
     {/if}
 </div>
 {#if data.research?.info_url}

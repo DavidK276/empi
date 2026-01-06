@@ -1,5 +1,5 @@
 <script lang="ts">
-	import markdownit from 'markdown-it';
+	import Markdown from 'svelte-exmarkdown';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { t } from '$lib/translations';
 	import { onMount } from 'svelte';
@@ -16,7 +16,6 @@
 	});
 
 	let { data }: PageProps = $props();
-	const converter = markdownit();
 </script>
 <h1>{$t('common.research_list')}</h1>
 {#if data.researches != null}
@@ -25,7 +24,7 @@
 			<h1>{research.name}</h1>
 			{#if browser && research.comment}
 				<div class="box">
-					{@html converter.render(research.comment)}
+					<Markdown md={research.comment}></Markdown>
 				</div>
 			{/if}
 			<a href="{resolve('/research/[nanoid=nanoid]', {nanoid: research.nanoid})}">
