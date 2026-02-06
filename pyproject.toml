@@ -4,9 +4,9 @@ version = "2026.1.1"
 description = "Backend for the Empirical research CMS"
 authors = [{ name = "David Krchňavý", email = "krchnavy11@uniba.sk" }]
 readme = "README.md"
-requires-python = "^3.14"
+requires-python = "^3.13"
 dependencies = [
-	"django (~=5.1.0)",
+	"django (~=5.2.0)",
 	"django-cors-headers (~=4.9.0)",
 	"djangorestframework (~=3.16.0)",
 	"pycryptodome (~=3.23.0)",
