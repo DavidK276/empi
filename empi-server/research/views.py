@@ -286,7 +286,7 @@ class ParticipationViewSet(
             private_key = RSA.import_key(research.privkey, password)
         except (ValueError, IndexError, TypeError):
             raise exceptions.AuthenticationFailed("invalid password")
-        participations = self.get_queryset()
+        participations = self.get_queryset().filter(appointment__research_id=research.id)
         return Response(self.get_participations_for_key(private_key, participations, request))
 
     @action(
