@@ -1,4 +1,7 @@
 services:
+  db:
+    ports:
+      - "5432:5432"
   api:
     environment:
       ALLOWED_HOSTS: "localhost,127.0.0.1"

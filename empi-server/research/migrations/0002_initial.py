@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="appointment",
             constraint=models.CheckConstraint(
-                check=models.Q(("info_url__isnull", True), ("location__isnull", True), _connector="XOR"),
+                condition=models.Q(("info_url__isnull", True), ("location__isnull", True), _connector="XOR"),
                 name="one_of_url_location_null",
             ),
         ),

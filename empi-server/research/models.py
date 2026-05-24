@@ -138,7 +138,7 @@ class Appointment(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=Q(info_url__isnull=True) ^ Q(location__isnull=True),
+                condition=Q(info_url__isnull=True) ^ Q(location__isnull=True),
                 name="one_of_url_location_null",
             )
         ]
