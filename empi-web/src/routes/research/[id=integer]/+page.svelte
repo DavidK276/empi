@@ -19,7 +19,7 @@
     {#await data.participations then participations}
 	    {@const participationConfirmed = participations?.values().some(p => p.is_confirmed)}
         {#if participationConfirmed}
-            <div class="row ver-center no-gap">
+            <div class="row ver-center no-gap nowrap">
                 <MaterialSymbolsInfoOutline width="24"
                                             height="24"></MaterialSymbolsInfoOutline>&nbsp;{$t('research.participated')}
             </div>

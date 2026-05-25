@@ -6,7 +6,16 @@ from .models import Appointment, Participation, Research
 class ResearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Research
-        fields = ["id", "name", "comment", "info_url", "points", "created", "has_open_appointments"]
+        fields = [
+            "id",
+            "name",
+            "comment",
+            "info_url",
+            "points",
+            "created",
+            "open_appointment_count",
+            "available_capacity",
+        ]
 
 
 class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,7 +30,8 @@ class ResearchAdminSerializer(serializers.HyperlinkedModelSerializer):
             "created",
             "is_protected",
             "is_published",
-            "has_open_appointments",
+            "open_appointment_count",
+            "available_capacity",
             "email_recipients",
         ]
 

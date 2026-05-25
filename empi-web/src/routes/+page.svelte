@@ -4,7 +4,7 @@
 	import Pagination from '$lib/components/Pagination.svelte';
 
 	let { data }: { data: PageData } = $props();
-	let showInfoUrlColumn = $derived(data.researches.some(r => r.has_open_appointments && r.info_url));
+	let showInfoUrlColumn = $derived(data.researches.some(r => r.open_appointment_count && r.info_url));
 </script>
 
 <h1>EMPI <span style="font-weight: normal">- Účasť na Empirickom Výskume (2-MXX-132)</span></h1>
@@ -17,12 +17,14 @@
 			{#if showInfoUrlColumn}
 				<th>{$t('common.info_url')}</th>
 			{/if}
+			<th>{$t('common.open_appointment_count')}</th>
+			<th>{$t('research.free_capacity')}</th>
 			<th>{$t('common.details')}</th>
 		</tr>
 		</thead>
 		<tbody>
 		{#each data.researches as research (research.id)}
-			{#if research.has_open_appointments}
+			{#if research.open_appointment_count}
 				<tr>
 					<td>{research.name}</td>
 					{#if showInfoUrlColumn}
@@ -32,6 +34,8 @@
 							{/if}
 						</td>
 					{/if}
+					<td style="text-align: center">{research.open_appointment_count}</td>
+					<td style="text-align: center">{research.available_capacity}</td>
 					<td style="text-align: center">
 						<button>
 							<a href="research/{research.id}/">{$t('common.details')}</a>

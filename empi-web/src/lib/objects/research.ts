@@ -9,6 +9,7 @@ export class Research {
 	created!: string
 	is_protected!: boolean;
 	is_published!: boolean;
-	has_open_appointments!: boolean;
+	open_appointment_count!: number;
+	available_capacity!: number;
 	email_recipients?: string;
 }

@@ -116,3 +116,7 @@
 .font-light {
 	font-weight: lighter;
 }
+
+.nowrap {
+	white-space: nowrap;
+}

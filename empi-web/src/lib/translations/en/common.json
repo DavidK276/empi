@@ -37,6 +37,7 @@
 	"research_points": "Research points",
 	"research_list": "Researches",
 	"details": "Details",
+  "open_appointment_count": "Number of available appointments",
 	"password_entry_title": "Password verification",
 	"password_entry_text": "This action requires that you verify your password.",
 	"check": "Check",

@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q, Manager
+from django.db.models.aggregates import Sum
 from django.forms import model_to_dict
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -123,8 +124,22 @@ class Research(models.Model):
         self.save(update_fields=["privkey", "is_protected"])
 
     @property
-    def has_open_appointments(self) -> bool:
-        return Appointment.objects.all().filter(Q(research=self) & Q(when__gt=timezone.now())).exists()
+    def open_appointment_count(self) -> int:
+        return Appointment.objects.all().filter(Q(research=self) & Q(when__gt=timezone.now())).count()
+
+    @property
+    def available_capacity(self) -> int:
+        agg_result = (
+            Appointment.objects.all().filter(Q(research=self) & Q(when__gt=timezone.now())).aggregate(Sum("capacity"))
+        )
+        total_capacity = agg_result["capacity__sum"] or 0
+        participation_count = (
+            Participation.objects.all()
+            .filter(Q(appointment__research_id=self.id) & Q(appointment__when__gt=timezone.now()))
+            .count()
+            or 0
+        )
+        return max(total_capacity - participation_count, 0)
 
 
 class Appointment(models.Model):
@@ -161,7 +176,8 @@ class Appointment(models.Model):
 
     @property
     def free_capacity(self) -> int:
-        return self.capacity - Participation.objects.filter(appointment=self).count()
+        free_capacity = self.capacity - Participation.objects.filter(appointment=self).count()
+        return max(free_capacity, 0)
 
     def serialize(self) -> Mapping:
         d = model_to_dict(self)
