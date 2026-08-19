@@ -1,8 +1,8 @@
 import * as consts from '$lib/constants';
+import { COOKIE_SECRET } from '$app/env/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { handleSession } from 'svelte-kit-cookie-session';
 import { resolve as resolvePath } from '$app/paths';
-import * as env from '$env/static/private';
 import { sequence } from '@sveltejs/kit/hooks';
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
@@ -84,7 +84,7 @@ const handleSezzion: Handle = handleSession({
 	secret: [
 		{
 			id: 1,
-			secret: env.COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+			secret: COOKIE_SECRET || 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
 		},
 	],
 	expires: 1,

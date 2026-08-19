@@ -16,16 +16,16 @@ const config = {
 		adapter: adapter(),
 		csp: {
 			directives: {
-				'default-src': ['self'].concat(...origin).concat('http://localhost:8000/', 'http://127.0.0.1:8000/'),
+				'default-src': ['self', 'http://localhost:8000/', 'http://127.0.0.1:8000/'].concat(...origin),
 				'img-src': ['self', 'data:'],
 				'style-src': ['self', 'unsafe-inline']
 			}
 		},
 		csrf: {
-			checkOrigin: true
+			trustedOrigins: ['http://localhost:8000/', 'http://127.0.0.1:8000/'].concat(...origin)
 		},
-		env: {
-			publicPrefix: "EMPI_"
+		experimental: {
+			explicitEnvironmentVariables: true
 		}
 	}
 };
