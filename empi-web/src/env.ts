@@ -12,6 +12,9 @@ export const variables = defineEnvVars({
 		public: true,
 		schema: v.pipe(v.string(), v.url())
 	},
+	SENTRY_DSN: {
+		public: true
+	},
 	COOKIE_SECRET: {
 		description: "Key used to encrypt certain cookies. Must be exactly 32 bytes long.",
 		schema: v.pipe(v.string(), v.length(32))

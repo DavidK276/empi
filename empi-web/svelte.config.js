@@ -25,7 +25,15 @@ const config = {
 			trustedOrigins: ['http://localhost:8000/', 'http://127.0.0.1:8000/'].concat(...origin)
 		},
 		experimental: {
-			explicitEnvironmentVariables: true
+			explicitEnvironmentVariables: true,
+
+			tracing: {
+				server: true
+			},
+
+			instrumentation: {
+				server: true
+			}
 		}
 	}
 };

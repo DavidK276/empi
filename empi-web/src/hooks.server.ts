@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/sveltekit';
 import * as consts from '$lib/constants';
 import { COOKIE_SECRET } from '$app/env/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
@@ -91,4 +92,5 @@ const handleSezzion: Handle = handleSession({
 	expires_in: 'days',
 });
 
-export const handle = sequence(handleSezzion, myHandle, handleLang);
+export const handle = sequence(Sentry.sentryHandle(), handleSezzion, myHandle, handleLang);
+export const handleError = Sentry.handleErrorWithSentry();
